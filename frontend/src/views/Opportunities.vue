@@ -63,6 +63,10 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
 const opportunities = [
   {
     title: '新手起步',
@@ -262,9 +266,11 @@ const opportunities = [
 
 // 添加购买处理函数
 const handlePurchase = (item: any) => {
-  // TODO: 实现购买逻辑
-  console.log('购买项目:', item.title, '价格:', item.price);
-};
+  router.push({
+    name: 'project-detail',
+    params: { id: item.price } // 临时使用price作为id
+  })
+}
 
 </script>
 
