@@ -7,26 +7,41 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CorsFilter;
+
+import javax.annotation.Resource;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    @Resource
+    private CorsFilter corsFilter;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+            // 添加cors过滤器
+            .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+            // 禁用csrf
             .csrf().disable()
+            // 基于token，不需要session
+            .sessionManagement().disable()
+            // 下面开始设置权限
             .authorizeRequests()
-            .antMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**", "/webjars/**").permitAll()
-            .antMatchers("/api/auth/**").permitAll()
-            .anyRequest().authenticated()
-            .and()
-            .formLogin().disable()
-            .httpBasic().disable();
+            // 设置允许访问的路径
+            .antMatchers(
+                "/api/users/register",
+                "/api/users/login",
+                "/api/users/check-phone"
+            ).permitAll()
+            // 其他所有请求需要认证
+            .anyRequest().authenticated();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 } 

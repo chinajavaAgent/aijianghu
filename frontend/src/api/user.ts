@@ -10,6 +10,15 @@ export function register(data: RegisterRequest) {
     })
 }
 
+// 用户登录
+export function login(data: { phone: string; password: string }) {
+    return request<any, { code: number; message: string; data: User }>({
+        url: '/users/login',
+        method: 'post',
+        data
+    })
+}
+
 // 检查手机号是否存在
 export function checkPhone(phone: string) {
     return request<any, { code: number; message: string; data: boolean }>({

@@ -1,5 +1,6 @@
 package com.aigroup.world.service.impl;
 
+import com.aigroup.world.dto.LoginRequest;
 import com.aigroup.world.dto.RegisterRequest;
 import com.aigroup.world.exception.BusinessException;
 import com.aigroup.world.mapper.UserMapper;
@@ -55,6 +56,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         save(user);
 
         // 5. 清空密码后返回
+        user.setPassword(null);
+        return user;
+    }
+
+    @Override
+    public User login(LoginRequest request) {
+        // 1. 根据手机号查询用户
+        User user = getOne(new LambdaQueryWrapper<User>()
+                .eq(User::getPhone, request.getPhone())
+                .eq(User::getStatus, 1));
+
+        // 2. 验证用户是否存在
+        if (user == null) {
+            throw new BusinessException("用户不存在或已被禁用");
+        }
+
+        // 3. 验证密码是否正确
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new BusinessException("密码错误");
+        }
+
+        // 4. 清空密码后返回
         user.setPassword(null);
         return user;
     }

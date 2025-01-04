@@ -63,6 +63,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { login } from '../api/user'
 
 const router = useRouter()
 
@@ -78,13 +79,21 @@ const handleLogin = async () => {
       alert('请输入正确的手机号码')
       return
     }
+
     // 验证密码格式
     if (form.password.length < 6) {
       alert('密码长度不能少于6位')
       return
     }
-    // TODO: 调用登录API
-    // await login(form)
+
+    // 调用登录API
+    const { data: user } = await login(form)
+    
+    // 保存用户信息到localStorage
+    localStorage.setItem('user', JSON.stringify(user))
+    
+    // 登录成功后跳转到首页
+    alert('登录成功')
     router.push('/')
   } catch (error) {
     console.error('登录失败:', error)
