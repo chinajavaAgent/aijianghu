@@ -198,6 +198,98 @@
         </div>
       </div>
     </div>
+
+    <!-- 联系方式弹窗 -->
+    <div v-if="showContactModal" 
+      class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+      <div class="bg-white rounded-2xl w-full max-w-md transform transition-all duration-300 scale-100">
+        <!-- 顶部背景装饰 -->
+        <div class="bg-gradient-to-r from-blue-500 to-purple-500 rounded-t-2xl p-6 text-center relative overflow-hidden">
+          <div class="absolute inset-0 bg-white opacity-10">
+            <div class="absolute inset-0 bg-repeat opacity-30" style="background-image: url('data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='1' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E');"></div>
+          </div>
+          <h3 class="font-bold text-xl text-white relative z-10 mb-1">联系AI经纪人解锁项目</h3>
+          <!-- <p class="text-white text-opacity-90 text-sm relative z-10">添加导师微信，获取完整项目资料</p> -->
+        </div>
+
+        <div class="p-6">
+
+          <!-- <div class="bg-gradient-to-b from-gray-50 to-white rounded-xl p-4 mb-6">
+            <div class="bg-white rounded-lg p-3 shadow-sm">
+              <img src="https://example.com/qrcode.jpg" alt="微信二维码" class="w-48 h-48 mx-auto"/>
+            </div>
+            <p class="text-center mt-3 text-gray-600">联系AI经纪人解锁项目</p>
+          </div> -->
+          
+          <!-- 联系方式列表 -->
+          <div class="space-y-3">
+            <div class="bg-gray-50 rounded-xl p-4 transition-all duration-300 hover:shadow-md">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <span class="font-semibold text-gray-700">微信号</span>
+                    <p class="text-gray-600 text-sm mt-0.5">ai_master888</p>
+                  </div>
+                </div>
+                <button @click="copyText('ai_master888')" 
+                  class="px-3 py-1.5 bg-green-50 text-green-600 rounded-lg text-sm font-medium hover:bg-green-100 transition-colors">
+                  复制
+                </button>
+              </div>
+            </div>
+            
+            <div class="bg-gray-50 rounded-xl p-4 transition-all duration-300 hover:shadow-md">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <span class="font-semibold text-gray-700">手机号</span>
+                    <p class="text-gray-600 text-sm mt-0.5">13800138000</p>
+                  </div>
+                </div>
+                <button @click="copyText('13800138000')" 
+                  class="px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors">
+                  复制
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 提示信息 -->
+          <!-- <div class="mt-6 p-4 bg-blue-50 rounded-xl">
+            <div class="flex items-start">
+              <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <div class="flex-1">
+                <p class="text-blue-800 font-medium">添加时请备注</p>
+                <div class="mt-1 text-blue-600 text-sm space-y-1">
+                  <p>项目：{{ currentProject.title }}</p>
+                  <p>价格：￥{{ currentProject.price }}</p>
+                </div>
+              </div>
+            </div>
+          </div> -->
+        </div>
+
+        <!-- 关闭按钮 -->
+        <button @click="showContactModal = false" 
+          class="absolute top-4 right-4 text-white opacity-80 hover:opacity-100">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -366,9 +458,18 @@ const activeTab = ref(0)
 
 const currentProject = computed(() => projectTabs[activeTab.value])
 
+const showContactModal = ref(false)
+
+const copyText = (text: string) => {
+  navigator.clipboard.writeText(text).then(() => {
+    alert('复制成功')
+  }).catch(() => {
+    alert('复制失败，请手动复制')
+  })
+}
+
 const handlePurchase = () => {
-  // TODO: 实现购买逻辑
-  console.log('购买项目:', currentProject.value.title, '价格:', currentProject.value.price)
+  showContactModal.value = true
 }
 
 // 根据路由参数设置初始选中的项目
