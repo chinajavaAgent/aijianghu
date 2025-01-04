@@ -26,26 +26,17 @@
               </div>
 
               <div class="group">
-                <label for="code" class="block text-sm mb-1">验证码</label>
-                <div class="flex space-x-2">
-                  <input
-                    id="code"
-                    v-model="form.code"
-                    type="text"
-                    required
-                    class="input-primary flex-1"
-                    placeholder="请输入验证码"
-                    maxlength="6"
-                  />
-                  <button 
-                    type="button" 
-                    class="btn-primary whitespace-nowrap px-4"
-                    :disabled="countdown > 0"
-                    @click="handleSendCode"
-                  >
-                    {{ countdown > 0 ? `${countdown}s后重试` : '获取验证码' }}
-                  </button>
-                </div>
+                <label for="password" class="block text-sm mb-1">密码</label>
+                <input
+                  id="password"
+                  v-model="form.password"
+                  type="password"
+                  required
+                  class="input-primary"
+                  placeholder="请输入密码"
+                  minlength="6"
+                  maxlength="20"
+                />
               </div>
             </div>
 
@@ -70,41 +61,15 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import Icon from '../components/Icons.vue'
 
 const router = useRouter()
-const countdown = ref(0)
 
 const form = reactive({
   phone: '',
-  code: ''
+  password: ''
 })
-
-const handleSendCode = async () => {
-  // 验证手机号格式
-  if (!/^1[3-9]\d{9}$/.test(form.phone)) {
-    alert('请输入正确的手机号码')
-    return
-  }
-
-  // 开始倒计时
-  countdown.value = 60
-  const timer = setInterval(() => {
-    countdown.value--
-    if (countdown.value <= 0) {
-      clearInterval(timer)
-    }
-  }, 1000)
-
-  try {
-    // TODO: 调用发送验证码API
-    // await sendCode(form.phone)
-  } catch (error) {
-    console.error('发送验证码失败:', error)
-  }
-}
 
 const handleLogin = async () => {
   try {
@@ -113,9 +78,9 @@ const handleLogin = async () => {
       alert('请输入正确的手机号码')
       return
     }
-    // 验证验证码格式
-    if (!/^\d{6}$/.test(form.code)) {
-      alert('请输入6位数字验证码')
+    // 验证密码格式
+    if (form.password.length < 6) {
+      alert('密码长度不能少于6位')
       return
     }
     // TODO: 调用登录API
@@ -134,11 +99,5 @@ const handleLogin = async () => {
 
 .group input::placeholder {
   color: var(--text-tertiary);
-}
-
-/* 禁用状态的按钮样式 */
-.btn-primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 </style> 

@@ -5,7 +5,7 @@ spring:
   application:
     name: ai-group-world
   datasource:
-    url: jdbc:mysql://rm-bp18or2tye31a67112o.mysql.rds.aliyuncs.com:3306/jiyuan?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://rm-bp18or2tye31a67112o.mysql.rds.aliyuncs.com:3306/aijianghu?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
     password: chaojigeti@666
     driver-class-name: com.mysql.cj.jdbc.Driver
