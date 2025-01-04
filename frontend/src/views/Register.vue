@@ -74,10 +74,10 @@
               </div>
 
               <div class="group">
-                <label for="nickname" class="block text-sm mb-1">真实姓名</label>
+                <label for="realName" class="block text-sm mb-1">真实姓名</label>
                 <input
-                  id="nickname"
-                  v-model="form.nickname"
+                  id="realName"
+                  v-model="form.realName"
                   type="text"
                   required
                   class="input-primary"
@@ -106,6 +106,8 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { register, checkPhone } from '../api/user'
+import type { RegisterRequest } from '../types/user'
 
 const router = useRouter()
 const route = useRoute()
@@ -113,12 +115,13 @@ const route = useRoute()
 // 从路由参数中获取推荐人信息
 const referrer = ref(route.query.referrer as string || '')
 
-const form = reactive({
+const form = reactive<RegisterRequest>({
   wechat: '',
   phone: '',
-  nickname: '',
+  realName: '',
   password: '',
-  confirmPassword: ''
+  confirmPassword: '',
+  referrerId: undefined
 })
 
 const handleRegister = async () => {
@@ -141,15 +144,21 @@ const handleRegister = async () => {
       return
     }
 
-    // TODO: 调用注册API
-    // const registerData = {
-    //   wechat: form.wechat,
-    //   phone: form.phone,
-    //   nickname: form.nickname,
-    //   referrer: referrer.value,
-    //   password: form.password
-    // }
-    // await register(registerData)
+    // 检查手机号是否已被注册
+    const { data: phoneExists } = await checkPhone(form.phone)
+    if (phoneExists) {
+      alert('该手机号已被注册')
+      return
+    }
+
+    // 如果有推荐人，转换为数字ID
+    if (referrer.value) {
+      form.referrerId = parseInt(referrer.value)
+    }
+
+    // 调用注册API
+    await register(form)
+    alert('注册成功')
     router.push('/login')
   } catch (error) {
     console.error('注册失败:', error)
