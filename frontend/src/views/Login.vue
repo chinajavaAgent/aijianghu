@@ -64,6 +64,7 @@
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { login } from '../api/user'
+import toast from '../utils/toast'
 
 const router = useRouter()
 
@@ -76,13 +77,13 @@ const handleLogin = async () => {
   try {
     // 验证手机号格式
     if (!/^1[3-9]\d{9}$/.test(form.phone)) {
-      alert('请输入正确的手机号码')
+      toast.error('请输入正确的手机号码')
       return
     }
 
     // 验证密码格式
     if (form.password.length < 6) {
-      alert('密码长度不能少于6位')
+      toast.error('密码长度不能少于6位')
       return
     }
 
@@ -93,7 +94,7 @@ const handleLogin = async () => {
     localStorage.setItem('user', JSON.stringify(user))
     
     // 登录成功后跳转到首页
-    alert('登录成功')
+    toast.success('登录成功')
     router.push('/')
   } catch (error) {
     console.error('登录失败:', error)

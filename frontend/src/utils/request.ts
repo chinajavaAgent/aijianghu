@@ -1,4 +1,5 @@
 import axios from 'axios'
+import toast from './toast'
 
 // 创建axios实例
 const request = axios.create({
@@ -25,14 +26,14 @@ request.interceptors.response.use(
         // 这里可以根据后端的返回格式进行统一处理
         if (res.code !== 200) {
             // 如果返回的code不是200，说明有错误
-            alert(res.message || '操作失败')
+            toast.error(res.message || '操作失败')
             return Promise.reject(new Error(res.message || '操作失败'))
         }
         return res
     },
     error => {
         console.error('响应错误:', error)
-        alert(error.response?.data?.message || '请求失败')
+        toast.error(error.response?.data?.message || '请求失败')
         return Promise.reject(error)
     }
 )

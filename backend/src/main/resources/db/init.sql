@@ -1,9 +1,3 @@
--- 删除已存在的表（如果存在）
-DROP TABLE IF EXISTS `user_resource`;
-DROP TABLE IF EXISTS `resource`;
-DROP TABLE IF EXISTS `category`;
-DROP TABLE IF EXISTS `user`;
-
 -- 创建用户表
 CREATE TABLE IF NOT EXISTS `user` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '用户ID',

@@ -9,21 +9,19 @@ spring:
     username: root
     password: chaojigeti@666
     driver-class-name: com.mysql.cj.jdbc.Driver
-    initialization-mode: always
-    schema: classpath:db/init.sql
-    sql-script-encoding: utf-8
-    continue-on-error: true
   
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  # SQL初始化配置
   sql:
     init:
       mode: always
       schema-locations: classpath:db/init.sql
       encoding: utf-8
       continue-on-error: true
+      platform: mysql
 
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml

@@ -108,6 +108,7 @@ import { reactive, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { register, checkPhone } from '../api/user'
 import type { RegisterRequest } from '../types/user'
+import toast from '../utils/toast'
 
 const router = useRouter()
 const route = useRoute()
@@ -128,26 +129,26 @@ const handleRegister = async () => {
   try {
     // 验证手机号格式
     if (!/^1[3-9]\d{9}$/.test(form.phone)) {
-      alert('请输入正确的手机号码')
+      toast.error('请输入正确的手机号码')
       return
     }
 
     // 验证密码长度
     if (form.password.length < 6) {
-      alert('密码长度不能少于6位')
+      toast.error('密码长度不能少于6位')
       return
     }
 
     // 验证两次密码是否一致
     if (form.password !== form.confirmPassword) {
-      alert('两次输入的密码不一致')
+      toast.error('两次输入的密码不一致')
       return
     }
 
     // 检查手机号是否已被注册
     const { data: phoneExists } = await checkPhone(form.phone)
     if (phoneExists) {
-      alert('该手机号已被注册')
+      toast.error('该手机号已被注册')
       return
     }
 
@@ -158,7 +159,7 @@ const handleRegister = async () => {
 
     // 调用注册API
     await register(form)
-    alert('注册成功')
+    toast.success('注册成功')
     router.push('/login')
   } catch (error) {
     console.error('注册失败:', error)
