@@ -1,21 +1,18 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full">
-      <div class="card p-8">
-        <div class="text-center">
-          <h2 class="text-3xl font-extrabold text-gray-900">登录账号</h2>
-          <p class="mt-2 text-sm text-gray-600">
-            或者
-            <router-link to="/register" class="font-medium text-indigo-600 hover:text-indigo-500">
-              注册新账号
-            </router-link>
-          </p>
-        </div>
-        <form class="mt-8 space-y-6" @submit.prevent="handleLogin">
-          <div class="space-y-4">
-            <div>
-              <label for="phone" class="block text-sm font-medium text-gray-700">手机号码</label>
-              <div class="mt-1">
+  <div class="min-h-screen bg-[#FFF8E1]">
+
+    <!-- 主要内容 -->
+    <div class="max-w-md mx-auto px-4 py-8">
+      <div class="space-y-6">
+
+        <!-- 登录表单 -->
+        <div class="card p-6 space-y-6">
+          <h2 class="heading-1 text-center">登录账号</h2>
+          
+          <form @submit.prevent="handleLogin" class="space-y-5">
+            <div class="space-y-4">
+              <div class="group">
+                <label for="phone" class="block text-sm mb-1">手机号码</label>
                 <input
                   id="phone"
                   v-model="form.phone"
@@ -27,37 +24,46 @@
                   title="请输入11位手机号码"
                 />
               </div>
-            </div>
-            <div>
-              <label for="code" class="block text-sm font-medium text-gray-700">验证码</label>
-              <div class="mt-1 flex space-x-3">
-                <input
-                  id="code"
-                  v-model="form.code"
-                  type="text"
-                  required
-                  class="input-primary"
-                  placeholder="请输入验证码"
-                  maxlength="6"
-                />
-                <button
-                  type="button"
-                  class="btn-secondary whitespace-nowrap"
-                  :disabled="countdown > 0"
-                  @click="sendCode"
-                >
-                  {{ countdown > 0 ? `${countdown}秒后重试` : '获取验证码' }}
-                </button>
+
+              <div class="group">
+                <label for="code" class="block text-sm mb-1">验证码</label>
+                <div class="flex space-x-2">
+                  <input
+                    id="code"
+                    v-model="form.code"
+                    type="text"
+                    required
+                    class="input-primary flex-1"
+                    placeholder="请输入验证码"
+                    maxlength="6"
+                  />
+                  <button 
+                    type="button" 
+                    class="btn-primary whitespace-nowrap px-4"
+                    :disabled="countdown > 0"
+                    @click="handleSendCode"
+                  >
+                    {{ countdown > 0 ? `${countdown}s后重试` : '获取验证码' }}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="flex justify-center mt-8">
-            <button type="submit" class="btn-3d w-48">
+            <button type="submit" class="btn-primary w-full py-3">
               登录
             </button>
-          </div>
-        </form>
+
+            <div class="flex justify-center space-x-4 text-sm">
+              <router-link to="/register" class="text-accent-color">
+                注册新账号
+              </router-link>
+              <span class="text-gray-300">|</span>
+              <a href="#" class="text-accent-color">
+                忘记密码
+              </a>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
@@ -66,10 +72,9 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '../store/user'
+import Icon from '../components/Icons.vue'
 
 const router = useRouter()
-const userStore = useUserStore()
 const countdown = ref(0)
 
 const form = reactive({
@@ -77,21 +82,25 @@ const form = reactive({
   code: ''
 })
 
-const sendCode = async () => {
-  try {
-    if (!/^1[3-9]\d{9}$/.test(form.phone)) {
-      alert('请输入正确的手机号码')
-      return
+const handleSendCode = async () => {
+  // 验证手机号格式
+  if (!/^1[3-9]\d{9}$/.test(form.phone)) {
+    alert('请输入正确的手机号码')
+    return
+  }
+
+  // 开始倒计时
+  countdown.value = 60
+  const timer = setInterval(() => {
+    countdown.value--
+    if (countdown.value <= 0) {
+      clearInterval(timer)
     }
+  }, 1000)
+
+  try {
     // TODO: 调用发送验证码API
-    // await sendVerificationCode(form.phone)
-    countdown.value = 60
-    const timer = setInterval(() => {
-      countdown.value--
-      if (countdown.value <= 0) {
-        clearInterval(timer)
-      }
-    }, 1000)
+    // await sendCode(form.phone)
   } catch (error) {
     console.error('发送验证码失败:', error)
   }
@@ -99,20 +108,37 @@ const sendCode = async () => {
 
 const handleLogin = async () => {
   try {
+    // 验证手机号格式
     if (!/^1[3-9]\d{9}$/.test(form.phone)) {
       alert('请输入正确的手机号码')
       return
     }
+    // 验证验证码格式
     if (!/^\d{6}$/.test(form.code)) {
-      alert('请输入6位验证码')
+      alert('请输入6位数字验证码')
       return
     }
     // TODO: 调用登录API
-    // const res = await login(form)
-    // userStore.setUser(res)
+    // await login(form)
     router.push('/')
   } catch (error) {
     console.error('登录失败:', error)
   }
 }
-</script> 
+</script>
+
+<style scoped>
+.group label {
+  color: var(--text-secondary);
+}
+
+.group input::placeholder {
+  color: var(--text-tertiary);
+}
+
+/* 禁用状态的按钮样式 */
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+</style> 
