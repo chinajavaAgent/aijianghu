@@ -9,6 +9,8 @@ spring:
     username: root
     password: chaojigeti@666
     driver-class-name: com.mysql.cj.jdbc.Driver
+    initialization-mode: always
+    schema: classpath:db/init.sql
   
   mvc:
     pathmatch:
@@ -16,15 +18,17 @@ spring:
 
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.aigroup.world.model
+  type-aliases-package: com.aigroup.world.entity
   configuration:
     map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
       id-type: auto
       logic-delete-field: deleted
       logic-delete-value: 1
       logic-not-delete-value: 0
+      table-prefix: t_
 
 logging:
   level:

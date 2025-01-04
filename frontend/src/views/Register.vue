@@ -9,19 +9,16 @@
         <div class="card p-6 space-y-6">
           <h2 class="heading-1 text-center">注册账号</h2>
           
+          <!-- 推荐人信息展示 -->
+          <div class="bg-[#FFF3CD] rounded-lg p-4">
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-[#856404]">推荐人</span>
+              <span class="font-medium text-[#856404]">{{ referrer || '暂无推荐人' }}</span>
+            </div>
+          </div>
+          
           <form @submit.prevent="handleRegister" class="space-y-5">
             <div class="space-y-4">
-              <div class="group">
-                <label for="referrer" class="block text-sm mb-1">推荐人</label>
-                <input
-                  id="referrer"
-                  v-model="form.referrer"
-                  type="text"
-                  class="input-primary"
-                  placeholder="请输入推荐人（选填）"
-                />
-              </div>
-
               <div class="group">
                 <label for="wechat" class="block text-sm mb-1">微信号</label>
                 <input
@@ -49,14 +46,42 @@
               </div>
 
               <div class="group">
-                <label for="nickname" class="block text-sm mb-1">昵称</label>
+                <label for="password" class="block text-sm mb-1">密码</label>
+                <input
+                  id="password"
+                  v-model="form.password"
+                  type="password"
+                  required
+                  class="input-primary"
+                  placeholder="请输入密码（6-20位字符）"
+                  minlength="6"
+                  maxlength="20"
+                />
+              </div>
+
+              <div class="group">
+                <label for="confirmPassword" class="block text-sm mb-1">确认密码</label>
+                <input
+                  id="confirmPassword"
+                  v-model="form.confirmPassword"
+                  type="password"
+                  required
+                  class="input-primary"
+                  placeholder="请再次输入密码"
+                  minlength="6"
+                  maxlength="20"
+                />
+              </div>
+
+              <div class="group">
+                <label for="nickname" class="block text-sm mb-1">真实姓名</label>
                 <input
                   id="nickname"
                   v-model="form.nickname"
                   type="text"
                   required
                   class="input-primary"
-                  placeholder="请输入昵称"
+                  placeholder="请输入真实姓名"
                 />
               </div>
             </div>
@@ -79,17 +104,21 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { useRouter } from 'vue-router'
-import Icon from '../components/Icons.vue'
+import { reactive, ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
+
+// 从路由参数中获取推荐人信息
+const referrer = ref(route.query.referrer as string || '')
 
 const form = reactive({
   wechat: '',
   phone: '',
   nickname: '',
-  referrer: ''
+  password: '',
+  confirmPassword: ''
 })
 
 const handleRegister = async () => {
@@ -99,8 +128,28 @@ const handleRegister = async () => {
       alert('请输入正确的手机号码')
       return
     }
+
+    // 验证密码长度
+    if (form.password.length < 6) {
+      alert('密码长度不能少于6位')
+      return
+    }
+
+    // 验证两次密码是否一致
+    if (form.password !== form.confirmPassword) {
+      alert('两次输入的密码不一致')
+      return
+    }
+
     // TODO: 调用注册API
-    // await register(form)
+    // const registerData = {
+    //   wechat: form.wechat,
+    //   phone: form.phone,
+    //   nickname: form.nickname,
+    //   referrer: referrer.value,
+    //   password: form.password
+    // }
+    // await register(registerData)
     router.push('/login')
   } catch (error) {
     console.error('注册失败:', error)
