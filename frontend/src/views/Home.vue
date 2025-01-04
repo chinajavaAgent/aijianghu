@@ -27,9 +27,11 @@
             </p>
           </div>
           <div class="text-center">
-            <button class="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors">
-              探索资源
-            </button>
+            <router-link to="/opportunities" class="inline-block">
+              <button class="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors">
+                探索资源
+              </button>
+            </router-link>
           </div>
         </div>
 
