@@ -11,14 +11,23 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     initialization-mode: always
     schema: classpath:db/init.sql
+    sql-script-encoding: utf-8
+    continue-on-error: true
   
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/init.sql
+      encoding: utf-8
+      continue-on-error: true
+
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.aigroup.world.entity
+  type-aliases-package: com.aigroup.world.model
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
@@ -28,7 +37,6 @@ mybatis-plus:
       logic-delete-field: deleted
       logic-delete-value: 1
       logic-not-delete-value: 0
-      table-prefix: t_
 
 logging:
   level:

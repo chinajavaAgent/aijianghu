@@ -1,6 +1,6 @@
 package com.aigroup.world.mapper;
 
-import com.aigroup.world.entity.User;
+import com.aigroup.world.model.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
