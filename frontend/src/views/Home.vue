@@ -1,91 +1,156 @@
 <template>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <!-- Hero Section -->
-    <div class="text-center mb-16">
-      <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-        <span class="block">欢迎来到</span>
-        <span class="block text-indigo-600">AI群江湖</span>
-      </h1>
-      <p class="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-        这是一个专注于AI资源分享的平台，用户可以根据自己的等级获取不同的资源。
-        通过不断学习和分享，提升等级，获取更多高级资源。
-      </p>
-      <div class="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
-        <div class="rounded-md shadow">
-          <router-link to="/resources" class="btn-primary w-full flex items-center justify-center px-8 py-3 text-base font-medium sm:w-auto">
-            浏览资源
-          </router-link>
+  <div class="min-h-screen bg-[#FFF8E1]">
+    <!-- 顶部横幅 -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl font-bold mb-4">AI江湖 - 你的AI资源与机遇平台</h1>
+        <p class="text-xl opacity-90">汇聚海量AI资源，创造无限商业可能</p>
+      </div>
+    </div>
+
+    <!-- 三大核心价值主张 -->
+    <div class="container mx-auto px-4 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- AI资源库 -->
+        <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+          <div class="text-center mb-4">
+            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">海量AI资源</h2>
+            <p class="text-gray-600">
+              精选优质AI工具与资源<br>
+              持续更新最新AI应用<br>
+              专业的资源分类与推荐
+            </p>
+          </div>
+          <div class="text-center">
+            <button class="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors">
+              探索资源
+            </button>
+          </div>
         </div>
-        <div class="mt-3 sm:mt-0 sm:ml-3">
-          <router-link to="/login" class="btn-secondary w-full flex items-center justify-center px-8 py-3 text-base font-medium sm:w-auto">
-            立即加入
-          </router-link>
+
+        <!-- AI副业机会 -->
+        <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+          <div class="text-center mb-4">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">AI副业机会</h2>
+            <p class="text-gray-600">
+              丰富的AI创业项目<br>
+              低门槛副业机会<br>
+              完整的变现指导
+            </p>
+          </div>
+          <div class="text-center">
+            <button class="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition-colors">
+              发现机会
+            </button>
+          </div>
+        </div>
+
+        <!-- AI流量池 -->
+        <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+          <div class="text-center mb-4">
+            <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">AI流量池</h2>
+            <p class="text-gray-600">
+              专业的流量获取方法<br>
+              AI营销体系搭建<br>
+              持续稳定的流量来源
+            </p>
+          </div>
+          <div class="text-center">
+            <button class="bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700 transition-colors">
+              了解更多
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Features Section -->
-    <div class="py-12 bg-white rounded-2xl shadow-sm">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="lg:text-center">
-          <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">平台特色</h2>
-          <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-            更好的学习体验
-          </p>
-          <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
-            我们提供最优质的AI学习资源，帮助你快速成长
-          </p>
+    <!-- 数据统计 -->
+    <div class="bg-gray-100 py-12">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <div>
+            <div class="text-3xl font-bold text-blue-600 mb-2">1000+</div>
+            <div class="text-gray-600">AI工具资源</div>
+          </div>
+          <div>
+            <div class="text-3xl font-bold text-green-600 mb-2">500+</div>
+            <div class="text-gray-600">副业项目</div>
+          </div>
+          <div>
+            <div class="text-3xl font-bold text-purple-600 mb-2">50000+</div>
+            <div class="text-gray-600">用户数量</div>
+          </div>
+          <div>
+            <div class="text-3xl font-bold text-red-600 mb-2">100+</div>
+            <div class="text-gray-600">成功案例</div>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <div class="mt-10">
-          <div class="space-y-10 md:space-y-0 md:grid md:grid-cols-3 md:gap-x-8 md:gap-y-10">
-            <div class="relative">
-              <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-              </div>
-              <div class="ml-16">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">丰富的资源</h3>
-                <p class="mt-2 text-base text-gray-500">
-                  提供各类AI相关的学习资源、工具和教程，满足不同层次的学习需求。
-                </p>
-              </div>
-            </div>
-
-            <div class="relative">
-              <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </div>
-              <div class="ml-16">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">等级制度</h3>
-                <p class="mt-2 text-base text-gray-500">
-                  通过活跃度和贡献提升等级，解锁更多高级内容，让学习更有动力。
-                </p>
-              </div>
-            </div>
-
-            <div class="relative">
-              <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
-                </svg>
-              </div>
-              <div class="ml-16">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">社区互动</h3>
-                <p class="mt-2 text-base text-gray-500">
-                  与其他用户交流分享，共同进步，建立专业的学习社区。
-                </p>
-              </div>
+    <!-- 最新资源展示 -->
+    <div class="container mx-auto px-4 py-12">
+      <h2 class="text-2xl font-bold text-gray-800 mb-8 text-center">最新AI资源</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div v-for="i in 6" :key="i" class="bg-white rounded-lg shadow-md overflow-hidden">
+          <div class="aspect-w-16 aspect-h-9 bg-gray-200"></div>
+          <div class="p-4">
+            <h3 class="text-lg font-semibold mb-2">AI资源标题</h3>
+            <p class="text-gray-600 text-sm mb-4">这是一个简短的资源描述，介绍其主要功能和特点。</p>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-500">更新时间：2023-12-25</span>
+              <span class="text-sm text-blue-600">查看详情 →</span>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- 加入我们 -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">加入AI江湖，开启你的AI之旅</h2>
+        <p class="text-xl mb-8 opacity-90">与数万用户一起，探索AI带来的无限可能</p>
+        <button class="bg-white text-blue-600 px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition-colors">
+          立即加入
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-</script> 
+// 可以在这里添加交互逻辑
+</script>
+
+<style scoped>
+.aspect-w-16 {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+}
+
+.aspect-w-16 > * {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+</style> 
