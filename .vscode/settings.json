@@ -1,0 +1,15 @@
+{
+    "java.project.sourcePaths": [
+        "src/main/java/com/aijianghu/util",
+        "src/main/java/com/aijianghu/service",
+        "src/main/java/com/aijianghu/repository",
+        "src/main/java/com/aijianghu/entity",
+        "src/main/java/com/aijianghu/dto",
+        "src/main/java/com/aijianghu/controller",
+        "src/main/java/com/aijianghu/config",
+        "src/main/java/com/aijianghu"
+    ],
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.debug.settings.onBuildFailureProceed": true,
+    "java.compile.nullAnalysis.mode": "automatic"
+}
