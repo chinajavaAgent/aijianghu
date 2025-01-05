@@ -19,7 +19,7 @@ export interface ProjectBenefit {
 export interface Project {
   id?: number
   tipId: number
-  title: string
+  name: string
   description: string
   videoUrl: string
   cases: ProjectCase[]
@@ -28,6 +28,8 @@ export interface Project {
   updateTime?: string
   isExpanded?: boolean
   currentStep?: number
+  views?: number
+  likes?: number
 }
 
 // 项目表单数据

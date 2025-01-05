@@ -41,10 +41,31 @@
               <h3 class="text-sm font-semibold text-gray-700 mb-2">相关项目</h3>
               <div class="space-y-2">
                 <div v-for="project in tip.projects" :key="project.id" 
-                  class="bg-gray-50 p-2 rounded-lg">
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-gray-600">{{ project.name }}</span>
-                    <span class="text-xs text-gray-500">{{ project.cases?.length || 0 }} 个案例</span>
+                  class="bg-gray-50 p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-gray-700">{{ project.name }}</span>
+                    <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">
+                      {{ project.cases?.length || 0 }} 个案例
+                    </span>
+                  </div>
+                  <p class="text-xs text-gray-500 line-clamp-2">{{ project.description }}</p>
+                  <div class="flex items-center justify-between mt-2 text-xs text-gray-500">
+                    <div class="flex items-center space-x-3">
+                      <span class="flex items-center">
+                        <i class="fas fa-eye mr-1"></i>
+                        {{ project.views || 0 }}
+                      </span>
+                      <span class="flex items-center">
+                        <i class="fas fa-heart mr-1"></i>
+                        {{ project.likes || 0 }}
+                      </span>
+                    </div>
+                    <router-link 
+                      :to="'/projects/' + project.id"
+                      class="text-blue-600 hover:text-blue-700"
+                    >
+                      查看详情
+                    </router-link>
                   </div>
                 </div>
               </div>

@@ -43,14 +43,51 @@
           
           <div class="p-4 sm:p-6">
             <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-3" :class="getTitleColorClass(tip)">{{ tip.title }}</h3>
-            <ul class="space-y-1.5 sm:space-y-2 mb-4 sm:mb-6 text-sm sm:text-base">
-              <li class="flex items-start">
-                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <span class="text-gray-600">{{ tip.description }}</span>
-              </li>
-            </ul>
+            <p class="text-gray-600 text-sm sm:text-base mb-4">{{ tip.description }}</p>
+
+            <!-- 项目列表 -->
+            <div v-if="tip.projects && tip.projects.length > 0" class="mb-4">
+              <h4 class="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                <i class="fas fa-project-diagram mr-2 text-blue-500"></i>
+                包含项目 ({{ tip.projects.length }})
+              </h4>
+              <div class="space-y-2">
+                <div v-for="project in tip.projects" :key="project.id"
+                  class="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-sm font-medium text-gray-700">{{ project.name }}</span>
+                    <div class="flex items-center space-x-2">
+                      <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
+                        {{ project.cases?.length || 0 }} 案例
+                      </span>
+                      <span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
+                        {{ project.benefits?.length || 0 }} 福利
+                      </span>
+                    </div>
+                  </div>
+                  <p class="text-xs text-gray-500 line-clamp-2">{{ project.description }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 等级要求和获取按钮 -->
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center space-x-2">
+                <i class="fas fa-crown text-amber-500"></i>
+                <span class="text-sm text-gray-600">等级要求: Lv.{{ tip.requiredLevel }}</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-sm text-gray-500">
+                  <i class="fas fa-eye mr-1"></i>
+                  {{ tip.views || 0 }}
+                </span>
+                <span class="text-sm text-gray-500">
+                  <i class="fas fa-heart mr-1"></i>
+                  {{ tip.likes || 0 }}
+                </span>
+              </div>
+            </div>
+
             <button class="w-full py-2.5 sm:py-3 rounded-lg text-white font-semibold text-sm sm:text-base transition-colors"
               :class="getButtonClass(tip)"
               @click="handlePurchase(tip)">
