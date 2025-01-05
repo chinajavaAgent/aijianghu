@@ -54,6 +54,7 @@
                   class="border rounded px-2 py-1">
                   <option value="gradient">渐变</option>
                   <option value="solid">纯色</option>
+                  <option value="paper">纸张</option>
                 </select>
               </div>
               
@@ -126,12 +127,25 @@ const props = defineProps<{
 interface ColorScheme {
   startColor: string
   endColor?: string
-  type: 'gradient' | 'solid'
+  type: 'gradient' | 'solid' | 'paper'
   name: string
+  texture?: string
 }
 
 // 预设颜色方案
 const colorSchemes: ColorScheme[] = [
+  {
+    startColor: '#F5F5F5',
+    type: 'paper',
+    name: '米色纸张',
+    texture: '/textures/paper-1.png'
+  },
+  {
+    startColor: '#E8E8E8',
+    type: 'paper',
+    name: '灰色纸张',
+    texture: '/textures/paper-2.png'
+  },
   {
     startColor: '#40E0D0',
     endColor: '#4169E1',
@@ -177,14 +191,16 @@ const colorSchemes: ColorScheme[] = [
 interface Background {
   startColor: string
   endColor: string
-  type: 'gradient' | 'solid'
+  type: 'gradient' | 'solid' | 'paper'
+  texture?: string
 }
 
 // 当前选中的背景方案
 const customBackground = reactive<Background>({
-  startColor: '#40E0D0',
+  startColor: '#F5F5F5',
   endColor: '#4169E1',
-  type: 'gradient'
+  type: 'paper',
+  texture: '/textures/paper-1.png'
 })
 
 const visible = ref(false)
@@ -221,6 +237,17 @@ const isCurrentScheme = (scheme: ColorScheme) => {
   return customBackground.type === 'gradient' && 
          customBackground.startColor === scheme.startColor && 
          customBackground.endColor === scheme.endColor
+}
+
+// 加载纹理图片
+const loadTexture = async (url: string): Promise<HTMLImageElement> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => resolve(img)
+    img.onerror = reject
+    img.src = url
+  })
 }
 
 const showPoster = async () => {
@@ -269,12 +296,31 @@ const generatePoster = async () => {
     // 1. 绘制背景
     const bg = customBackground
     
-    if (bg.type === 'solid') {
-      // 纯色背景
+    if (bg.type === 'paper' && bg.texture) {
+      try {
+        // 加载纹理图片
+        const textureImg = await loadTexture(bg.texture)
+        
+        // 创建纹理图案
+        const pattern = ctx.createPattern(textureImg, 'repeat')
+        if (pattern) {
+          ctx.fillStyle = pattern
+          ctx.fillRect(0, 0, canvas.width, canvas.height)
+        }
+        
+        // 添加一层浅色遮罩使纹理更柔和
+        ctx.fillStyle = `${bg.startColor}99`  // 添加60%透明度
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+      } catch (error) {
+        console.error('Failed to load texture:', error)
+        // 如果纹理加载失败，使用纯色背景
+        ctx.fillStyle = bg.startColor
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+      }
+    } else if (bg.type === 'solid') {
       ctx.fillStyle = bg.startColor
       ctx.fillRect(0, 0, canvas.width, canvas.height)
     } else {
-      // 渐变背景
       const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
       gradient.addColorStop(0, bg.startColor)
       gradient.addColorStop(1, bg.endColor)
@@ -282,25 +328,29 @@ const generatePoster = async () => {
       ctx.fillRect(0, 0, canvas.width, canvas.height)
     }
 
-    // 2. 绘制白色卡片背景
+    // 2. 绘制卡片内容
     const cardMargin = 40
     const cardWidth = canvas.width - (cardMargin * 2)
     const cardHeight = canvas.height - (cardMargin * 2)
-    ctx.fillStyle = '#FFFFFF'
-    ctx.beginPath()
-    ctx.roundRect(cardMargin, cardMargin, cardWidth, cardHeight, 20)
-    ctx.fill()
+
+    // 如果是纸张风格，不需要绘制白色背景
+    if (bg.type !== 'paper') {
+      ctx.fillStyle = '#FFFFFF'
+      ctx.beginPath()
+      ctx.roundRect(cardMargin, cardMargin, cardWidth, cardHeight, 20)
+      ctx.fill()
+    }
 
     let currentY = cardMargin + 60
 
     // 3. 绘制图标（这里用文字代替）
-    ctx.fillStyle = '#666666'
+    ctx.fillStyle = bg.type === 'paper' ? '#333333' : '#666666'
     ctx.font = '32px sans-serif'
     ctx.textAlign = 'left'
     ctx.fillText('🚲', cardMargin + 40, currentY)
 
     // 4. 绘制日期
-    ctx.fillStyle = '#666666'
+    ctx.fillStyle = bg.type === 'paper' ? '#333333' : '#666666'
     ctx.font = '24px sans-serif'
     ctx.fillText(new Date().toLocaleDateString('zh-CN'), cardMargin + 40, currentY + 50)
 
@@ -390,7 +440,7 @@ const generatePoster = async () => {
         margin: 0,
         color: {
           dark: '#000000',
-          light: '#FFFFFF'
+          light: bg.type === 'paper' ? '#FFFFFF99' : '#FFFFFF'
         }
       })
 
