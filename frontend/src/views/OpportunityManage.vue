@@ -193,14 +193,31 @@
 
                 <!-- 项目视频 -->
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">项目视频</label>
-                  <div class="flex items-center space-x-2">
-                    <input v-model="project.videoUrl" type="text"
-                      class="flex-1 px-3 py-2 border rounded-lg"
-                      placeholder="请输入视频URL">
-                    <button class="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200">
-                      上传视频
-                    </button>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">项目视频</label>
+                  <div class="space-y-2">
+                    <div v-if="project.videoUrl" class="relative">
+                      <video 
+                        :src="project.videoUrl" 
+                        class="w-full rounded-lg" 
+                        controls>
+                      </video>
+                      <button @click="project.videoUrl = ''"
+                        class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                    <div v-else class="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                      <input type="file" 
+                        accept="video/*" 
+                        class="hidden" 
+                        :ref="el => { if (el) videoInputRefs[index] = (el as HTMLInputElement) }"
+                        @change="handleVideoUpload($event, project)">
+                      <button @click="triggerVideoUpload(index)"
+                        class="w-full h-32 flex flex-col items-center justify-center text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-video text-2xl mb-2"></i>
+                        <span class="text-sm">点击上传项目视频</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -442,6 +459,32 @@ const handleImageUpload = (event: Event, caseItem: any) => {
     reader.onload = (e) => {
       if (e.target?.result) {
         caseItem.imageUrl = e.target.result as string
+      }
+    }
+    reader.readAsDataURL(file)
+  }
+}
+
+// 视频上传相关
+const videoInputRefs = ref<{ [key: string]: HTMLInputElement }>({})
+
+// 触发视频上传
+const triggerVideoUpload = (projectIndex: number) => {
+  const inputRef = videoInputRefs.value[projectIndex]
+  if (inputRef) {
+    inputRef.click()
+  }
+}
+
+// 处理视频上传
+const handleVideoUpload = (event: Event, project: any) => {
+  const input = event.target as HTMLInputElement
+  if (input.files && input.files[0]) {
+    const file = input.files[0]
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      if (e.target?.result) {
+        project.videoUrl = e.target.result as string
       }
     }
     reader.readAsDataURL(file)
