@@ -3,15 +3,21 @@ package com.aigroup.world.service;
 import com.aigroup.world.entity.Project;
 import com.aigroup.world.entity.ProjectCase;
 import com.aigroup.world.entity.ProjectBenefit;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface ProjectService {
     /**
-     * 获取锦囊下的项目列表
+     * 分页获取项目列表
      */
-    List<Project> getProjectsByTipId(Long tipId);
+    Page<Project> getProjects(Integer page, Integer size);
+
+    /**
+     * 获取项目详情
+     */
+    Project getProjectById(Long id);
 
     /**
      * 创建项目

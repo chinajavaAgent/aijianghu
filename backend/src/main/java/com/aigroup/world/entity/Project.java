@@ -11,19 +11,30 @@ public class Project {
     @TableId(type = IdType.AUTO)
     private Long id;
     
-    private Long tipId;
-    
-    private String title;
+    private String name;
     
     private String description;
     
+    @TableField("cover_image")
+    private String coverImage;
+    
+    @TableField("video_url")
     private String videoUrl;
     
-    @TableField(exist = false)
-    private List<ProjectCase> cases;
+    private Integer status;
     
-    @TableField(exist = false)
-    private List<ProjectBenefit> benefits;
+    @TableField("start_time")
+    private LocalDateTime startTime;
+    
+    @TableField("end_time")
+    private LocalDateTime endTime;
+    
+    @TableField("author_id")
+    private Long authorId;
+    
+    private Integer views;
+    
+    private Integer likes;
     
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
@@ -33,4 +44,10 @@ public class Project {
     
     @TableLogic
     private Integer deleted;
+    
+    @TableField(exist = false)
+    private List<ProjectCase> cases;
+    
+    @TableField(exist = false)
+    private List<ProjectBenefit> benefits;
 } 

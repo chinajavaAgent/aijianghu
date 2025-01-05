@@ -5,6 +5,7 @@ import com.aigroup.world.entity.Project;
 import com.aigroup.world.entity.ProjectCase;
 import com.aigroup.world.entity.ProjectBenefit;
 import com.aigroup.world.service.ProjectService;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,12 +20,23 @@ public class ProjectController {
     private ProjectService projectService;
 
     /**
-     * 获取锦囊下的项目列表
+     * 获取项目列表
      */
-    @GetMapping("/{tipId}")
-    public Result<List<Project>> getProjects(@PathVariable Long tipId) {
-        List<Project> projects = projectService.getProjectsByTipId(tipId);
+    @GetMapping
+    public Result<Page<Project>> getProjects(
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer size) {
+        Page<Project> projects = projectService.getProjects(page, size);
         return Result.success(projects);
+    }
+
+    /**
+     * 获取项目详情
+     */
+    @GetMapping("/{id}")
+    public Result<Project> getProject(@PathVariable Long id) {
+        Project project = projectService.getProjectById(id);
+        return Result.success(project);
     }
 
     /**

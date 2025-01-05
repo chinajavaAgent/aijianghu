@@ -90,6 +90,7 @@ CREATE TABLE IF NOT EXISTS `project` (
     `name` varchar(100) NOT NULL COMMENT '项目名称',
     `description` text COMMENT '项目描述',
     `cover_image` varchar(255) COMMENT '封面图片URL',
+    `video_url` varchar(255) DEFAULT NULL COMMENT '视频URL',
     `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态：0-开发中 1-已完成',
     `start_time` datetime COMMENT '开始时间',
     `end_time` datetime COMMENT '结束时间',

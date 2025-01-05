@@ -9,6 +9,7 @@ import com.aigroup.world.mapper.ProjectBenefitMapper;
 import com.aigroup.world.service.ProjectService;
 import com.aigroup.world.service.FileService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,29 +33,48 @@ public class ProjectServiceImpl implements ProjectService {
     private FileService fileService;
 
     @Override
-    public List<Project> getProjectsByTipId(Long tipId) {
-        // 获取项目列表
-        List<Project> projects = projectMapper.selectList(
+    public Page<Project> getProjects(Integer page, Integer size) {
+        // 创建分页对象
+        Page<Project> pageParam = new Page<>(page, size);
+        
+        // 查询项目列表
+        Page<Project> projectPage = projectMapper.selectPage(pageParam,
             new LambdaQueryWrapper<Project>()
-                .eq(Project::getTipId, tipId)
+                .orderByDesc(Project::getCreateTime)
         );
 
         // 加载每个项目的案例和福利
-        for (Project project : projects) {
-            List<ProjectCase> cases = projectCaseMapper.selectList(
-                new LambdaQueryWrapper<ProjectCase>()
-                    .eq(ProjectCase::getProjectId, project.getId())
-            );
-            project.setCases(cases);
-
-            List<ProjectBenefit> benefits = projectBenefitMapper.selectList(
-                new LambdaQueryWrapper<ProjectBenefit>()
-                    .eq(ProjectBenefit::getProjectId, project.getId())
-            );
-            project.setBenefits(benefits);
+        for (Project project : projectPage.getRecords()) {
+            loadProjectDetails(project);
         }
 
-        return projects;
+        return projectPage;
+    }
+
+    @Override
+    public Project getProjectById(Long id) {
+        // 获取项目
+        Project project = projectMapper.selectById(id);
+        if (project != null) {
+            loadProjectDetails(project);
+        }
+        return project;
+    }
+
+    private void loadProjectDetails(Project project) {
+        // 加载项目案例
+        List<ProjectCase> cases = projectCaseMapper.selectList(
+            new LambdaQueryWrapper<ProjectCase>()
+                .eq(ProjectCase::getProjectId, project.getId())
+        );
+        project.setCases(cases);
+
+        // 加载项目福利
+        List<ProjectBenefit> benefits = projectBenefitMapper.selectList(
+            new LambdaQueryWrapper<ProjectBenefit>()
+                .eq(ProjectBenefit::getProjectId, project.getId())
+        );
+        project.setBenefits(benefits);
     }
 
     @Override
