@@ -201,16 +201,16 @@
                             <i class="fas fa-times"></i>
                           </button>
                         </div>
-                        <div v-else class="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                        <div v-else class="border-2 border-dashed border-gray-300 rounded-lg p-2">
                           <input type="file" 
                             accept="image/*" 
                             class="hidden" 
                             :ref="el => { if (el) imageInputRefs[`${index}-${caseIndex}`] = (el as HTMLInputElement) }"
                             @change="handleImageUpload($event, project, caseItem)">
                           <button @click="triggerImageUpload(index, caseIndex)"
-                            class="w-full h-32 flex flex-col items-center justify-center text-gray-500 hover:text-gray-700">
-                            <i class="fas fa-camera text-2xl mb-2"></i>
-                            <span class="text-sm">点击上传案例图片</span>
+                            class="w-full h-24 flex flex-col items-center justify-center text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-camera text-xl mb-1"></i>
+                            <span class="text-xs">点击上传案例图片</span>
                           </button>
                         </div>
                       </div>
@@ -281,7 +281,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import { Dialog, showToast } from 'vant'
+import { showConfirmDialog, showToast } from 'vant'
 import { createAiTips, updateAiTips, deleteAiTips, getAiTipsList } from '@/api/tips'
 import type { AiTips } from '@/types/tips'
 import {
@@ -391,7 +391,7 @@ const removeProject = async (index: number) => {
   if (!project.id) return
 
   try {
-    await Dialog.confirm({
+    await showConfirmDialog({
       title: '确认删除',
       message: '确定要删除这个项目吗？'
     })
@@ -435,7 +435,7 @@ const handleProjectSubmit = async () => {
 // 删除锦囊
 const deleteTip = async (id: number) => {
   try {
-    await Dialog.confirm({
+    await showConfirmDialog({
       title: '确认删除',
       message: '确定要删除这个锦囊吗？'
     })
@@ -520,7 +520,7 @@ const removeCase = async (project: Project, index: number) => {
   if (!project.id || !caseItem.id) return
 
   try {
-    await Dialog.confirm({
+    await showConfirmDialog({
       title: '确认删除',
       message: '确定要删除这个案例吗？'
     })
@@ -558,7 +558,7 @@ const removeBenefit = async (project: Project, index: number) => {
   if (!project.id || !benefit.id) return
 
   try {
-    await Dialog.confirm({
+    await showConfirmDialog({
       title: '确认删除',
       message: '确定要删除这个福利吗？'
     })
@@ -637,6 +637,45 @@ const handleVideoUpload = async (event: Event, project: Project) => {
   :deep(.van-dialog) {
     width: 90%;
     max-width: 800px;
+    height: 60vh;  /* 还原为固定高度 */
+    display: flex;
+    flex-direction: column;
+    
+    .van-dialog__header {
+      flex-shrink: 0;
+      padding: 16px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .van-dialog__content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0;
+      
+      /* 滚动条样式 */
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+      
+      &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+      }
+      
+      &::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+      }
+      
+      &::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+    }
+    
+    .van-dialog__footer {
+      flex-shrink: 0;
+      border-top: 1px solid #eee;
+    }
   }
 }
 </style> 

@@ -2,16 +2,17 @@
 export interface Project {
   id?: number;
   tipId?: number;
-  name: string;
+  title?: string;
+  name?: string;
   description: string;
   coverImage?: string;
   videoUrl?: string;
-  status: number;
+  status?: number;
   startTime?: string;
   endTime?: string;
   authorId?: number;
-  views: number;
-  likes: number;
+  views?: number;
+  likes?: number;
   createTime?: string;
   updateTime?: string;
   cases: ProjectCase[];
@@ -43,6 +44,7 @@ export interface ProjectBenefit {
 // 用于更新项目时的部分字段
 export interface ProjectUpdateDto {
   name?: string;
+  title?: string;
   description?: string;
   videoUrl?: string;
   status?: number;
