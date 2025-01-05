@@ -182,10 +182,16 @@
                       class="bg-white p-4 rounded-lg border border-gray-200">
                       <div class="flex justify-between items-start mb-2">
                         <span class="text-sm font-medium text-gray-700">案例 {{ caseIndex + 1 }}</span>
-                        <button @click="removeCase(project, caseIndex)"
-                          class="text-sm text-red-600 hover:text-red-800">
-                          删除案例
-                        </button>
+                        <div class="flex items-center space-x-2">
+                          <button @click="saveCase(project, caseItem, caseIndex)"
+                            class="text-sm text-blue-600 hover:text-blue-800">
+                            保存
+                          </button>
+                          <button @click="removeCase(project, caseIndex)"
+                            class="text-sm text-red-600 hover:text-red-800">
+                            删除
+                          </button>
+                        </div>
                       </div>
                       <textarea v-model="caseItem.description"
                         class="w-full px-3 py-2 border rounded-lg mb-2"
@@ -498,19 +504,38 @@ onMounted(() => {
 
 // 添加案例
 const addCase = async (project: Project) => {
+  // 只在本地添加一个临时案例对象，不调用接口
+  const newCase: ProjectCase = {
+    description: '',
+    imageUrl: ''
+  }
+  project.cases.push(newCase)
+}
+
+// 保存案例
+const saveCase = async (project: Project, caseItem: ProjectCase, index: number) => {
   if (!project.id) return
   
   try {
-    const newCase = {
-      description: '',
-      imageUrl: ''
+    if (!caseItem.description) {
+      showToast('请输入案例描述')
+      return
     }
-    const response = await addProjectCase(project.id, newCase)
-    project.cases.push(response.data)
-    showToast('添加成功')
+    
+    // 如果是新案例，则调用添加接口
+    if (!caseItem.id) {
+      const response = await addProjectCase(project.id, caseItem)
+      // 用返回的数据更新本地案例对象
+      Object.assign(project.cases[index], response.data)
+      showToast('添加成功')
+    } else {
+      // 如果是已有案例，则调用更新接口
+      await updateCase(project.id, caseItem.id, caseItem)
+      showToast('更新成功')
+    }
   } catch (error) {
-    console.error('添加案例失败:', error)
-    showToast('添加失败，请重试')
+    console.error('保存案例失败:', error)
+    showToast('保存失败，请重试')
   }
 }
 
