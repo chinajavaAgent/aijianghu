@@ -256,7 +256,7 @@
                   <div class="space-y-2">
                     <div v-for="(benefit, benefitIndex) in project.benefits" :key="benefitIndex"
                       class="flex items-center space-x-2">
-                      <input v-model="project.benefits[benefitIndex]" type="text"
+                      <input v-model="benefit.content" type="text"
                         class="flex-1 px-3 py-2 border rounded-lg"
                         placeholder="请输入福利内容">
                       <button @click="removeBenefit(project, benefitIndex)"
@@ -355,8 +355,8 @@ const openProjectDialog = async (tip: AiTips) => {
   currentTip.value = tip
   try {
     // 加载项目列表
-    const response = await getProjects(tip.id)
-    projectForm.projects = response.data.map((project: Project) => ({
+    const response = await getProjects(1, 10)  // 使用分页参数
+    projectForm.projects = response.data.records.map((project: Project) => ({  // 从分页对象中获取records
       ...project,
       isExpanded: true,
       currentStep: 0
@@ -369,31 +369,20 @@ const openProjectDialog = async (tip: AiTips) => {
 }
 
 // 添加项目
-const addProject = async () => {
-  if (!currentTip.value) return
-  
-  try {
-    const newProject: Omit<Project, 'id'> = {
-      tipId: currentTip.value.id,
-      title: '',
-      description: '',
-      videoUrl: '',
-      cases: [],
-      benefits: [],
-      isExpanded: true,
-      currentStep: 0
-    }
-    const response = await createProject(newProject)
-    projectForm.projects.push({
-      ...response.data,
-      isExpanded: true,
-      currentStep: 0
-    })
-    showToast('添加成功')
-  } catch (error) {
-    console.error('添加项目失败:', error)
-    showToast('添加失败，请重试')
+const addProject = () => {
+  const newProject: Project = {
+    title: '',
+    description: '',
+    videoUrl: '',
+    status: 0,
+    views: 0,
+    likes: 0,
+    cases: [],
+    benefits: [],
+    isExpanded: true,
+    currentStep: 0
   }
+  projectForm.projects.push(newProject)
 }
 
 // 删除项目
@@ -419,8 +408,6 @@ const removeProject = async (index: number) => {
 
 // 提交项目表单
 const handleProjectSubmit = async () => {
-  if (!currentTip.value) return
-  
   try {
     // 更新所有项目
     await Promise.all(projectForm.projects.map(async (project) => {
@@ -428,13 +415,16 @@ const handleProjectSubmit = async () => {
         await updateProject(project.id, {
           title: project.title,
           description: project.description,
-          videoUrl: project.videoUrl
+          videoUrl: project.videoUrl,
+          status: project.status
         })
+      } else {
+        // 如果是新项目，则创建
+        await createProject(project)
       }
     }))
     showToast('保存成功')
     projectDialogVisible.value = false
-    loadTipsList()
   } catch (error) {
     console.error('保存项目失败:', error)
     showToast('保存失败，请重试')

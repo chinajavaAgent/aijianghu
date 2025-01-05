@@ -1,21 +1,38 @@
 export interface Project {
-  id: number;
+  id?: number;
+  tipId?: number;
   title: string;
-  price: number;
-  introduction: string;
-  coverImage: string;
-  keyPoints: string[];
-  examples: {
-    title: string;
-    image: string;
-    description: string;
-    income: string;
-  }[];
-  videos: {
-    title: string;
-    cover: string;
-    duration: string;
-    videoUrl: string;
-  }[];
-  benefits: string[];
+  description: string;
+  coverImage?: string;
+  videoUrl?: string;
+  status: number;
+  startTime?: string;
+  endTime?: string;
+  authorId?: number;
+  views: number;
+  likes: number;
+  createTime?: string;
+  updateTime?: string;
+  cases: ProjectCase[];
+  benefits: ProjectBenefit[];
+  // 前端专用字段
+  isExpanded?: boolean;
+  currentStep?: number;
+}
+
+export interface ProjectCase {
+  id?: number;
+  projectId?: number;
+  description: string;
+  imageUrl: string;
+  createTime?: string;
+  updateTime?: string;
+}
+
+export interface ProjectBenefit {
+  id?: number;
+  projectId?: number;
+  content: string;
+  createTime?: string;
+  updateTime?: string;
 } 
