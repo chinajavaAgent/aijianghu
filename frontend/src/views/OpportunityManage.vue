@@ -337,6 +337,7 @@ const projectSteps = ['基本信息', '成功案例', '项目视频', '项目福
 // 显示添加对话框
 const showAddDialog = () => {
   isEditing.value = false
+  // 清空表单数据
   Object.assign(form, {
     id: null,
     title: '',
@@ -344,12 +345,16 @@ const showAddDialog = () => {
     price: 0,
     requiredLevel: 1
   })
+  // 清空项目相关数据
+  projectForm.projects = []
+  currentTip.value = null
   showDialog.value = true
 }
 
 // 编辑锦囊
 const editTip = (tip: AiTips) => {
   isEditing.value = true
+  // 设置表单数据
   Object.assign(form, {
     id: tip.id,
     title: tip.title,
@@ -480,10 +485,25 @@ const handleSubmit = async () => {
       await createAiTips(tipData)
       showToast('创建成功')
     }
+    
+    // 清空所有相关数据
+    Object.assign(form, {
+      id: null,
+      title: '',
+      description: '',
+      price: 0,
+      requiredLevel: 1
+    })
+    projectForm.projects = []
+    currentTip.value = null
+    isEditing.value = false
     showDialog.value = false
+    
+    // 重新加载列表
     loadTipsList()
   } catch (error) {
     console.error('操作失败:', error)
+    showToast('操作失败，请重试')
   }
 }
 
