@@ -194,20 +194,10 @@
                   <div class="space-y-4">
                     <div v-for="(caseItem, caseIndex) in project.cases" :key="caseIndex"
                       class="bg-white p-4 rounded-lg border border-gray-200">
-                      <div class="flex justify-between items-start mb-2">
+                      <div class="mb-4">
                         <span class="text-sm font-medium text-gray-700">案例 {{ caseIndex + 1 }}</span>
-                        <div class="flex items-center space-x-2">
-                          <button @click="submitCase(project, caseItem)"
-                            class="text-sm text-blue-600 hover:text-blue-800">
-                            提交
-                          </button>
-                          <button @click="removeCase(project, caseIndex)"
-                            class="text-sm text-red-600 hover:text-red-800">
-                            删除案例
-                          </button>
-                        </div>
                       </div>
-                      <div class="space-y-2">
+                      <div class="space-y-4">
                         <div>
                           <label class="block text-sm font-medium text-gray-700 mb-1">
                             案例描述
@@ -238,6 +228,16 @@
                             class="w-full h-32 flex flex-col items-center justify-center text-gray-500 hover:text-gray-700">
                             <i class="fas fa-camera text-2xl mb-2"></i>
                             <span class="text-sm">点击上传案例图片（选填）</span>
+                          </button>
+                        </div>
+                        <div class="flex justify-end space-x-2 mt-4">
+                          <button @click="submitCase(project, caseItem)"
+                            class="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                            提交案例
+                          </button>
+                          <button @click="removeCase(project, caseIndex)"
+                            class="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700">
+                            删除案例
                           </button>
                         </div>
                       </div>
@@ -285,9 +285,14 @@
                       class="flex items-center space-x-2">
                       <input v-model="benefit.content" type="text"
                         class="flex-1 px-3 py-2 border rounded-lg"
+                        :class="{'border-red-500': !benefit.content?.trim()}"
                         placeholder="请输入福利内容">
+                      <button @click="submitBenefit(project, benefit)"
+                        class="px-3 py-1 text-sm text-blue-600 hover:text-blue-800">
+                        提交
+                      </button>
                       <button @click="removeBenefit(project, benefitIndex)"
-                        class="text-sm text-red-600 hover:text-red-800">
+                        class="px-3 py-1 text-sm text-red-600 hover:text-red-800">
                         删除
                       </button>
                     </div>
@@ -597,19 +602,42 @@ const removeCase = async (project: Project, index: number) => {
 }
 
 // 添加福利
-const addBenefit = async (project: Project) => {
-  if (!project.id) return
-  
+const addBenefit = (project: Project) => {
+  if (!project.benefits) {
+    project.benefits = []
+  }
+  const newBenefit: ProjectBenefit = {
+    content: ''
+  }
+  project.benefits.push(newBenefit)
+}
+
+// 提交福利
+const submitBenefit = async (project: Project, benefit: ProjectBenefit) => {
   try {
-    const newBenefit = {
-      content: ''
+    if (!benefit.content?.trim()) {
+      showToast('请输入福利内容')
+      return
     }
-    const response = await addProjectBenefit(project.id, newBenefit)
-    project.benefits.push(response.data)
-    showToast('添加成功')
+
+    if (project.id) {
+      if (benefit.id) {
+        // 更新已有福利
+        await updateBenefit(project.id, benefit.id, {
+          content: benefit.content
+        })
+      } else {
+        // 添加新福利
+        const response = await addProjectBenefit(project.id, {
+          content: benefit.content
+        })
+        Object.assign(benefit, response.data)
+      }
+      showToast('保存成功')
+    }
   } catch (error) {
-    console.error('添加福利失败:', error)
-    showToast('添加失败，请重试')
+    console.error('保存福利失败:', error)
+    showToast('保存失败，请重试')
   }
 }
 
