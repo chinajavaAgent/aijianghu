@@ -26,9 +26,9 @@
     </div>
     
     <!-- 物料卡片列表 -->
-    <div class="grid grid-cols-2 gap-4 mb-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
       <div class="material-card" @click="navigateTo('/poster-generator', selectedProject)">
-        <div class="icon-wrapper">
+        <div class="icon-wrapper bg-blue-100 text-blue-600">
           <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
           </svg>
@@ -38,13 +38,33 @@
       </div>
       
       <div class="material-card" @click="navigateTo('/qr-generator', selectedProject)">
-        <div class="icon-wrapper">
+        <div class="icon-wrapper bg-purple-100 text-purple-600">
           <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path>
           </svg>
         </div>
         <h3 class="text-lg font-semibold">二维码生成</h3>
         <p class="text-sm text-gray-600">生成带有自定义样式的二维码</p>
+      </div>
+
+      <div class="material-card" @click="navigateTo('/copywriting', selectedProject)">
+        <div class="icon-wrapper bg-green-100 text-green-600">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold">运营话术</h3>
+        <p class="text-sm text-gray-600">常用运营话术和文案模板</p>
+      </div>
+
+      <div class="material-card" @click="navigateTo('/tutorials', selectedProject)">
+        <div class="icon-wrapper bg-yellow-100 text-yellow-600">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold">运营教程</h3>
+        <p class="text-sm text-gray-600">项目运营指南和技巧</p>
       </div>
     </div>
     
@@ -109,6 +129,22 @@ const recentMaterials = ref([
     type: 'poster',
     id: 3,
     projectId: 2
+  },
+  {
+    title: '新人引导话术',
+    date: '2024-01-17',
+    thumbnail: '/placeholder.png',
+    type: 'copywriting',
+    id: 4,
+    projectId: 1
+  },
+  {
+    title: '项目运营指南',
+    date: '2024-01-16',
+    thumbnail: '/placeholder.png',
+    type: 'tutorial',
+    id: 5,
+    projectId: 2
   }
 ])
 
@@ -134,7 +170,13 @@ const navigateTo = (path: string, projectId: number | null) => {
 }
 
 const continueEdit = (item: any) => {
-  const path = item.type === 'poster' ? '/poster-generator' : '/qr-generator'
+  const pathMap = {
+    poster: '/poster-generator',
+    qrcode: '/qr-generator',
+    copywriting: '/copywriting',
+    tutorial: '/tutorials'
+  }
+  const path = pathMap[item.type as keyof typeof pathMap]
   router.push({ 
     path, 
     query: { 
@@ -155,7 +197,7 @@ const continueEdit = (item: any) => {
 }
 
 .icon-wrapper {
-  @apply w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mb-4;
+  @apply w-12 h-12 rounded-full flex items-center justify-center mb-4;
 }
 
 .recent-item {
