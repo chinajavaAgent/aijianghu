@@ -308,7 +308,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import { Dialog, showToast } from 'vant'
+import { Dialog, showToast, showConfirmDialog } from 'vant'
 import { createAiTips, updateAiTips, deleteAiTips, getAiTipsList } from '@/api/tips'
 import type { AiTips } from '@/types/tips'
 import {
@@ -325,7 +325,13 @@ import {
   updateBenefit,
   deleteBenefit
 } from '@/api/project'
-import { Project, ProjectCase, ProjectBenefit, ProjectUpdateDto } from '@/types/project'
+import type {
+  Project,
+  ProjectCase,
+  ProjectBenefit,
+  ProjectUpdateDto,
+  ProjectCreateDto
+} from '@/types/project'
 
 // 锦囊列表数据
 const tipsList = ref<AiTips[]>([])
@@ -384,8 +390,8 @@ const openProjectDialog = async (tip: AiTips) => {
     // 加载项目列表
     const response = await getProjects(1, 10)  // 使用分页参数
     projectForm.projects = response.data.records.map((project: any) => ({
-      ...project,
-      name: project.name,  // 确保使用后端返回的name字段
+      id: project.id,
+      name: project.name,
       description: project.description,
       videoUrl: project.videoUrl,
       status: project.status || 0,
@@ -395,7 +401,7 @@ const openProjectDialog = async (tip: AiTips) => {
       benefits: project.benefits || [],
       isExpanded: true,
       currentStep: 0
-    }))
+    } as Project))
     projectDialogVisible.value = true
   } catch (error) {
     console.error('加载项目列表失败:', error)
@@ -565,19 +571,26 @@ const addCase = (project: Project) => {
 // 删除案例
 const removeCase = async (project: Project, index: number) => {
   const caseItem = project.cases[index]
-  if (!project.id || !caseItem.id) return
 
   try {
-    await Dialog.confirm({
+    await showConfirmDialog({
       title: '确认删除',
-      message: '确定要删除这个案例吗？'
+      message: '确定要删除这个案例吗？',
+      confirmButtonText: '确定',
+      cancelButtonText: '取消'
     })
-    await deleteCase(project.id, caseItem.id)
+
+    // 如果案例已经保存到后端，则调用删除接口
+    if (project.id && caseItem.id) {
+      await deleteCase(project.id, caseItem.id)
+    }
+    
+    // 无论案例是否已保存，都从前端列表中移除
     project.cases.splice(index, 1)
     showToast('删除成功')
   } catch (error) {
-    console.error('删除案例失败:', error)
     if (error !== 'cancel') {
+      console.error('删除案例失败:', error)
       showToast('删除失败，请重试')
     }
   }
@@ -718,11 +731,13 @@ const submitProject = async (project: Project) => {
 
     if (project.id) {
       // 更新已有项目
-      await updateProject(project.id, {
+      const updateData: ProjectUpdateDto = {
         name: project.name,
         description: project.description,
-        videoUrl: project.videoUrl
-      })
+        videoUrl: project.videoUrl,
+        status: project.status
+      }
+      await updateProject(project.id, updateData)
     } else {
       // 创建新项目
       const response = await createProject(project)

@@ -1,8 +1,7 @@
-// 项目类型定义
 export interface Project {
   id?: number;
   tipId?: number;
-  name: string;
+  name: string;  // 项目名称
   description: string;
   coverImage?: string;
   videoUrl?: string;
@@ -21,7 +20,6 @@ export interface Project {
   currentStep?: number;
 }
 
-// 项目案例类型定义
 export interface ProjectCase {
   id?: number;
   projectId?: number;
@@ -31,7 +29,6 @@ export interface ProjectCase {
   updateTime?: string;
 }
 
-// 项目福利类型定义
 export interface ProjectBenefit {
   id?: number;
   projectId?: number;
@@ -40,18 +37,16 @@ export interface ProjectBenefit {
   updateTime?: string;
 }
 
-// 用于更新项目时的部分字段
 export interface ProjectUpdateDto {
-  name?: string;
+  name?: string;  // 项目名称
   description?: string;
   videoUrl?: string;
   status?: number;
   coverImage?: string;
 }
 
-// 用于创建项目时的字段
 export interface ProjectCreateDto {
-  name: string;
+  name: string;  // 项目名称
   description: string;
   videoUrl?: string;
   status: number;
@@ -59,7 +54,4 @@ export interface ProjectCreateDto {
   likes: number;
   cases: ProjectCase[];
   benefits: ProjectBenefit[];
-}
-
-// 导出所有类型
-export { Project, ProjectCase, ProjectBenefit, ProjectUpdateDto, ProjectCreateDto } 
+} 
