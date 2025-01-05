@@ -22,6 +22,61 @@
           </button>
         </div>
 
+        <!-- 背景颜色选择器 -->
+        <div class="mb-6">
+          <h4 class="text-lg font-medium mb-3">选择背景样式</h4>
+          <div class="flex flex-wrap gap-4">
+            <!-- 预设颜色方案 -->
+            <div v-for="(scheme, index) in colorSchemes" 
+              :key="index"
+              @click="selectColorScheme(scheme)"
+              class="relative w-20 h-20 rounded-lg cursor-pointer overflow-hidden hover:ring-2 hover:ring-blue-500 transition-all"
+              :class="{'ring-2 ring-blue-500': isCurrentScheme(scheme)}">
+              <div v-if="scheme.type === 'gradient'"
+                class="w-full h-full"
+                :style="{
+                  background: `linear-gradient(to bottom, ${scheme.startColor}, ${scheme.endColor})`
+                }">
+              </div>
+              <div v-else
+                class="w-full h-full"
+                :style="{
+                  backgroundColor: scheme.startColor
+                }">
+              </div>
+            </div>
+            
+            <!-- 自定义颜色选择器 -->
+            <div class="space-y-2">
+              <div class="flex items-center space-x-2">
+                <label class="text-sm text-gray-600">背景类型：</label>
+                <select v-model="customBackground.type" 
+                  class="border rounded px-2 py-1">
+                  <option value="gradient">渐变</option>
+                  <option value="solid">纯色</option>
+                </select>
+              </div>
+              
+              <div class="flex items-center space-x-2">
+                <label class="text-sm text-gray-600">
+                  {{ customBackground.type === 'gradient' ? '开始颜色' : '背景颜色' }}：
+                </label>
+                <input type="color" 
+                  v-model="customBackground.startColor"
+                  class="w-8 h-8 p-0 border rounded">
+              </div>
+              
+              <div v-if="customBackground.type === 'gradient'" 
+                class="flex items-center space-x-2">
+                <label class="text-sm text-gray-600">结束颜色：</label>
+                <input type="color" 
+                  v-model="customBackground.endColor"
+                  class="w-8 h-8 p-0 border rounded">
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- 海报预览区域 -->
         <div class="relative bg-gray-50 rounded-lg overflow-hidden mb-6">
           <div class="poster-container">
@@ -56,7 +111,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, reactive, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import QRCode from 'qrcode'
 
@@ -68,30 +123,113 @@ const props = defineProps<{
   shareUrl: string
 }>()
 
+interface ColorScheme {
+  startColor: string
+  endColor?: string
+  type: 'gradient' | 'solid'
+  name: string
+}
+
+// 预设颜色方案
+const colorSchemes: ColorScheme[] = [
+  {
+    startColor: '#40E0D0',
+    endColor: '#4169E1',
+    type: 'gradient',
+    name: '默认蓝绿'
+  },
+  {
+    startColor: '#FF6B6B',
+    endColor: '#4ECDC4',
+    type: 'gradient',
+    name: '珊瑚红'
+  },
+  {
+    startColor: '#A8E6CF',
+    endColor: '#FFD3B6',
+    type: 'gradient',
+    name: '清新绿'
+  },
+  {
+    startColor: '#3494E6',
+    endColor: '#EC6EAD',
+    type: 'gradient',
+    name: '梦幻紫'
+  },
+  {
+    startColor: '#11998E',
+    endColor: '#38EF7D',
+    type: 'gradient',
+    name: '森林绿'
+  },
+  {
+    startColor: '#FC466B',
+    type: 'solid',
+    name: '活力红'
+  },
+  {
+    startColor: '#3B4371',
+    type: 'solid',
+    name: '深邃蓝'
+  }
+]
+
+interface Background {
+  startColor: string
+  endColor: string
+  type: 'gradient' | 'solid'
+}
+
+// 当前选中的背景方案
+const customBackground = reactive<Background>({
+  startColor: '#40E0D0',
+  endColor: '#4169E1',
+  type: 'gradient'
+})
+
 const visible = ref(false)
 const generating = ref(false)
 const posterCanvas = ref<HTMLCanvasElement | null>(null)
 
+// 监听颜色变化
+watch(
+  () => [customBackground.startColor, customBackground.endColor, customBackground.type],
+  () => {
+    if (visible.value) {
+      generatePoster()
+    }
+  },
+  { deep: true }
+)
+
+// 选择颜色方案
+const selectColorScheme = (scheme: ColorScheme) => {
+  customBackground.type = scheme.type
+  customBackground.startColor = scheme.startColor
+  if (scheme.type === 'gradient' && scheme.endColor) {
+    customBackground.endColor = scheme.endColor
+  }
+  generatePoster()
+}
+
+// 检查是否是当前选中的方案
+const isCurrentScheme = (scheme: ColorScheme) => {
+  if (scheme.type === 'solid') {
+    return customBackground.type === 'solid' && 
+           customBackground.startColor === scheme.startColor
+  }
+  return customBackground.type === 'gradient' && 
+         customBackground.startColor === scheme.startColor && 
+         customBackground.endColor === scheme.endColor
+}
+
 const showPoster = async () => {
   visible.value = true
-  
-  // 等待下一个 tick，确保 Canvas 元素已经挂载
   await nextTick()
-  
   generating.value = true
   
-  // 打印传入的属性
-  console.log('Generating poster with props:', {
-    title: props.title,
-    price: props.price,
-    introduction: props.introduction,
-    coverImage: props.coverImage,
-    shareUrl: props.shareUrl
-  })
-
   try {
     await generatePoster()
-    console.log('Poster generation completed successfully')
   } catch (error) {
     console.error('Failed to generate poster:', error)
     ElMessage.error('生成海报失败，请重试')
@@ -129,11 +267,20 @@ const generatePoster = async () => {
     canvas.height = 800
     
     // 1. 绘制背景
-    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
-    gradient.addColorStop(0, '#40E0D0')  // 绿松石色
-    gradient.addColorStop(1, '#4169E1')  // 皇家蓝
-    ctx.fillStyle = gradient
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    const bg = customBackground
+    
+    if (bg.type === 'solid') {
+      // 纯色背景
+      ctx.fillStyle = bg.startColor
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+    } else {
+      // 渐变背景
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+      gradient.addColorStop(0, bg.startColor)
+      gradient.addColorStop(1, bg.endColor)
+      ctx.fillStyle = gradient
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+    }
 
     // 2. 绘制白色卡片背景
     const cardMargin = 40
