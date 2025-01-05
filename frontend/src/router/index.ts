@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import OperationMaterials from '../views/OperationMaterials.vue'
+import Tutorials from '../views/Tutorials.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -57,7 +59,7 @@ const router = createRouter({
     {
       path: '/operation-materials',
       name: 'OperationMaterials',
-      component: () => import('../views/OperationMaterials.vue'),
+      component: OperationMaterials,
       meta: {
         title: '运营物料',
         requiresAuth: true
@@ -89,6 +91,11 @@ const router = createRouter({
         title: '文案模板',
         requiresAuth: true
       }
+    },
+    {
+      path: '/tutorials',
+      name: 'tutorials',
+      component: Tutorials
     }
   ]
 })
