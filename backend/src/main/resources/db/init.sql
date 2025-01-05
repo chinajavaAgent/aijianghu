@@ -58,14 +58,20 @@ CREATE TABLE IF NOT EXISTS `user_resource` (
     KEY `idx_user_resource` (`user_id`, `resource_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户资源关联表';
 
+-- 删除已存在的AI锦囊表
+DROP TABLE IF EXISTS `ai_tips`;
+
 -- 创建AI锦囊表
 CREATE TABLE IF NOT EXISTS `ai_tips` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
     `title` varchar(100) NOT NULL COMMENT '标题',
+    `description` varchar(255) DEFAULT NULL COMMENT '描述',
     `content` text NOT NULL COMMENT '内容',
+    `price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '价格',
     `category` varchar(50) DEFAULT NULL COMMENT '分类',
     `tags` varchar(255) DEFAULT NULL COMMENT '标签，多个标签用逗号分隔',
     `author_id` bigint(20) NOT NULL COMMENT '作者ID',
+    `required_level` int(11) DEFAULT 1 COMMENT '所需等级',
     `views` int(11) DEFAULT 0 COMMENT '浏览次数',
     `likes` int(11) DEFAULT 0 COMMENT '点赞次数',
     `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态：0-草稿，1-已发布',
