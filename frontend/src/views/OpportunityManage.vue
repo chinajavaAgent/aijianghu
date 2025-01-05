@@ -542,7 +542,15 @@ const saveCase = async (project: Project, caseItem: ProjectCase, index: number) 
 // 删除案例
 const removeCase = async (project: Project, index: number) => {
   const caseItem = project.cases[index]
-  if (!project.id || !caseItem.id) return
+  
+  // 如果案例没有id，说明还未保存到数据库，直接在前端删除
+  if (!caseItem.id) {
+    project.cases.splice(index, 1)
+    return
+  }
+
+  // 如果案例已经保存到数据库，需要调用接口删除
+  if (!project.id) return
 
   try {
     await showConfirmDialog({
