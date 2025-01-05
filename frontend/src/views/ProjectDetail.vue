@@ -218,7 +218,7 @@ const currentProject = ref<Project>({
   title: 'AI副业项目详情',
   price: 299,
   introduction: '这是一个基于人工智能技术的副业项目，通过AI技术帮助你轻松创收。项目包含详细的视频教程和实战案例，让你快速掌握技能。',
-  coverImage: 'https://example.com/project-cover.jpg',
+  coverImage: 'https://img.freepik.com/free-vector/artificial-intelligence-concept-landing-page_23-2148247345.jpg',
   keyPoints: [
     '无需编程基础，人人可学',
     '一次学习，终身受用',
@@ -228,13 +228,13 @@ const currentProject = ref<Project>({
   examples: [
     {
       title: '案例一：AI写作助手',
-      image: 'https://example.com/case1.jpg',
+      image: 'https://img.freepik.com/free-vector/ai-powered-content-writing-concept_23-2149387017.jpg',
       description: '通过AI技术，帮助客户快速生成高质量文章',
       income: '￥5000/月'
     },
     {
       title: '案例二：AI绘画设计',
-      image: 'https://example.com/case2.jpg',
+      image: 'https://img.freepik.com/free-vector/artificial-intelligence-concept-illustration_114360-7000.jpg',
       description: '利用AI绘画技术，为客户提供设计服务',
       income: '￥8000/月'
     }
@@ -242,13 +242,13 @@ const currentProject = ref<Project>({
   videos: [
     {
       title: '入门指南：AI技术基础',
-      cover: 'https://example.com/video1.jpg',
+      cover: 'https://img.freepik.com/free-vector/online-tutorials-concept_23-2148529958.jpg',
       duration: '45分钟',
       videoUrl: 'https://example.com/video1.mp4'
     },
     {
       title: '进阶教程：项目实战',
-      cover: 'https://example.com/video2.jpg',
+      cover: 'https://img.freepik.com/free-vector/digital-presentation-concept-illustration_114360-8175.jpg',
       duration: '60分钟',
       videoUrl: 'https://example.com/video2.mp4'
     }
