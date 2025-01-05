@@ -191,10 +191,10 @@ const generatePoster = async () => {
       lines.push(line)
     }
 
-    // 限制最多显示4行，超出部分用省略号表示
-    if (lines.length > 4) {
-      lines = lines.slice(0, 3)
-      lines.push(lines[3] + '...')
+    // 限制最多显示3行，超出部分用省略号表示
+    if (lines.length > 3) {
+      lines = lines.slice(0, 2)
+      lines.push(lines[2] + '...')
     }
 
     // 绘制每一行文字
@@ -202,24 +202,40 @@ const generatePoster = async () => {
       ctx.fillText(line, cardMargin + 40, currentY + index * lineHeight)
     })
 
-    currentY += lines.length * lineHeight + 80
+    currentY += lines.length * lineHeight + 60
 
-    // 7. 绘制底部信息
-    ctx.fillStyle = '#999999'
-    ctx.font = '24px sans-serif'
-    ctx.textAlign = 'left'
-    ctx.fillText('是魔王吧', cardMargin + 40, canvas.height - cardMargin - 80)
+    // 7. 绘制成功案例
+    ctx.fillStyle = '#333333'
+    ctx.font = 'bold 32px sans-serif'
+    ctx.fillText('成功案例：', cardMargin + 40, currentY)
+    
+    currentY += 40
 
-    // 8. 绘制字数统计
-    ctx.textAlign = 'right'
-    ctx.fillText(`字数：${props.introduction.length}`, canvas.width - cardMargin - 40, canvas.height - cardMargin - 80)
+    // 案例列表
+    const cases = [
+      { icon: '💼', text: '小王：月收入增长10倍' },
+      { icon: '👩‍💼', text: '张三：一周成功转型' },
+      { icon: '👨‍💻', text: '李四：客户量翻3倍' }
+    ]
 
-    // 9. 绘制底部标题和二维码
-    ctx.textAlign = 'left'
+    ctx.font = '28px sans-serif'
     ctx.fillStyle = '#666666'
-    ctx.fillText('流光卡片', cardMargin + 40, canvas.height - cardMargin - 40)
+    cases.forEach((item, index) => {
+      ctx.fillText(`${item.icon} ${item.text}`, cardMargin + 40, currentY + index * 40)
+    })
 
-    // 10. 绘制二维码
+    currentY += cases.length * 40 + 60
+
+    // 8. 绘制底部信息
+    const bottomY = canvas.height - cardMargin - 60
+    
+    // 左侧品牌名
+    ctx.fillStyle = '#333333'
+    ctx.font = 'bold 28px sans-serif'
+    ctx.textAlign = 'left'
+    ctx.fillText('AI锦囊', cardMargin + 40, bottomY)
+
+    // 右侧二维码
     try {
       const qrSize = 100
       const qrCodeUrl = await QRCode.toDataURL(props.shareUrl, {
@@ -239,11 +255,22 @@ const generatePoster = async () => {
       })
 
       // 绘制二维码
-      ctx.drawImage(qrImage, canvas.width - cardMargin - qrSize - 40, canvas.height - cardMargin - qrSize - 20, qrSize, qrSize)
+      const qrX = canvas.width - cardMargin - qrSize - 40
+      const qrY = bottomY - qrSize - 10
+      
+      // 绘制二维码背景
+      ctx.fillStyle = '#F8F8F8'
+      ctx.beginPath()
+      ctx.roundRect(qrX - 10, qrY - 10, qrSize + 20, qrSize + 20, 10)
+      ctx.fill()
+      
+      ctx.drawImage(qrImage, qrX, qrY, qrSize, qrSize)
 
       // 绘制扫码提示
+      ctx.fillStyle = '#666666'
+      ctx.font = '24px sans-serif'
       ctx.textAlign = 'center'
-      ctx.fillText('扫描二维码', canvas.width - cardMargin - qrSize/2 - 40, canvas.height - cardMargin - 40)
+      ctx.fillText('扫描查看详情', qrX + qrSize/2, bottomY)
 
     } catch (error) {
       console.error('Failed to generate QR code:', error)
