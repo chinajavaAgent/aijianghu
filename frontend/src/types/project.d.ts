@@ -1,23 +1,16 @@
 // 项目类型定义
 export interface Project {
   id?: number;
-  tipId?: number;
-  title?: string;
-  name?: string;
+  tipId: number;
+  name: string;
   description: string;
-  coverImage?: string;
-  videoUrl?: string;
+  videoUrl: string;
   status?: number;
-  startTime?: string;
-  endTime?: string;
-  authorId?: number;
   views?: number;
   likes?: number;
-  createTime?: string;
-  updateTime?: string;
   cases: ProjectCase[];
   benefits: ProjectBenefit[];
-  // 前端专用字段
+  // 前端使用的临时属性
   isExpanded?: boolean;
   currentStep?: number;
 }
@@ -44,9 +37,7 @@ export interface ProjectBenefit {
 // 用于更新项目时的部分字段
 export interface ProjectUpdateDto {
   name?: string;
-  title?: string;
   description?: string;
   videoUrl?: string;
   status?: number;
-  coverImage?: string;
 } 

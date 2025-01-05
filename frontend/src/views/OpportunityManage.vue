@@ -389,7 +389,10 @@ const openProjectDialog = async (tip: AiTips) => {
 
 // 添加项目
 const addProject = () => {
+  if (!currentTip.value) return
+  
   const newProject: Project = {
+    tipId: currentTip.value.id,
     name: '',
     description: '',
     videoUrl: '',
@@ -427,11 +430,13 @@ const removeProject = async (index: number) => {
 
 // 提交项目表单
 const handleProjectSubmit = async () => {
+  if (!currentTip.value) return
+  
   try {
     // 更新所有项目
     await Promise.all(projectForm.projects.map(async (project) => {
       if (project.id) {
-        const updateData: ProjectUpdateDto = {
+        const updateData = {
           name: project.name,
           description: project.description,
           videoUrl: project.videoUrl,
@@ -439,8 +444,12 @@ const handleProjectSubmit = async () => {
         }
         await updateProject(project.id, updateData)
       } else {
-        // 如果是新项目，则创建
-        await createProject(project)
+        // 如果是新项目，则创建，并确保设置tipId
+        const newProject = {
+          ...project,
+          tipId: currentTip.value!.id
+        }
+        await createProject(newProject)
       }
     }))
     showToast('保存成功')
