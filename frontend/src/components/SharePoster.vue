@@ -111,9 +111,9 @@ import { ElMessage } from 'element-plus'
 import QRCode from 'qrcode'
 
 const props = defineProps<{
-  title: string
-  price: string | number
-  introduction: string
+  title?: string
+  price?: string | number
+  introduction?: string
   coverImage?: string
   shareUrl: string
 }>()

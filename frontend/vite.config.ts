@@ -19,10 +19,28 @@ export default defineConfig({
     },
     server: {
         port: 3000,
+        host: true,
         proxy: {
             '/api': {
                 target: 'http://localhost:8080',
                 changeOrigin: true
+            }
+        }
+    },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                additionalData: `@import "@/styles/variables.scss";`
+            }
+        }
+    },
+    build: {
+        assetsDir: 'assets',
+        rollupOptions: {
+            output: {
+                chunkFileNames: 'assets/js/[name]-[hash].js',
+                entryFileNames: 'assets/js/[name]-[hash].js',
+                assetFileNames: 'assets/[ext]/[name]-[hash].[ext]'
             }
         }
     }

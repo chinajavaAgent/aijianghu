@@ -11,10 +11,9 @@
           返回列表
         </button>
         <SharePoster 
-          :title="currentProject.title"
-          :price="currentProject.price"
-          :introduction="currentProject.introduction"
-          :cover-image="currentProject.coverImage"
+          :title="tipDetail?.title || ''"
+          :price="tipDetail?.price || 0"
+          :introduction="tipDetail?.description || ''"
           :share-url="shareUrl"
         />
       </div>
@@ -23,10 +22,10 @@
       <div class="bg-white rounded-xl p-6 mb-6 shadow-lg">
         <div class="flex items-center justify-between">
           <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">
-            {{ currentProject.title }}
+            {{ currentProject.name }}
           </h1>
           <div class="text-2xl font-bold text-red-500">
-            ￥{{ currentProject.price }}
+            ￥{{ tipDetail?.price }}
           </div>
         </div>
       </div>
@@ -45,56 +44,29 @@
               项目介绍
             </h2>
             <div class="space-y-4 text-gray-600">
-              <p>{{ currentProject.introduction }}</p>
-              <ul class="list-disc list-inside space-y-2">
-                <li v-for="(point, index) in currentProject.keyPoints" :key="index">
-                  {{ point }}
-                </li>
-              </ul>
+              <p>{{ currentProject.description }}</p>
             </div>
           </div>
 
-          <!-- 案例展示 -->
+          <!-- 视频教程 -->
           <div class="bg-white rounded-xl p-6 shadow-lg">
             <h2 class="text-xl font-bold mb-4 flex items-center">
-              <svg class="w-6 h-6 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              成功案例
-            </h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div v-for="(example, index) in currentProject.examples" :key="index"
-                class="border border-gray-200 rounded-lg p-4">
-                <img :src="example.image" :alt="example.title" 
-                  class="w-full h-48 object-cover rounded-lg mb-4"/>
-                <h3 class="font-bold mb-2">{{ example.title }}</h3>
-                <p class="text-gray-600 text-sm">{{ example.description }}</p>
-                <div class="mt-2 text-green-600 font-bold">
-                  收益：{{ example.income }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 右侧：视频和福利 -->
-        <div class="space-y-6">
-          <!-- 视频展示 -->
-          <div class="bg-white rounded-xl p-6 shadow-lg">
-            <h2 class="text-xl font-bold mb-4 flex items-center">
-              <svg class="w-6 h-6 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-6 h-6 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                   d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
               </svg>
               视频教程
             </h2>
             <div class="space-y-4">
-              <div v-for="(video, index) in currentProject.videos" :key="index"
+              <div v-if="currentProject.videoUrl"
                 class="border border-gray-200 rounded-lg overflow-hidden cursor-pointer"
-                @click="playVideo(video)">
+                @click="playVideo({
+                  title: currentProject.name,
+                  cover: '',
+                  duration: '',
+                  videoUrl: currentProject.videoUrl
+                })">
                 <div class="aspect-w-16 aspect-h-9">
-                  <img :src="video.cover" :alt="video.title" class="w-full h-full object-cover"/>
                   <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                     <svg class="w-16 h-16 text-white opacity-80" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M10 0a10 10 0 100 20 10 10 0 000-20zm4 10.75l-6 3.5A.75.75 0 016.5 13V7a.75.75 0 011.125-.65l6 3.5a.75.75 0 010 1.3z"></path>
@@ -102,38 +74,59 @@
                   </div>
                 </div>
                 <div class="p-4">
-                  <h3 class="font-bold mb-1">{{ video.title }}</h3>
-                  <p class="text-gray-600 text-sm">{{ video.duration }}</p>
+                  <h3 class="font-bold mb-1">{{ currentProject.name }}</h3>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- 福利展示 -->
+          <!-- 成功案例 -->
           <div class="bg-white rounded-xl p-6 shadow-lg">
             <h2 class="text-xl font-bold mb-4 flex items-center">
-              <svg class="w-6 h-6 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-6 h-6 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                  d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path>
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
-              项目福利
+              成功案例
             </h2>
-            <ul class="space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div v-for="(item, index) in currentProject.cases" :key="index"
+                class="bg-gray-50 rounded-lg p-4">
+                <img :src="item.imageUrl" :alt="item.description" class="w-full h-48 object-cover rounded-lg mb-4">
+                <p class="text-gray-600">{{ item.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右侧：购买信息 -->
+        <div class="lg:col-span-1">
+          <div class="bg-white rounded-xl p-6 shadow-lg sticky top-6">
+            <h2 class="text-xl font-bold mb-4">项目福利</h2>
+            <ul class="space-y-3 mb-6">
               <li v-for="(benefit, index) in currentProject.benefits" :key="index"
                 class="flex items-start">
-                <svg class="w-5 h-5 text-green-500 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                 </svg>
-                <span class="text-gray-600">{{ benefit }}</span>
+                <span class="text-gray-600">{{ benefit.content }}</span>
               </li>
             </ul>
-          </div>
 
-          <!-- 购买按钮 -->
-          <button class="w-full py-4 rounded-xl text-white font-bold text-lg transition-colors bg-blue-600 hover:bg-blue-700"
-            @click="handlePurchase">
-            立即购买 ￥{{ currentProject.price }}
-          </button>
+            <div class="border-t pt-6">
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-gray-600">项目价格</span>
+                <span class="text-2xl font-bold text-red-500">￥{{ tipDetail?.price }}</span>
+              </div>
+              <button @click="handlePurchase"
+                class="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-medium hover:opacity-90 transition-opacity">
+                立即购买
+              </button>
+              <p class="text-gray-500 text-sm text-center mt-3">
+                购买后可获得终身学习权限
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -169,7 +162,7 @@
           <div class="bg-gradient-to-r from-blue-500 to-purple-500 rounded-t-2xl p-8 text-center relative overflow-hidden">
             <div class="absolute inset-0 bg-white opacity-10">
               <div class="absolute inset-0 bg-repeat opacity-30" 
-                style="background-image: url('data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='1' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E');">
+                style="background-image: url('data:image/svg+xml,%3Csvg width=20 height=20 viewBox=0 0 20 20 xmlns=http://www.w3.org/2000/svg%3E%3Cg fill=%23ffffff fill-opacity=1 fill-rule=evenodd%3E%3Ccircle cx=3 cy=3 r=3/%3E%3Ccircle cx=13 cy=13 r=3/%3E%3C/g%3E%3C/svg%3E');">
               </div>
             </div>
             <button @click="showContactModal = false" 
@@ -248,102 +241,110 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import SharePoster from '@/components/SharePoster.vue'
 import type { Project } from '@/types/project'
+import type { AiTips } from '@/types/tips'
+import { getAiTipsDetail } from '@/api/tips'
+import { getProjectById } from '@/api/project'
 
 const router = useRouter()
-
-// 当前项目数据
-const currentProject = ref<Project>({
-  id: 1,
-  title: 'AI副业项目详情',
-  price: 299,
-  introduction: '这是一个基于人工智能技术的副业项目，通过AI技术帮助你轻松创收。项目包含详细的视频教程和实战案例，让你快速掌握技能。',
-  coverImage: 'https://img.freepik.com/free-vector/artificial-intelligence-concept-landing-page_23-2148247345.jpg',
-  keyPoints: [
-    '无需编程基础，人人可学',
-    '一次学习，终身受用',
-    '实时技术支持，确保学习效果',
-    '丰富的实战案例，快速上手'
-  ],
-  examples: [
-    {
-      title: '案例一：AI写作助手',
-      image: 'https://img.freepik.com/free-vector/ai-powered-content-writing-concept_23-2149387017.jpg',
-      description: '通过AI技术，帮助客户快速生成高质量文章',
-      income: '￥5000/月'
-    },
-    {
-      title: '案例二：AI绘画设计',
-      image: 'https://img.freepik.com/free-vector/artificial-intelligence-concept-illustration_114360-7000.jpg',
-      description: '利用AI绘画技术，为客户提供设计服务',
-      income: '￥8000/月'
-    }
-  ],
-  videos: [
-    {
-      title: '入门指南：AI技术基础',
-      cover: 'https://img.freepik.com/free-vector/online-tutorials-concept_23-2148529958.jpg',
-      duration: '45分钟',
-      videoUrl: 'https://example.com/video1.mp4'
-    },
-    {
-      title: '进阶教程：项目实战',
-      cover: 'https://img.freepik.com/free-vector/digital-presentation-concept-illustration_114360-8175.jpg',
-      duration: '60分钟',
-      videoUrl: 'https://example.com/video2.mp4'
-    }
-  ],
-  benefits: [
-    '终身学习权限',
-    '一对一技术指导',
-    '项目实战机会',
-    '优先推荐客户资源'
-  ]
-})
-
-// 生成分享链接
-const shareUrl = computed(() => {
-  const baseUrl = window.location.origin
-  return `${baseUrl}${router.currentRoute.value.fullPath}`
-})
-
-// 视频播放相关
+const route = useRoute()
+const tipDetail = ref<AiTips | null>(null)
 const showVideoModal = ref(false)
-const currentVideo = ref<Project['videos'][0] | null>(null)
+const showContactModal = ref(false)
+const currentVideo = ref<any>(null)
+const currentProjectIndex = ref(0)
+const projects = ref<Project[]>([])
 
-const playVideo = (video: Project['videos'][0]) => {
-  currentVideo.value = video
+const currentProject = computed(() => projects.value[currentProjectIndex.value] || {})
+const shareUrl = computed(() => window.location.href)
+
+// 获取提示详情
+const fetchTipDetail = async () => {
+  try {
+    if (currentProject.value?.tipId) {
+      const response = await getAiTipsDetail(currentProject.value.tipId)
+      tipDetail.value = response.data
+    }
+  } catch (error) {
+    console.error('获取提示详情失败:', error)
+    ElMessage.error('获取提示详情失败')
+  }
+}
+
+// 切换项目
+const selectProject = (index: number) => {
+  currentProjectIndex.value = index
+  fetchTipDetail() // 切换项目时重新获取提示详情
+}
+
+// 播放视频
+const playVideo = (videoInfo: any) => {
+  currentVideo.value = videoInfo
   showVideoModal.value = true
 }
 
-// 联系方式相关
-const showContactModal = ref(false)
-
-const copyText = (text: string) => {
-  navigator.clipboard.writeText(text)
-    .then(() => {
-      ElMessage.success('复制成功')
-    })
-    .catch(() => {
-      ElMessage.error('复制失败')
-    })
-}
-
-// 购买处理
+// 处理购买
 const handlePurchase = () => {
   showContactModal.value = true
 }
 
-// 提交审核处理
-const submitForReview = () => {
-  showContactModal.value = false
-  // 跳转到订单待审核页面
-  router.push('/orders/pending')
+// 复制文本
+const copyText = async (text: string) => {
+  try {
+    await navigator.clipboard.writeText(text)
+    ElMessage.success('复制成功')
+  } catch (error) {
+    console.error('复制失败:', error)
+    ElMessage.error('复制失败')
+  }
 }
+
+// 提交审核
+const submitForReview = () => {
+  ElMessage.success('提交成功，我们将尽快处理您的申请')
+  showContactModal.value = false
+}
+
+// 组件挂载时获取数据
+onMounted(async () => {
+  const projectId = Number(route.params.id)
+  if (!projectId) {
+    ElMessage.error('项目ID不能为空')
+    return
+  }
+
+  try {
+    // 这里应该从后端获取项目数据
+    // 暂时使用示例数据
+    projects.value = [
+      {
+        id: projectId,
+        tipId: projectId, // 假设tipId与projectId相同
+        name: '示例项目1',
+        description: '这是一个示例项目的描述',
+        videoUrl: 'https://example.com/video1.mp4',
+        coverImage: 'https://example.com/cover1.jpg',
+        cases: [
+          { imageUrl: 'https://example.com/case1.jpg', description: '案例1描述' }
+        ],
+        benefits: [
+          { content: '福利1' },
+          { content: '福利2' }
+        ]
+      }
+    ]
+    
+    // 立即获取tips详情
+    await fetchTipDetail()
+  } catch (error) {
+    console.error('获取项目数据失败:', error)
+    ElMessage.error('获取项目数据失败')
+  }
+})
 </script>
 
 <style scoped>

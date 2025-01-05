@@ -22,6 +22,7 @@ export interface Project {
   name: string
   description: string
   videoUrl: string
+  coverImage: string
   cases: ProjectCase[]
   benefits: ProjectBenefit[]
   createTime?: string

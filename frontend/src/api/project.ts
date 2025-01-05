@@ -14,6 +14,14 @@ export const getProjects = (page: number, size: number, tipId?: number) => {
   })
 }
 
+// 获取项目详情
+export const getProjectById = (id: number) => {
+  return request<{ projects: Project[], tipId: number }>({
+    url: `/api/projects/${id}`,
+    method: 'get'
+  })
+}
+
 // 创建项目
 export const createProject = (data: Project) => {
   return request({
