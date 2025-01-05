@@ -41,6 +41,18 @@ const router = createRouter({
       name: 'project-detail',
       component: () => import('@/views/ProjectDetail.vue'),
       meta: { requiresAuth: true }
+    },
+    {
+      path: '/opportunity-manage',
+      name: 'opportunity-manage',
+      component: () => import('@/views/OpportunityManage.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/admin-manage',
+      name: 'admin-manage',
+      component: () => import('@/views/AdminManage.vue'),
+      meta: { requiresAuth: true }
     }
   ]
 })
