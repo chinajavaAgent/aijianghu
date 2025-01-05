@@ -206,7 +206,7 @@
                             accept="image/*" 
                             class="hidden" 
                             :ref="el => { if (el) imageInputRefs[`${index}-${caseIndex}`] = (el as HTMLInputElement) }"
-                            @change="handleImageUpload($event, caseItem)">
+                            @change="handleImageUpload($event, project, caseItem)">
                           <button @click="triggerImageUpload(index, caseIndex)"
                             class="w-full h-32 flex flex-col items-center justify-center text-gray-500 hover:text-gray-700">
                             <i class="fas fa-camera text-2xl mb-2"></i>
@@ -284,6 +284,21 @@ import { ref, reactive, onMounted } from 'vue'
 import { Dialog, showToast } from 'vant'
 import { createAiTips, updateAiTips, deleteAiTips, getAiTipsList } from '@/api/tips'
 import type { AiTips } from '@/types/tips'
+import {
+  getProjects,
+  createProject,
+  updateProject,
+  deleteProject,
+  addCase as addProjectCase,
+  updateCase,
+  deleteCase,
+  uploadCaseImage,
+  uploadProjectVideo,
+  addBenefit as addProjectBenefit,
+  updateBenefit,
+  deleteBenefit
+} from '@/api/project'
+import type { Project, ProjectCase, ProjectBenefit } from '@/types/project'
 
 // 锦囊列表数据
 const tipsList = ref<AiTips[]>([])
@@ -303,18 +318,7 @@ const form = reactive({
 const projectDialogVisible = ref(false)
 const currentTip = ref<AiTips | null>(null)
 const projectForm = reactive({
-  projects: [] as Array<{
-    title: string
-    description: string
-    cases: Array<{
-      description: string
-      imageUrl: string
-    }>
-    videoUrl: string
-    benefits: string[]
-    isExpanded: boolean
-    currentStep: number
-  }>
+  projects: [] as Array<Project>
 })
 
 // 项目步骤
@@ -347,29 +351,70 @@ const editTip = (tip: AiTips) => {
 }
 
 // 显示项目管理
-const openProjectDialog = (tip: AiTips) => {
+const openProjectDialog = async (tip: AiTips) => {
   currentTip.value = tip
-  // 加载项目列表
-  projectForm.projects = tip.content ? JSON.parse(tip.content) : []
-  projectDialogVisible.value = true
+  try {
+    // 加载项目列表
+    const response = await getProjects(tip.id)
+    projectForm.projects = response.data.map((project: Project) => ({
+      ...project,
+      isExpanded: true,
+      currentStep: 0
+    }))
+    projectDialogVisible.value = true
+  } catch (error) {
+    console.error('加载项目列表失败:', error)
+    showToast('加载失败，请重试')
+  }
 }
 
 // 添加项目
-const addProject = () => {
-  projectForm.projects.push({
-    title: '',
-    description: '',
-    cases: [],
-    videoUrl: '',
-    benefits: [],
-    isExpanded: true,
-    currentStep: 0
-  })
+const addProject = async () => {
+  if (!currentTip.value) return
+  
+  try {
+    const newProject: Omit<Project, 'id'> = {
+      tipId: currentTip.value.id,
+      title: '',
+      description: '',
+      videoUrl: '',
+      cases: [],
+      benefits: [],
+      isExpanded: true,
+      currentStep: 0
+    }
+    const response = await createProject(newProject)
+    projectForm.projects.push({
+      ...response.data,
+      isExpanded: true,
+      currentStep: 0
+    })
+    showToast('添加成功')
+  } catch (error) {
+    console.error('添加项目失败:', error)
+    showToast('添加失败，请重试')
+  }
 }
 
 // 删除项目
-const removeProject = (index: number) => {
-  projectForm.projects.splice(index, 1)
+const removeProject = async (index: number) => {
+  const project = projectForm.projects[index]
+  if (!project.id) return
+
+  try {
+    await Dialog.confirm({
+      title: '确认删除',
+      message: '确定要删除这个项目吗？'
+    })
+    await deleteProject(project.id)
+    projectForm.projects.splice(index, 1)
+    showToast('删除成功')
+  } catch (error) {
+    console.error('删除项目失败:', error)
+    if (error !== 'cancel') {
+      showToast('删除失败，请重试')
+    }
+  }
 }
 
 // 提交项目表单
@@ -377,14 +422,22 @@ const handleProjectSubmit = async () => {
   if (!currentTip.value) return
   
   try {
-    await updateAiTips(currentTip.value.id, {
-      content: JSON.stringify(projectForm.projects)
-    })
+    // 更新所有项目
+    await Promise.all(projectForm.projects.map(async (project) => {
+      if (project.id) {
+        await updateProject(project.id, {
+          title: project.title,
+          description: project.description,
+          videoUrl: project.videoUrl
+        })
+      }
+    }))
     showToast('保存成功')
     projectDialogVisible.value = false
     loadTipsList()
   } catch (error) {
     console.error('保存项目失败:', error)
+    showToast('保存失败，请重试')
   }
 }
 
@@ -453,26 +506,80 @@ onMounted(() => {
 })
 
 // 添加案例
-const addCase = (project: any) => {
-  project.cases.push({
-    description: '',
-    imageUrl: ''
-  })
+const addCase = async (project: Project) => {
+  if (!project.id) return
+  
+  try {
+    const newCase = {
+      description: '',
+      imageUrl: ''
+    }
+    const response = await addProjectCase(project.id, newCase)
+    project.cases.push(response.data)
+    showToast('添加成功')
+  } catch (error) {
+    console.error('添加案例失败:', error)
+    showToast('添加失败，请重试')
+  }
 }
 
 // 删除案例
-const removeCase = (project: any, index: number) => {
-  project.cases.splice(index, 1)
+const removeCase = async (project: Project, index: number) => {
+  const caseItem = project.cases[index]
+  if (!project.id || !caseItem.id) return
+
+  try {
+    await Dialog.confirm({
+      title: '确认删除',
+      message: '确定要删除这个案例吗？'
+    })
+    await deleteCase(project.id, caseItem.id)
+    project.cases.splice(index, 1)
+    showToast('删除成功')
+  } catch (error) {
+    console.error('删除案例失败:', error)
+    if (error !== 'cancel') {
+      showToast('删除失败，请重试')
+    }
+  }
 }
 
 // 添加福利
-const addBenefit = (project: any) => {
-  project.benefits.push('')
+const addBenefit = async (project: Project) => {
+  if (!project.id) return
+  
+  try {
+    const newBenefit = {
+      content: ''
+    }
+    const response = await addProjectBenefit(project.id, newBenefit)
+    project.benefits.push(response.data)
+    showToast('添加成功')
+  } catch (error) {
+    console.error('添加福利失败:', error)
+    showToast('添加失败，请重试')
+  }
 }
 
 // 删除福利
-const removeBenefit = (project: any, index: number) => {
-  project.benefits.splice(index, 1)
+const removeBenefit = async (project: Project, index: number) => {
+  const benefit = project.benefits[index]
+  if (!project.id || !benefit.id) return
+
+  try {
+    await Dialog.confirm({
+      title: '确认删除',
+      message: '确定要删除这个福利吗？'
+    })
+    await deleteBenefit(project.id, benefit.id)
+    project.benefits.splice(index, 1)
+    showToast('删除成功')
+  } catch (error) {
+    console.error('删除福利失败:', error)
+    if (error !== 'cancel') {
+      showToast('删除失败，请重试')
+    }
+  }
 }
 
 // 图片上传相关
@@ -487,17 +594,18 @@ const triggerImageUpload = (projectIndex: number, caseIndex: number) => {
 }
 
 // 处理图片上传
-const handleImageUpload = (event: Event, caseItem: any) => {
+const handleImageUpload = async (event: Event, project: Project, caseItem: ProjectCase) => {
   const input = event.target as HTMLInputElement
-  if (input.files && input.files[0]) {
+  if (!input.files || !input.files[0] || !project.id || !caseItem.id) return
+
+  try {
     const file = input.files[0]
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      if (e.target?.result) {
-        caseItem.imageUrl = e.target.result as string
-      }
-    }
-    reader.readAsDataURL(file)
+    const response = await uploadCaseImage(project.id, caseItem.id, file)
+    caseItem.imageUrl = response.data.url
+    showToast('上传成功')
+  } catch (error) {
+    console.error('上传图片失败:', error)
+    showToast('上传失败，请重试')
   }
 }
 
@@ -513,17 +621,18 @@ const triggerVideoUpload = (projectIndex: number) => {
 }
 
 // 处理视频上传
-const handleVideoUpload = (event: Event, project: any) => {
+const handleVideoUpload = async (event: Event, project: Project) => {
   const input = event.target as HTMLInputElement
-  if (input.files && input.files[0]) {
+  if (!input.files || !input.files[0] || !project.id) return
+
+  try {
     const file = input.files[0]
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      if (e.target?.result) {
-        project.videoUrl = e.target.result as string
-      }
-    }
-    reader.readAsDataURL(file)
+    const response = await uploadProjectVideo(project.id, file)
+    project.videoUrl = response.data.url
+    showToast('上传成功')
+  } catch (error) {
+    console.error('上传视频失败:', error)
+    showToast('上传失败，请重试')
   }
 }
 </script>

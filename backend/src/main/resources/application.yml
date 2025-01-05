@@ -23,6 +23,19 @@ spring:
       continue-on-error: true
       platform: mysql
 
+  # 文件上传配置
+  file:
+    upload:
+      path: /Users/mac/Desktop/cusor-project/AI群江湖/backend/uploads  # 文件上传路径
+    access:
+      url: http://localhost:8080/uploads  # 文件访问URL
+
+  # 文件上传大小限制
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.aigroup.world.model
