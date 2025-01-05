@@ -90,106 +90,99 @@ const generatePoster = async () => {
   canvas.width = 750
   canvas.height = 1334
 
-  // 绘制背景
-  ctx.fillStyle = '#ffffff'
-  ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-  // 绘制顶部背景装饰
-  const gradient = ctx.createLinearGradient(0, 0, canvas.width, 300)
-  gradient.addColorStop(0, '#3B82F6')
-  gradient.addColorStop(1, '#8B5CF6')
-  ctx.fillStyle = gradient
-  ctx.fillRect(0, 0, canvas.width, 300)
-
-  // 绘制装饰图案
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.1)'
-  for (let i = 0; i < 10; i++) {
-    const x = Math.random() * canvas.width
-    const y = Math.random() * 300
-    const size = Math.random() * 30 + 10
-    ctx.beginPath()
-    ctx.arc(x, y, size, 0, Math.PI * 2)
-    ctx.fill()
-  }
-
-  // 绘制标题
-  ctx.fillStyle = '#ffffff'
-  ctx.font = 'bold 48px sans-serif'
-  ctx.textAlign = 'center'
-  ctx.fillText(props.title, canvas.width / 2, 160)
-
-  // 绘制副标题
-  ctx.font = '28px sans-serif'
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'
-  ctx.fillText('AI副业项目', canvas.width / 2, 220)
-
-  // 如果有封面图，绘制封面图
-  if (props.coverImage) {
-    try {
-      const image = new Image()
-      image.crossOrigin = 'anonymous'
-      await new Promise((resolve, reject) => {
-        image.onload = resolve
-        image.onerror = reject
-        image.src = props.coverImage || ''
-      })
-      
-      // 绘制封面图（居中显示）
-      const imageWidth = 650
-      const imageHeight = 366 // 16:9 比例
-      const imageX = (canvas.width - imageWidth) / 2
-      ctx.drawImage(image, imageX, 340, imageWidth, imageHeight)
-
-      // 添加渐变阴影
-      const shadowGradient = ctx.createLinearGradient(imageX, 340 + imageHeight - 50, imageX, 340 + imageHeight)
-      shadowGradient.addColorStop(0, 'rgba(0, 0, 0, 0)')
-      shadowGradient.addColorStop(1, 'rgba(0, 0, 0, 0.3)')
-      ctx.fillStyle = shadowGradient
-      ctx.fillRect(imageX, 340 + imageHeight - 50, imageWidth, 50)
-    } catch (error) {
-      console.error('加载封面图失败:', error)
-    }
-  }
-
-  // 绘制简介
-  ctx.fillStyle = '#374151'
-  ctx.font = '32px sans-serif'
-  ctx.textAlign = 'left'
-  const maxWidth = 650
-  const lineHeight = 48
-  const startY = props.coverImage ? 750 : 340
-  const words = props.introduction.split('')
-  let line = ''
-  let y = startY
-
-  for (let i = 0; i < words.length; i++) {
-    const testLine = line + words[i]
-    const metrics = ctx.measureText(testLine)
-    if (metrics.width > maxWidth && i > 0) {
-      ctx.fillText(line, 50, y)
-      line = words[i]
-      y += lineHeight
-    } else {
-      line = testLine
-    }
-  }
-  ctx.fillText(line, 50, y)
-
-  // 绘制价格标签背景
-  const priceY = y + 100
-  ctx.fillStyle = '#FEF2F2'
-  ctx.beginPath()
-  ctx.roundRect((canvas.width - 300) / 2, priceY - 40, 300, 80, 20)
-  ctx.fill()
-
-  // 绘制价格
-  ctx.fillStyle = '#EF4444'
-  ctx.font = 'bold 64px sans-serif'
-  ctx.textAlign = 'center'
-  ctx.fillText(`￥${props.price}`, canvas.width / 2, priceY + 20)
-
-  // 生成并绘制二维码
   try {
+    // 1. 绘制背景
+    ctx.fillStyle = '#ffffff'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+    // 2. 绘制顶部背景
+    const gradient = ctx.createLinearGradient(0, 0, canvas.width, 300)
+    gradient.addColorStop(0, '#3B82F6')
+    gradient.addColorStop(1, '#8B5CF6')
+    ctx.fillStyle = gradient
+    ctx.fillRect(0, 0, canvas.width, 300)
+
+    // 3. 绘制项目标题
+    ctx.fillStyle = '#ffffff'
+    ctx.font = 'bold 48px sans-serif'
+    ctx.textAlign = 'center'
+    ctx.fillText(props.title, canvas.width / 2, 100)
+
+    // 4. 绘制价格
+    ctx.font = 'bold 36px sans-serif'
+    ctx.fillText(`￥${props.price}`, canvas.width / 2, 160)
+
+    // 5. 绘制封面图片
+    if (props.coverImage) {
+      try {
+        const image = new Image()
+        image.crossOrigin = 'anonymous'
+        await new Promise((resolve, reject) => {
+          image.onload = resolve
+          image.onerror = reject
+          image.src = props.coverImage as string
+        })
+        
+        // 计算图片尺寸和位置（保持16:9比例）
+        const imageWidth = 670
+        const imageHeight = imageWidth * 9 / 16
+        const imageX = (canvas.width - imageWidth) / 2
+        const imageY = 320
+        
+        // 绘制图片
+        ctx.drawImage(image, imageX, imageY, imageWidth, imageHeight)
+        
+        // 添加图片阴影效果
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'
+        ctx.fillRect(imageX, imageY + imageHeight - 20, imageWidth, 20)
+      } catch (error) {
+        console.error('加载封面图片失败:', error)
+      }
+    }
+
+    // 6. 绘制项目介绍
+    const introY = props.coverImage ? 720 : 320
+    ctx.fillStyle = '#333333'
+    ctx.font = '28px sans-serif'
+    ctx.textAlign = 'left'
+    
+    // 文本换行处理
+    const maxWidth = 670
+    const lineHeight = 42
+    const words = props.introduction.split('')
+    let line = ''
+    let y = introY
+
+    for (let i = 0; i < words.length; i++) {
+      const testLine = line + words[i]
+      const metrics = ctx.measureText(testLine)
+      if (metrics.width > maxWidth && i > 0) {
+        ctx.fillText(line, 40, y)
+        line = words[i]
+        y += lineHeight
+      } else {
+        line = testLine
+      }
+    }
+    ctx.fillText(line, 40, y)
+
+    // 7. 绘制分割线
+    const separatorY = y + 60
+    ctx.strokeStyle = '#E5E7EB'
+    ctx.lineWidth = 1
+    ctx.beginPath()
+    ctx.moveTo(40, separatorY)
+    ctx.lineTo(canvas.width - 40, separatorY)
+    ctx.stroke()
+
+    // 8. 绘制二维码标题
+    const qrTitleY = separatorY + 60
+    ctx.fillStyle = '#666666'
+    ctx.font = '28px sans-serif'
+    ctx.textAlign = 'center'
+    ctx.fillText('扫码查看详情', canvas.width / 2, qrTitleY)
+
+    // 9. 生成并绘制二维码
     const qrCodeUrl = await QRCode.toDataURL(props.shareUrl, {
       width: 200,
       margin: 1,
@@ -206,29 +199,23 @@ const generatePoster = async () => {
       qrCode.src = qrCodeUrl
     })
     
-    const qrCodeSize = 200
-    const qrCodeX = (canvas.width - qrCodeSize) / 2
-    const qrCodeY = priceY + 100
-
     // 绘制二维码背景
+    const qrSize = 200
+    const qrX = (canvas.width - qrSize) / 2
+    const qrY = qrTitleY + 40
+    
     ctx.fillStyle = '#ffffff'
     ctx.shadowColor = 'rgba(0, 0, 0, 0.1)'
-    ctx.shadowBlur = 20
-    ctx.beginPath()
-    ctx.roundRect(qrCodeX - 20, qrCodeY - 20, qrCodeSize + 40, qrCodeSize + 40, 20)
-    ctx.fill()
+    ctx.shadowBlur = 10
+    ctx.fillRect(qrX - 10, qrY - 10, qrSize + 20, qrSize + 20)
     ctx.shadowColor = 'transparent'
-
+    
     // 绘制二维码
-    ctx.drawImage(qrCode, qrCodeX, qrCodeY, qrCodeSize, qrCodeSize)
+    ctx.drawImage(qrCode, qrX, qrY, qrSize, qrSize)
 
-    // 绘制提示文字
-    ctx.fillStyle = '#6B7280'
-    ctx.font = '28px sans-serif'
-    ctx.textAlign = 'center'
-    ctx.fillText('扫码查看详情', canvas.width / 2, qrCodeY + qrCodeSize + 50)
   } catch (error) {
-    console.error('生成二维码失败:', error)
+    console.error('生成海报失败:', error)
+    ElMessage.error('生成海报失败，请重试')
   }
 }
 
