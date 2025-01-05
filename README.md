@@ -73,6 +73,31 @@ AI群江湖是一个资源分享平台，用户可以根据不同的等级获取
 - resource_id: 资源ID
 - download_time: 下载时间
 
+### AI锦囊表(ai_tips)
+- id: 主键
+- title: 标题
+- description: 描述
+- content: 内容
+- category: 分类
+- required_level: 所需等级
+- views: 查看次数
+- likes: 点赞数
+- create_time: 创建时间
+- update_time: 更新时间
+- status: 状态(0:草稿 1:已发布 2:已下架)
+
+### 用户锦囊收藏表(user_tips_collection)
+- id: 主键
+- user_id: 用户ID
+- tip_id: 锦囊ID
+- create_time: 收藏时间
+
+### 用户锦囊点赞表(user_tips_like)
+- id: 主键
+- user_id: 用户ID
+- tip_id: 锦囊ID
+- create_time: 点赞时间
+
 ## 项目结构
 ```
 ai-group-world/

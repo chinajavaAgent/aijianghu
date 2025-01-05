@@ -91,16 +91,16 @@ const handleLogin = async () => {
     }
 
     // 调用登录API
-    const { data } = await login(form)
+    const response = await login(form)
     
     // 保存token和用户信息
-    userStore.setToken(data.token)
-    userStore.setUserInfo(data)
+    userStore.setToken(response.data.token)
+    userStore.setUserInfo(response.data.user)
     
     // 登录成功后跳转
     toast.success('登录成功')
-    const redirect = route.query.redirect as string
-    router.push(redirect || '/')
+    const redirect = route.query.redirect
+    router.push(redirect?.toString() || '/')
   } catch (error) {
     console.error('登录失败:', error)
     toast.error('登录失败，请检查账号密码')

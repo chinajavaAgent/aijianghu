@@ -179,8 +179,10 @@
 </template> 
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted, onUnmounted, watch } from 'vue'
 import { Dialog, showToast } from 'vant'
+import { createAiTips, updateAiTips, deleteAiTips, getAiTipsList } from '@/api/tips'
+import type { AiTips } from '@/types/tips'
 
 interface Case {
   title: string
@@ -261,47 +263,57 @@ const editPackage = (pack: Package) => {
   showAddPackageDialog.value = true
 }
 
-const deletePackage = (id: number) => {
-  Dialog.confirm({
-    title: '确认删除',
-    message: '确定要删除这个锦囊吗？'
-  }).then(() => {
-    const index = packages.value.findIndex(p => p.id === id)
-    if (index !== -1) {
-      packages.value.splice(index, 1)
-      showToast('删除成功')
-    }
-  })
+const deletePackage = async (id: number) => {
+  try {
+    await Dialog.confirm({
+      title: '确认删除',
+      message: '确定要删除这个锦囊吗？'
+    })
+
+    await deleteAiTips(id)
+    showToast('删除成功')
+    await loadPackages()
+  } catch (error) {
+    if (error === 'cancel') return
+    console.error('删除锦囊失败:', error)
+    showToast('删除失败，请重试')
+  }
 }
 
-const handlePackageSubmit = () => {
-  if (!packageForm.title || packageForm.price <= 0) {
-    showToast('请填写完整信息')
-    return
-  }
-
-  if (editingPackage.value) {
-    // 更新锦囊
-    const index = packages.value.findIndex(p => p.id === packageForm.id)
-    if (index !== -1) {
-      packages.value[index] = { 
-        ...packages.value[index], 
-        title: packageForm.title,
-        price: packageForm.price
-      }
+const handlePackageSubmit = async () => {
+  try {
+    if (!packageForm.title) {
+      showToast('请输入锦囊名称')
+      return false
     }
-  } else {
-    // 添加锦囊
-    packages.value.push({
-      id: Date.now(),
-      title: packageForm.title,
-      price: packageForm.price,
-      projects: []
-    })
-  }
 
-  showToast('保存成功')
-  resetPackageForm()
+    const tipData = {
+      title: packageForm.title,
+      description: `价格：￥${packageForm.price}`,
+      content: '', // 可以根据需要设置内容
+      category: 'AI变现',
+      requiredLevel: 1, // 可以根据需要设置等级要求
+      status: 1 // 1: 已发布
+    }
+
+    if (editingPackage.value && packageForm.id) {
+      // 更新锦囊
+      await updateAiTips(packageForm.id, tipData)
+      showToast('更新成功')
+    } else {
+      // 创建锦囊
+      await createAiTips(tipData)
+      showToast('创建成功')
+    }
+
+    // 重新加载锦囊列表
+    await loadPackages()
+    return true
+  } catch (error) {
+    console.error('保存锦囊失败:', error)
+    showToast('操作失败，请重试')
+    return false
+  }
 }
 
 const resetPackageForm = () => {
@@ -309,8 +321,19 @@ const resetPackageForm = () => {
   packageForm.title = ''
   packageForm.price = 0
   editingPackage.value = false
-  showAddPackageDialog.value = false
 }
+
+// 监听弹窗关闭，重置表单
+watch(showAddPackageDialog, (newVal) => {
+  if (!newVal) {
+    resetPackageForm()
+  }
+})
+
+// 组件卸载时清理
+onUnmounted(() => {
+  resetPackageForm()
+})
 
 // 项目相关方法
 const showAddProjectDialog = (packageId: number) => {
@@ -395,6 +418,31 @@ const resetProjectForm = () => {
   currentPackageId.value = null
   showProjectDialog.value = false
 }
+
+// 加载锦囊列表
+const loadPackages = async () => {
+  try {
+    const response = await getAiTipsList({
+      page: 1,
+      size: 100,
+      category: 'AI变现'
+    })
+    packages.value = response.data.records.map((tip: AiTips) => ({
+      id: tip.id,
+      title: tip.title,
+      price: Number(tip.description.replace(/[^0-9]/g, '')) || 0,
+      projects: []
+    }))
+  } catch (error) {
+    console.error('加载锦囊列表失败:', error)
+    showToast('加载失败，请重试')
+  }
+}
+
+// 在页面加载时获取数据
+onMounted(() => {
+  loadPackages()
+})
 </script>
 
 <style scoped>

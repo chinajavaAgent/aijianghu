@@ -2,23 +2,28 @@ package com.aigroup.world.controller;
 
 import com.aigroup.world.common.Result;
 import com.aigroup.world.dto.LoginRequest;
+import com.aigroup.world.dto.LoginResponse;
 import com.aigroup.world.dto.RegisterRequest;
 import com.aigroup.world.model.User;
 import com.aigroup.world.service.UserService;
+import com.aigroup.world.utils.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
 
 @Api(tags = "用户管理")
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Resource
-    private UserService userService;
+    private final UserService userService;
+    private final JwtUtil jwtUtil;
+    private final UserDetailsService userDetailsService;
 
     @ApiOperation("用户注册")
     @PostMapping("/register")
@@ -29,9 +34,16 @@ public class UserController {
 
     @ApiOperation("用户登录")
     @PostMapping("/login")
-    public Result<User> login(@Validated @RequestBody LoginRequest request) {
+    public Result<LoginResponse> login(@Validated @RequestBody LoginRequest request) {
+        // 登录验证
         User user = userService.login(request);
-        return Result.success(user);
+        
+        // 生成token
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getPhone());
+        String token = jwtUtil.generateToken(userDetails);
+        
+        // 返回登录响应
+        return Result.success(LoginResponse.of(token, user));
     }
 
     @ApiOperation("检查手机号是否存在")

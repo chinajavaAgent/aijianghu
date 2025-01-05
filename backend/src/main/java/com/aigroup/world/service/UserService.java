@@ -28,4 +28,12 @@ public interface UserService {
      * @return true-存在，false-不存在
      */
     boolean checkPhoneExists(String phone);
+
+    /**
+     * 根据手机号查找用户
+     *
+     * @param phone 手机号
+     * @return 用户信息
+     */
+    User findByPhone(String phone);
 } 

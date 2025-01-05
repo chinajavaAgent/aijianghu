@@ -96,6 +96,24 @@ const router = createRouter({
       path: '/tutorials',
       name: 'tutorials',
       component: Tutorials
+    },
+    {
+      path: '/tips',
+      name: 'AiTipsList',
+      component: () => import('@/views/AiTipsList.vue'),
+      meta: {
+        title: 'AI锦囊',
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/tips/:id',
+      name: 'AiTipsDetail',
+      component: () => import('@/views/AiTipsDetail.vue'),
+      meta: {
+        title: 'AI锦囊详情',
+        requiresAuth: true
+      }
     }
   ]
 })

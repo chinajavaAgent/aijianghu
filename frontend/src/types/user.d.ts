@@ -10,14 +10,23 @@ export interface RegisterRequest {
 
 // 用户信息
 export interface User {
-    id: number
-    phone: string
-    wechat: string
-    realName: string
-    level: number
-    points: number
-    status: number
-    token?: string
-    createTime: string
-    updateTime: string
+    id: number;
+    username: string;
+    nickname: string;
+    phone: string;
+    avatar: string;
+    level: number;
+    points: number;
+    createTime: string;
+    updateTime: string;
+}
+
+export interface LoginResponse {
+    token: string;
+    user: User;
+}
+
+export interface LoginRequest {
+    phone: string;
+    password: string;
 } 

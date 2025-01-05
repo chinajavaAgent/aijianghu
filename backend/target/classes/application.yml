@@ -39,3 +39,8 @@ mybatis-plus:
 logging:
   level:
     com.aigroup.world: debug 
+
+jwt:
+  # 密钥需要至少32字节（256位）
+  secret: 9a4f2c8d3b7a1e6f45c8a0b3f267d8b1d4e6f3c8a9d2b5f8e3a9c6b5d8a7f1e2
+  expiration: 86400 # 24小时，单位：秒 

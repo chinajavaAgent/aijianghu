@@ -8,19 +8,19 @@ import com.aigroup.world.model.User;
 import com.aigroup.world.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    @Resource
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -91,5 +91,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private boolean checkWechatExists(String wechat) {
         return baseMapper.exists(new LambdaQueryWrapper<User>()
                 .eq(User::getWechat, wechat));
+    }
+
+    @Override
+    public User findByPhone(String phone) {
+        return getOne(new LambdaQueryWrapper<User>()
+                .eq(User::getPhone, phone));
     }
 } 
