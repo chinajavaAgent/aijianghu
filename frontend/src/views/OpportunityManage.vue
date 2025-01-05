@@ -161,54 +161,37 @@
                 <!-- 基本信息 -->
                 <div v-if="project.currentStep === 0" class="space-y-4">
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                      项目名称
-                      <span class="text-red-500">*</span>
-                    </label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">项目名称</label>
                     <input v-model="project.name" type="text"
                       class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                      :class="{'border-red-500': !project.name?.trim()}"
-                      placeholder="请输入项目名称（必填）">
+                      placeholder="请输入项目名称">
                   </div>
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                      项目介绍
-                      <span class="text-red-500">*</span>
-                    </label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">项目介绍</label>
                     <textarea v-model="project.description"
                       class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                      :class="{'border-red-500': !project.description?.trim()}"
                       rows="3"
-                      placeholder="请输入项目详细介绍（必填）"></textarea>
-                  </div>
-                  <div class="flex justify-end">
-                    <button @click="submitProject(project)"
-                      class="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700">
-                      保存基本信息
-                    </button>
+                      placeholder="请输入项目详细介绍"></textarea>
                   </div>
                 </div>
 
                 <!-- 成功案例 -->
-                <div v-if="project.currentStep === 1" class="relative">
-                  <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+                <div v-if="project.currentStep === 1">
+                  <div class="space-y-4">
                     <div v-for="(caseItem, caseIndex) in project.cases" :key="caseIndex"
                       class="bg-white p-4 rounded-lg border border-gray-200">
-                      <div class="mb-4">
+                      <div class="flex justify-between items-start mb-2">
                         <span class="text-sm font-medium text-gray-700">案例 {{ caseIndex + 1 }}</span>
+                        <button @click="removeCase(project, caseIndex)"
+                          class="text-sm text-red-600 hover:text-red-800">
+                          删除案例
+                        </button>
                       </div>
-                      <div class="space-y-4">
-                        <div>
-                          <label class="block text-sm font-medium text-gray-700 mb-1">
-                            案例描述
-                            <span class="text-red-500">*</span>
-                          </label>
-                          <textarea v-model="caseItem.description"
-                            class="w-full px-3 py-2 border rounded-lg mb-2"
-                            :class="{'border-red-500': !caseItem.description?.trim()}"
-                            rows="2"
-                            placeholder="请输入案例描述（必填）"></textarea>
-                        </div>
+                      <textarea v-model="caseItem.description"
+                        class="w-full px-3 py-2 border rounded-lg mb-2"
+                        rows="2"
+                        placeholder="请输入案例描述"></textarea>
+                      <div class="space-y-2">
                         <div v-if="caseItem.imageUrl" class="relative">
                           <img :src="caseItem.imageUrl" 
                             class="w-full h-48 object-cover rounded-lg" 
@@ -227,23 +210,11 @@
                           <button @click="triggerImageUpload(index, caseIndex)"
                             class="w-full h-32 flex flex-col items-center justify-center text-gray-500 hover:text-gray-700">
                             <i class="fas fa-camera text-2xl mb-2"></i>
-                            <span class="text-sm">点击上传案例图片（选填）</span>
-                          </button>
-                        </div>
-                        <div class="flex justify-end space-x-2 mt-4">
-                          <button @click="submitCase(project, caseItem)"
-                            class="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700">
-                            提交案例
-                          </button>
-                          <button @click="removeCase(project, caseIndex)"
-                            class="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700">
-                            删除案例
+                            <span class="text-sm">点击上传案例图片</span>
                           </button>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="sticky bottom-0 pt-4 bg-white border-t border-gray-200 mt-4">
                     <button @click="addCase(project)"
                       class="w-full px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50">
                       添加案例
@@ -287,14 +258,9 @@
                       class="flex items-center space-x-2">
                       <input v-model="benefit.content" type="text"
                         class="flex-1 px-3 py-2 border rounded-lg"
-                        :class="{'border-red-500': !benefit.content?.trim()}"
                         placeholder="请输入福利内容">
-                      <button @click="submitBenefit(project, benefit)"
-                        class="px-3 py-1 text-sm text-blue-600 hover:text-blue-800">
-                        提交
-                      </button>
                       <button @click="removeBenefit(project, benefitIndex)"
-                        class="px-3 py-1 text-sm text-red-600 hover:text-red-800">
+                        class="text-sm text-red-600 hover:text-red-800">
                         删除
                       </button>
                     </div>
@@ -315,7 +281,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import { Dialog, showToast, showConfirmDialog } from 'vant'
+import { Dialog, showToast } from 'vant'
 import { createAiTips, updateAiTips, deleteAiTips, getAiTipsList } from '@/api/tips'
 import type { AiTips } from '@/types/tips'
 import {
@@ -332,13 +298,7 @@ import {
   updateBenefit,
   deleteBenefit
 } from '@/api/project'
-import type {
-  Project,
-  ProjectCase,
-  ProjectBenefit,
-  ProjectUpdateDto,
-  ProjectCreateDto
-} from '@/types/project'
+import type { Project, ProjectCase, ProjectBenefit, ProjectUpdateDto } from '@/types/project'
 
 // 锦囊列表数据
 const tipsList = ref<AiTips[]>([])
@@ -396,19 +356,11 @@ const openProjectDialog = async (tip: AiTips) => {
   try {
     // 加载项目列表
     const response = await getProjects(1, 10)  // 使用分页参数
-    projectForm.projects = response.data.records.map((project: any) => ({
-      id: project.id,
-      name: project.name,
-      description: project.description,
-      videoUrl: project.videoUrl,
-      status: project.status || 0,
-      views: project.views || 0,
-      likes: project.likes || 0,
-      cases: project.cases || [],
-      benefits: project.benefits || [],
+    projectForm.projects = response.data.records.map((project: Project) => ({  // 从分页对象中获取records
+      ...project,
       isExpanded: true,
       currentStep: 0
-    } as Project))
+    }))
     projectDialogVisible.value = true
   } catch (error) {
     console.error('加载项目列表失败:', error)
@@ -457,25 +409,6 @@ const removeProject = async (index: number) => {
 // 提交项目表单
 const handleProjectSubmit = async () => {
   try {
-    // 验证所有项目的必填字段
-    for (const project of projectForm.projects) {
-      if (!project.name?.trim()) {
-        showToast('请输入项目名称')
-        return
-      }
-      if (!project.description?.trim()) {
-        showToast('请输入项目介绍')
-        return
-      }
-      // 验证案例内容
-      for (const caseItem of project.cases) {
-        if (!caseItem.description?.trim()) {
-          showToast('请输入案例内容')
-          return
-        }
-      }
-    }
-
     // 更新所有项目
     await Promise.all(projectForm.projects.map(async (project) => {
       if (project.id) {
@@ -564,82 +497,58 @@ onMounted(() => {
 })
 
 // 添加案例
-const addCase = (project: Project) => {
-  if (!project.cases) {
-    project.cases = []
+const addCase = async (project: Project) => {
+  if (!project.id) return
+  
+  try {
+    const newCase = {
+      description: '',
+      imageUrl: ''
+    }
+    const response = await addProjectCase(project.id, newCase)
+    project.cases.push(response.data)
+    showToast('添加成功')
+  } catch (error) {
+    console.error('添加案例失败:', error)
+    showToast('添加失败，请重试')
   }
-  const newCase: ProjectCase = {
-    description: '',
-    imageUrl: ''
-  }
-  project.cases.push(newCase)
 }
 
 // 删除案例
 const removeCase = async (project: Project, index: number) => {
   const caseItem = project.cases[index]
+  if (!project.id || !caseItem.id) return
 
   try {
-    await showConfirmDialog({
+    await Dialog.confirm({
       title: '确认删除',
-      message: '确定要删除这个案例吗？',
-      confirmButtonText: '确定',
-      cancelButtonText: '取消'
+      message: '确定要删除这个案例吗？'
     })
-
-    // 如果案例已经保存到后端，则调用删除接口
-    if (project.id && caseItem.id) {
-      await deleteCase(project.id, caseItem.id)
-    }
-    
-    // 无论案例是否已保存，都从前端列表中移除
+    await deleteCase(project.id, caseItem.id)
     project.cases.splice(index, 1)
     showToast('删除成功')
   } catch (error) {
+    console.error('删除案例失败:', error)
     if (error !== 'cancel') {
-      console.error('删除案例失败:', error)
       showToast('删除失败，请重试')
     }
   }
 }
 
 // 添加福利
-const addBenefit = (project: Project) => {
-  if (!project.benefits) {
-    project.benefits = []
-  }
-  const newBenefit: ProjectBenefit = {
-    content: ''
-  }
-  project.benefits.push(newBenefit)
-}
-
-// 提交福利
-const submitBenefit = async (project: Project, benefit: ProjectBenefit) => {
+const addBenefit = async (project: Project) => {
+  if (!project.id) return
+  
   try {
-    if (!benefit.content?.trim()) {
-      showToast('请输入福利内容')
-      return
+    const newBenefit = {
+      content: ''
     }
-
-    if (project.id) {
-      if (benefit.id) {
-        // 更新已有福利
-        await updateBenefit(project.id, benefit.id, {
-          content: benefit.content
-        })
-      } else {
-        // 添加新福利
-        const response = await addProjectBenefit(project.id, {
-          content: benefit.content
-        })
-        Object.assign(benefit, response.data)
-      }
-      showToast('保存成功')
-    }
+    const response = await addProjectBenefit(project.id, newBenefit)
+    project.benefits.push(response.data)
+    showToast('添加成功')
   } catch (error) {
-    console.error('保存福利失败:', error)
-    showToast('保存失败，请重试')
+    console.error('添加福利失败:', error)
+    showToast('添加失败，请重试')
   }
 }
 
@@ -717,68 +626,6 @@ const handleVideoUpload = async (event: Event, project: Project) => {
     showToast('上传失败，请重试')
   }
 }
-
-// 提交单个案例
-const submitCase = async (project: Project, caseItem: ProjectCase) => {
-  try {
-    if (!caseItem.description?.trim()) {
-      showToast('请输入案例描述')
-      return
-    }
-
-    if (project.id && caseItem.id) {
-      // 更新已有案例
-      await updateCase(project.id, caseItem.id, {
-        description: caseItem.description,
-        imageUrl: caseItem.imageUrl
-      })
-    } else if (project.id) {
-      // 添加新案例
-      const response = await addProjectCase(project.id, {
-        description: caseItem.description,
-        imageUrl: caseItem.imageUrl
-      })
-      Object.assign(caseItem, response.data)
-    }
-    showToast('保存成功')
-  } catch (error) {
-    console.error('保存案例失败:', error)
-    showToast('保存失败，请重试')
-  }
-}
-
-// 提交单个项目的基本信息
-const submitProject = async (project: Project) => {
-  try {
-    if (!project.name?.trim()) {
-      showToast('请输入项目名称')
-      return
-    }
-    if (!project.description?.trim()) {
-      showToast('请输入项目介绍')
-      return
-    }
-
-    if (project.id) {
-      // 更新已有项目
-      const updateData: ProjectUpdateDto = {
-        name: project.name,
-        description: project.description,
-        videoUrl: project.videoUrl,
-        status: project.status
-      }
-      await updateProject(project.id, updateData)
-    } else {
-      // 创建新项目
-      const response = await createProject(project)
-      Object.assign(project, response.data)
-    }
-    showToast('保存成功')
-  } catch (error) {
-    console.error('保存项目失败:', error)
-    showToast('保存失败，请重试')
-  }
-}
 </script>
 
 <style scoped>
@@ -790,52 +637,6 @@ const submitProject = async (project: Project) => {
   :deep(.van-dialog) {
     width: 90%;
     max-width: 800px;
-    max-height: 90vh;
-    display: flex;
-    flex-direction: column;
-    
-    .van-dialog__content {
-      flex: 1;
-      overflow-y: auto;
-      
-      /* 添加滚动条样式 */
-      &::-webkit-scrollbar {
-        width: 6px;
-      }
-      
-      &::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 3px;
-      }
-      
-      &::-webkit-scrollbar-thumb {
-        background: #888;
-        border-radius: 3px;
-      }
-      
-      &::-webkit-scrollbar-thumb:hover {
-        background: #555;
-      }
-    }
   }
-}
-
-/* 添加滚动条样式 */
-.space-y-4::-webkit-scrollbar {
-  width: 6px;
-}
-
-.space-y-4::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
-}
-
-.space-y-4::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 3px;
-}
-
-.space-y-4::-webkit-scrollbar-thumb:hover {
-  background: #555;
 }
 </style> 
