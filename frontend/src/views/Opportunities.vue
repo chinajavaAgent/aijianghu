@@ -70,24 +70,6 @@
               </div>
             </div>
 
-            <!-- 等级要求和获取按钮 -->
-            <div class="flex items-center justify-between mb-4">
-              <div class="flex items-center space-x-2">
-                <i class="fas fa-crown text-amber-500"></i>
-                <span class="text-sm text-gray-600">等级要求: Lv.{{ tip.requiredLevel }}</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span class="text-sm text-gray-500">
-                  <i class="fas fa-eye mr-1"></i>
-                  {{ tip.views || 0 }}
-                </span>
-                <span class="text-sm text-gray-500">
-                  <i class="fas fa-heart mr-1"></i>
-                  {{ tip.likes || 0 }}
-                </span>
-              </div>
-            </div>
-
             <button class="w-full py-2.5 sm:py-3 rounded-lg text-white font-semibold text-sm sm:text-base transition-colors"
               :class="getButtonClass(tip)"
               @click="handlePurchase(tip)">
