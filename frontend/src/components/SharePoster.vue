@@ -23,14 +23,14 @@
         </div>
 
         <!-- 背景颜色选择器 -->
-        <div class="mb-6">
-          <h4 class="text-lg font-medium mb-3">选择背景样式</h4>
-          <div class="flex flex-wrap gap-4">
+        <div class="mb-4">
+          <h4 class="text-sm font-medium mb-2">选择背景样式</h4>
+          <div class="flex flex-wrap gap-2">
             <!-- 预设颜色方案 -->
             <div v-for="(scheme, index) in colorSchemes" 
               :key="index"
               @click="selectColorScheme(scheme)"
-              class="relative w-20 h-20 rounded-lg cursor-pointer overflow-hidden hover:ring-2 hover:ring-blue-500 transition-all"
+              class="relative w-12 h-12 rounded-md cursor-pointer overflow-hidden hover:ring-2 hover:ring-blue-500 transition-all"
               :class="{'ring-2 ring-blue-500': isCurrentScheme(scheme)}">
               <div v-if="scheme.type === 'gradient'"
                 class="w-full h-full"
@@ -44,35 +44,29 @@
                   backgroundColor: scheme.startColor
                 }">
               </div>
+              <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-20 text-white text-[8px] text-center py-0.5">
+                {{ scheme.name }}
+              </div>
             </div>
             
             <!-- 自定义颜色选择器 -->
-            <div class="space-y-2">
-              <div class="flex items-center space-x-2">
-                <label class="text-sm text-gray-600">背景类型：</label>
-                <select v-model="customBackground.type" 
-                  class="border rounded px-2 py-1">
-                  <option value="gradient">渐变</option>
-                  <option value="solid">纯色</option>
-                  <option value="paper">纸张</option>
-                </select>
-              </div>
+            <div class="flex items-center gap-2">
+              <select v-model="customBackground.type" 
+                class="border rounded px-1 py-0.5 text-sm">
+                <option value="gradient">渐变</option>
+                <option value="solid">纯色</option>
+                <option value="paper">纸张</option>
+              </select>
               
-              <div class="flex items-center space-x-2">
-                <label class="text-sm text-gray-600">
-                  {{ customBackground.type === 'gradient' ? '开始颜色' : '背景颜色' }}：
-                </label>
+              <div class="flex items-center gap-1">
                 <input type="color" 
                   v-model="customBackground.startColor"
-                  class="w-8 h-8 p-0 border rounded">
-              </div>
-              
-              <div v-if="customBackground.type === 'gradient'" 
-                class="flex items-center space-x-2">
-                <label class="text-sm text-gray-600">结束颜色：</label>
-                <input type="color" 
+                  class="w-6 h-6 p-0 border rounded">
+                
+                <input v-if="customBackground.type === 'gradient'" 
+                  type="color" 
                   v-model="customBackground.endColor"
-                  class="w-8 h-8 p-0 border rounded">
+                  class="w-6 h-6 p-0 border rounded">
               </div>
             </div>
           </div>
