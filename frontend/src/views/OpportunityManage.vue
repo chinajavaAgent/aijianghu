@@ -123,7 +123,7 @@
               <!-- 项目头部 -->
               <div class="flex justify-between items-center p-4 bg-white border-b border-gray-200">
                 <div class="flex items-center space-x-3">
-                  <span class="font-medium text-gray-800">{{ project.title || `项目 ${index + 1}` }}</span>
+                  <span class="font-medium text-gray-800">{{ project.name || `项目 ${index + 1}` }}</span>
                   <span class="text-sm text-gray-500">{{ project.cases?.length || 0 }}个案例</span>
                   <span class="text-sm text-gray-500">{{ project.benefits?.length || 0 }}项福利</span>
                 </div>
@@ -162,7 +162,7 @@
                 <div v-if="project.currentStep === 0" class="space-y-4">
                   <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">项目名称</label>
-                    <input v-model="project.title" type="text"
+                    <input v-model="project.name" type="text"
                       class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                       placeholder="请输入项目名称">
                   </div>
@@ -298,7 +298,7 @@ import {
   updateBenefit,
   deleteBenefit
 } from '@/api/project'
-import type { Project, ProjectCase, ProjectBenefit } from '@/types/project'
+import type { Project, ProjectCase, ProjectBenefit, ProjectUpdateDto } from '@/types/project'
 
 // 锦囊列表数据
 const tipsList = ref<AiTips[]>([])
@@ -371,7 +371,7 @@ const openProjectDialog = async (tip: AiTips) => {
 // 添加项目
 const addProject = () => {
   const newProject: Project = {
-    title: '',
+    name: '',
     description: '',
     videoUrl: '',
     status: 0,
@@ -412,12 +412,13 @@ const handleProjectSubmit = async () => {
     // 更新所有项目
     await Promise.all(projectForm.projects.map(async (project) => {
       if (project.id) {
-        await updateProject(project.id, {
-          title: project.title,
+        const updateData: ProjectUpdateDto = {
+          name: project.name,
           description: project.description,
           videoUrl: project.videoUrl,
           status: project.status
-        })
+        }
+        await updateProject(project.id, updateData)
       } else {
         // 如果是新项目，则创建
         await createProject(project)
