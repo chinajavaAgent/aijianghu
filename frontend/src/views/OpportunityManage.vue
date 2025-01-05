@@ -788,6 +788,33 @@ const submitProject = async (project: Project) => {
   :deep(.van-dialog) {
     width: 90%;
     max-width: 800px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    
+    .van-dialog__content {
+      flex: 1;
+      overflow-y: auto;
+      
+      /* 添加滚动条样式 */
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+      
+      &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+      }
+      
+      &::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+      }
+      
+      &::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+    }
   }
 }
 </style> 
