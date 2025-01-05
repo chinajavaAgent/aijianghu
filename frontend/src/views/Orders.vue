@@ -50,16 +50,34 @@
                     <h3 class="font-medium text-gray-800 text-lg">{{ order.title }}</h3>
                     <span class="px-3 py-1 bg-yellow-50 text-yellow-600 rounded-full text-sm font-medium">审核中</span>
                   </div>
-                  <p class="text-sm text-gray-500 mt-2">申请时间：{{ order.applyTime }}</p>
-                  <p class="text-sm text-gray-500 mt-1">订单编号：{{ order.id }}</p>
+                  <div class="mt-3">
+                    <div class="flex items-center text-sm text-gray-500 mb-1">
+                      <span class="font-medium text-gray-700">申核商家：</span>
+                      <span>{{ order.reviewer }}</span>
+                    </div>
+                    <div class="flex items-center text-sm text-gray-500 mb-1">
+                      <span class="font-medium text-gray-700">商家电话：</span>
+                      <span>{{ order.phone }}</span>
+                      <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click="copyText(order.phone)">一键拨号</button>
+                    </div>
+                    <div class="flex items-center text-sm text-gray-500 mb-1">
+                      <span class="font-medium text-gray-700">商家微信：</span>
+                      <span>{{ order.wechat }}</span>
+                      <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click="copyText(order.wechat)">点击复制</button>
+                    </div>
+                    <div class="flex items-center text-sm text-gray-500 mb-1">
+                      <span class="font-medium text-gray-700">商家信誉：</span>
+                      <span>{{ order.credit }} 分</span>
+                    </div>
+                  </div>
                   <div class="mt-3 pt-3 border-t border-gray-100">
                     <div class="flex justify-between items-center">
                       <span class="text-gray-600">订单金额：
                         <span class="text-gray-800 font-medium text-lg">￥{{ order.price }}</span>
                       </span>
-                      <button class="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                        查看详情
-                      </button>
+                      <div class="flex items-center gap-2">
+                        <span class="text-sm text-gray-500">{{ order.applyTime }}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -96,16 +114,34 @@
                     <h3 class="font-medium text-gray-800 text-lg">{{ order.title }}</h3>
                     <span class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-sm font-medium">已通过</span>
                   </div>
-                  <p class="text-sm text-gray-500 mt-2">审核时间：{{ order.approveTime }}</p>
-                  <p class="text-sm text-gray-500 mt-1">订单编号：{{ order.id }}</p>
+                  <div class="mt-3">
+                    <div class="flex items-center text-sm text-gray-500 mb-1">
+                      <span class="font-medium text-gray-700">申核商家：</span>
+                      <span>{{ order.reviewer }}</span>
+                    </div>
+                    <div class="flex items-center text-sm text-gray-500 mb-1">
+                      <span class="font-medium text-gray-700">商家电话：</span>
+                      <span>{{ order.phone }}</span>
+                      <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click="copyText(order.phone)">一键拨号</button>
+                    </div>
+                    <div class="flex items-center text-sm text-gray-500 mb-1">
+                      <span class="font-medium text-gray-700">商家微信：</span>
+                      <span>{{ order.wechat }}</span>
+                      <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click="copyText(order.wechat)">点击复制</button>
+                    </div>
+                    <div class="flex items-center text-sm text-gray-500 mb-1">
+                      <span class="font-medium text-gray-700">商家信誉：</span>
+                      <span>{{ order.credit }} 分</span>
+                    </div>
+                  </div>
                   <div class="mt-3 pt-3 border-t border-gray-100">
                     <div class="flex justify-between items-center">
                       <span class="text-gray-600">订单金额：
                         <span class="text-gray-800 font-medium text-lg">￥{{ order.price }}</span>
                       </span>
-                      <button class="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                        查看详情
-                      </button>
+                      <div class="flex items-center gap-2">
+                        <span class="text-sm text-gray-500">{{ order.approveTime }}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -130,7 +166,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { showToast } from 'vant'
+import { useRouter, useRoute } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 
 // 标签页配置
 const tabs = [
@@ -138,16 +177,48 @@ const tabs = [
   { label: '已审核', value: 'approved' }
 ]
 
+const router = useRouter()
+const route = useRoute()
+const userStore = useUserStore()
+
 // 当前选中的标签页
 const activeTab = ref('pending')
+
+// 检查登录状态
+const checkLogin = () => {
+  const token = localStorage.getItem('token')
+  const user = userStore.userInfo
+  if (!token || !user) {
+    // 如果发现token存在但user不存在，清除token
+    if (token && !user) {
+      localStorage.removeItem('token')
+    }
+    router.push({
+      path: '/login',
+      query: { redirect: route.fullPath }
+    })
+    return false
+  }
+  return true
+}
+
+// 在组件挂载时检查登录状态并获取用户信息
+onMounted(async () => {
+  if (!checkLogin()) return
+  // 这里可以添加获取订单列表的逻辑
+})
 
 // 模拟订单数据
 const pendingOrders = ref([
   {
     id: 'ORD20240120143',
-    title: 'AI写作变现',
-    price: 10,
-    applyTime: '2024-01-20 14:30'
+    title: '申请升级：二级会员',
+    price: 20,
+    reviewer: '悦悦',
+    phone: '15813545885',
+    wechat: 'djdj20012',
+    credit: 81,
+    applyTime: '2025-01-04 23:49:0'
   }
 ])
 
@@ -156,9 +227,30 @@ const approvedOrders = ref([
     id: 'ORD20240119152',
     title: 'AI绘画变现',
     price: 20,
+    reviewer: '悦悦',
+    phone: '15813545885',
+    wechat: 'djdj20012',
+    credit: 81,
     approveTime: '2024-01-19 15:20'
   }
 ])
+
+// 复制文本
+const copyText = (text: string) => {
+  if (!checkLogin()) return
+
+  if (text.match(/^\d+$/)) {
+    // 如果是纯数字，则是电话号码，直接拨打
+    window.location.href = `tel:${text}`
+  } else {
+    // 否则复制到剪贴板
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('复制成功')
+    }).catch(() => {
+      showToast('复制失败，请手动复制')
+    })
+  }
+}
 </script>
 
 <style scoped>

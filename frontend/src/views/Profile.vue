@@ -10,8 +10,8 @@
             </svg>
           </div>
           <div class="ml-4">
-            <h2 class="text-xl font-bold text-gray-800">{{ userInfo.nickname || '未设置昵称' }}</h2>
-            <p class="text-gray-600 mt-1">手机号：{{ userInfo.phone || '未绑定' }}</p>
+            <h2 class="text-xl font-bold text-gray-800">{{ userStore.userInfo?.nickname || '未设置昵称' }}</h2>
+            <p class="text-gray-600 mt-1">手机号：{{ userStore.userInfo?.phone || '未绑定' }}</p>
           </div>
         </div>
       </div>
@@ -20,7 +20,7 @@
       <div class="bg-white rounded-xl shadow-md overflow-hidden">
         <div class="divide-y">
           <!-- 我的订单 -->
-          <router-link to="/orders" class="flex items-center justify-between p-4 hover:bg-gray-50">
+          <div class="flex items-center justify-between p-4 hover:bg-gray-50" @click="checkLogin(() => router.push('/orders'))">
             <div class="flex items-center">
               <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
                 <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -32,10 +32,10 @@
             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
             </svg>
-          </router-link>
+          </div>
 
           <!-- 账号设置 -->
-          <div class="flex items-center justify-between p-4 hover:bg-gray-50">
+          <div class="flex items-center justify-between p-4 hover:bg-gray-50" @click="checkLogin(() => {})">
             <div class="flex items-center">
               <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
                 <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,7 +51,7 @@
           </div>
 
           <!-- 联系客服 -->
-          <div class="flex items-center justify-between p-4 hover:bg-gray-50" @click="showCustomerService">
+          <div class="flex items-center justify-between p-4 hover:bg-gray-50" @click="checkLogin(showCustomerService)">
             <div class="flex items-center">
               <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
                 <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -111,19 +111,29 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { Dialog } from 'vant'
+import { useRouter, useRoute } from 'vue-router'
+import { Dialog, showToast } from 'vant'
+import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
-
-// 模拟用户数据
-const userInfo = ref({
-  nickname: '测试用户',
-  phone: '138****8888'
-})
+const route = useRoute()
+const userStore = useUserStore()
 
 // 客服弹窗控制
 const showServiceDialog = ref(false)
+
+// 检查登录状态
+const checkLogin = (callback: () => void) => {
+  const token = localStorage.getItem('token')
+  if (!token) {
+    router.push({
+      path: '/login',
+      query: { redirect: route.fullPath }
+    })
+    return
+  }
+  callback()
+}
 
 // 显示客服弹窗
 const showCustomerService = () => {
@@ -131,12 +141,17 @@ const showCustomerService = () => {
 }
 
 const handleLogout = () => {
-  if (confirm('确定要退出登录吗？')) {
-    // 清除用户信息
-    // userStore.clearUser()
-    // 跳转到登录页
-    router.push('/login')
-  }
+  Dialog.confirm({
+    title: '提示',
+    message: '确定要退出登录吗？',
+  })
+    .then(() => {
+      userStore.clearUser()
+      router.push('/login')
+    })
+    .catch(() => {
+      // 取消退出
+    })
 }
 </script>
 

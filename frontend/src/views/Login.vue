@@ -62,11 +62,14 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { login } from '../api/user'
 import toast from '../utils/toast'
+import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
+const route = useRoute()
+const userStore = useUserStore()
 
 const form = reactive({
   phone: '',
@@ -88,16 +91,19 @@ const handleLogin = async () => {
     }
 
     // 调用登录API
-    const { data: user } = await login(form)
+    const { data } = await login(form)
     
-    // 保存用户信息到localStorage
-    localStorage.setItem('user', JSON.stringify(user))
+    // 保存token和用户信息
+    userStore.setToken(data.token)
+    userStore.setUserInfo(data)
     
-    // 登录成功后跳转到首页
+    // 登录成功后跳转
     toast.success('登录成功')
-    router.push('/')
+    const redirect = route.query.redirect as string
+    router.push(redirect || '/')
   } catch (error) {
     console.error('登录失败:', error)
+    toast.error('登录失败，请检查账号密码')
   }
 }
 </script>

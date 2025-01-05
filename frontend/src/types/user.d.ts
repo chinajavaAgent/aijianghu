@@ -17,6 +17,7 @@ export interface User {
     level: number
     points: number
     status: number
+    token?: string
     createTime: string
     updateTime: string
 } 
