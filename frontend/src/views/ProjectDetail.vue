@@ -263,21 +263,21 @@
               </div>
             </div>
 
-            <!-- 提示信息 -->
-            <!-- <div class="mt-6 p-4 bg-blue-50 rounded-xl">
-              <div class="flex items-start">
-                <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <!-- 申请按钮 -->
+            <div class="mt-6">
+              <button @click="handleApply" 
+                class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors duration-200 flex items-center justify-center space-x-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <div class="flex-1">
-                  <p class="text-blue-800 font-medium">添加时请备注</p>
-                  <div class="mt-1 text-blue-600 text-sm space-y-1">
-                    <p>项目：{{ currentProject.title }}</p>
-                    <p>价格：￥{{ currentProject.price }}</p>
-                  </div>
-                </div>
-              </div>
-            </div> -->
+                <span>立即申请</span>
+              </button>
+            </div>
+
+            <!-- 提示信息 -->
+            <p class="mt-3 text-center text-sm text-gray-500">
+              申请后可在"订单-待审核"中查看进度
+            </p>
           </div>
 
           <!-- 关闭按钮 -->
@@ -470,6 +470,15 @@ const copyText = (text: string) => {
 
 const handlePurchase = () => {
   showContactModal.value = true
+}
+
+const handleApply = () => {
+  // 显示申请提示
+  alert('申请审核中')
+  // 关闭联系弹窗
+  showContactModal.value = false
+  // 跳转到订单页面
+  router.push('/orders')
 }
 
 // 根据路由参数设置初始选中的项目

@@ -1,32 +1,49 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import Home from '../views/Home.vue'
+import Register from '../views/Register.vue'
+import Login from '../views/Login.vue'
+import Opportunities from '../views/Opportunities.vue'
+import ProjectDetail from '../views/ProjectDetail.vue'
+import Orders from '../views/Orders.vue'
+import Profile from '../views/Profile.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
     {
       path: '/',
       name: 'home',
-      component: () => import('../views/Home.vue')
+      component: Home
     },
     {
       path: '/register',
       name: 'register',
-      component: () => import('../views/Register.vue')
+      component: Register
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/Login.vue')
+      component: Login
     },
     {
       path: '/opportunities',
       name: 'opportunities',
-      component: () => import('../views/Opportunities.vue')
+      component: Opportunities
     },
     {
       path: '/project/:id',
       name: 'project-detail',
-      component: () => import('../views/ProjectDetail.vue')
+      component: ProjectDetail
+    },
+    {
+      path: '/orders',
+      name: 'orders',
+      component: Orders
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: Profile
     }
   ]
 })
