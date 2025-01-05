@@ -190,8 +190,8 @@
                 </div>
 
                 <!-- 成功案例 -->
-                <div v-if="project.currentStep === 1">
-                  <div class="space-y-4">
+                <div v-if="project.currentStep === 1" class="relative">
+                  <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
                     <div v-for="(caseItem, caseIndex) in project.cases" :key="caseIndex"
                       class="bg-white p-4 rounded-lg border border-gray-200">
                       <div class="mb-4">
@@ -242,6 +242,8 @@
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div class="sticky bottom-0 pt-4 bg-white border-t border-gray-200 mt-4">
                     <button @click="addCase(project)"
                       class="w-full px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50">
                       添加案例
@@ -816,5 +818,24 @@ const submitProject = async (project: Project) => {
       }
     }
   }
+}
+
+/* 添加滚动条样式 */
+.space-y-4::-webkit-scrollbar {
+  width: 6px;
+}
+
+.space-y-4::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.space-y-4::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.space-y-4::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 </style> 
