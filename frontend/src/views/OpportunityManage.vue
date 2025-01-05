@@ -203,9 +203,10 @@ const loadTipsList = async () => {
       page: 1,
       size: 100
     })
-    tipsList.value = response.data.records
+    tipsList.value = response.data.records || []
   } catch (error) {
     console.error('加载锦囊列表失败:', error)
+    showToast('加载失败，请重试')
   }
 }
 

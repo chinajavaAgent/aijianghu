@@ -28,12 +28,12 @@ request.interceptors.request.use(
 request.interceptors.response.use(
     response => {
         const res = response.data
-        // 这里可以根据后端的返回格式进行统一处理
+        // 判断返回的code是否为200
         if (res.code !== 200) {
-            // 如果返回的code不是200，说明有错误
             toast.error(res.message || '操作失败')
             return Promise.reject(new Error(res.message || '操作失败'))
         }
+        // 返回数据部分
         return res
     },
     error => {
@@ -46,7 +46,8 @@ request.interceptors.response.use(
             toast.error('没有权限访问')
         } else {
             console.error('响应错误:', error)
-            toast.error(error.response?.data?.message || '请求失败')
+            const message = error.response?.data?.message || error.message || '请求失败'
+            toast.error(message)
         }
         return Promise.reject(error)
     }
