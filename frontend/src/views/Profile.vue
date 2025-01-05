@@ -51,7 +51,7 @@
           </div>
 
           <!-- 联系客服 -->
-          <div class="flex items-center justify-between p-4 hover:bg-gray-50">
+          <div class="flex items-center justify-between p-4 hover:bg-gray-50" @click="showCustomerService">
             <div class="flex items-center">
               <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
                 <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,12 +82,37 @@
         </div>
       </div>
     </div>
+
+    <!-- 客服弹窗 -->
+    <van-dialog
+      v-model:show="showServiceDialog"
+      title="联系客服"
+      :show-confirm-button="false"
+      :close-on-click-overlay="true"
+      :close-on-popstate="true"
+      class="rounded-lg"
+    >
+      <div class="p-6 text-center">
+        <div class="flex justify-center mb-4">
+          <svg class="w-16 h-16 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M8.2 9.6c-.4 0-.7.1-.9.3-.2.2-.3.5-.3.8 0 .4.1.7.3.9.2.2.5.3.9.3.3 0 .6-.1.8-.3.2-.2.3-.5.3-.9 0-.3-.1-.6-.3-.8-.2-.2-.5-.3-.8-.3zm7.6 0c-.4 0-.7.1-.9.3-.2.2-.3.5-.3.8 0 .4.1.7.3.9.2.2.5.3.9.3.3 0 .6-.1.8-.3.2-.2.3-.5.3-.9 0-.3-.1-.6-.3-.8-.2-.2-.5-.3-.8-.3zm-3.8 10.2c-4.8 0-8.7-3.9-8.7-8.7 0-4.8 3.9-8.7 8.7-8.7 4.8 0 8.7 3.9 8.7 8.7 0 4.8-3.9 8.7-8.7 8.7zm0-15.9c-4 0-7.2 3.2-7.2 7.2 0 4 3.2 7.2 7.2 7.2 4 0 7.2-3.2 7.2-7.2 0-4-3.2-7.2-7.2-7.2z"/>
+          </svg>
+        </div>
+        <p class="text-lg font-medium text-gray-900 mb-2">微信号：AI群江湖</p>
+        <p class="text-sm text-gray-500 mb-4">扫码或搜索添加客服微信</p>
+        <div class="flex justify-center">
+          <img src="https://learn-app.oss-cn-hangzhou.aliyuncs.com/image/qrcode.jpg" alt="客服微信二维码" class="w-48 h-48 object-cover rounded-lg shadow-sm">
+        </div>
+        <p class="text-xs text-gray-400 mt-4">工作时间：周一至周日 9:00-22:00</p>
+      </div>
+    </van-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { Dialog } from 'vant'
 
 const router = useRouter()
 
@@ -97,6 +122,14 @@ const userInfo = ref({
   phone: '138****8888'
 })
 
+// 客服弹窗控制
+const showServiceDialog = ref(false)
+
+// 显示客服弹窗
+const showCustomerService = () => {
+  showServiceDialog.value = true
+}
+
 const handleLogout = () => {
   if (confirm('确定要退出登录吗？')) {
     // 清除用户信息
@@ -105,4 +138,20 @@ const handleLogout = () => {
     router.push('/login')
   }
 }
-</script> 
+</script>
+
+<style scoped>
+.container {
+  max-width: 768px;
+}
+
+:deep(.van-dialog) {
+  border-radius: 0.75rem;
+}
+
+:deep(.van-dialog__header) {
+  padding: 1rem;
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+</style> 

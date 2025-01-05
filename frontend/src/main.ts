@@ -10,7 +10,8 @@ import {
   PullRefresh,
   Toast,
   Tab,
-  Tabs
+  Tabs,
+  Dialog
 } from 'vant'
 import 'vant/lib/index.css'
 
@@ -23,6 +24,7 @@ app.use(PullRefresh)
 app.use(Toast)
 app.use(Tab)
 app.use(Tabs)
+app.use(Dialog)
 
 app.use(pinia)
 app.use(router)
