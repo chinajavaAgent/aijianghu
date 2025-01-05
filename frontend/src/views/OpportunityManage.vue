@@ -265,6 +265,10 @@
                       <input v-model="benefit.content" type="text"
                         class="flex-1 px-3 py-2 border rounded-lg"
                         placeholder="请输入福利内容">
+                      <button @click="saveBenefit(project, benefit, benefitIndex)"
+                        class="text-sm text-blue-600 hover:text-blue-800">
+                        保存
+                      </button>
                       <button @click="removeBenefit(project, benefitIndex)"
                         class="text-sm text-red-600 hover:text-red-800">
                         删除
@@ -569,26 +573,53 @@ const removeCase = async (project: Project, index: number) => {
 }
 
 // 添加福利
-const addBenefit = async (project: Project) => {
+const addBenefit = (project: Project) => {
+  // 只在本地添加一个临时福利对象，不调用接口
+  const newBenefit: ProjectBenefit = {
+    content: ''
+  }
+  project.benefits.push(newBenefit)
+}
+
+// 保存福利
+const saveBenefit = async (project: Project, benefit: ProjectBenefit, index: number) => {
   if (!project.id) return
   
   try {
-    const newBenefit = {
-      content: ''
+    if (!benefit.content) {
+      showToast('请输入福利内容')
+      return
     }
-    const response = await addProjectBenefit(project.id, newBenefit)
-    project.benefits.push(response.data)
-    showToast('添加成功')
+    
+    // 如果是新福利，则调用添加接口
+    if (!benefit.id) {
+      const response = await addProjectBenefit(project.id, benefit)
+      // 用返回的数据更新本地福利对象
+      Object.assign(project.benefits[index], response.data)
+      showToast('添加成功')
+    } else {
+      // 如果是已有福利，则调用更新接口
+      await updateBenefit(project.id, benefit.id, benefit)
+      showToast('更新成功')
+    }
   } catch (error) {
-    console.error('添加福利失败:', error)
-    showToast('添加失败，请重试')
+    console.error('保存福利失败:', error)
+    showToast('保存失败，请重试')
   }
 }
 
 // 删除福利
 const removeBenefit = async (project: Project, index: number) => {
   const benefit = project.benefits[index]
-  if (!project.id || !benefit.id) return
+  
+  // 如果福利没有id，说明还未保存到数据库，直接在前端删除
+  if (!benefit.id) {
+    project.benefits.splice(index, 1)
+    return
+  }
+
+  // 如果福利已经保存到数据库，需要调用接口删除
+  if (!project.id) return
 
   try {
     await showConfirmDialog({
