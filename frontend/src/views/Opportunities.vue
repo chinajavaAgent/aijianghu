@@ -179,10 +179,12 @@ const getButtonClass = (tip: AiTips) => {
 
 // 添加购买处理函数
 const handlePurchase = (tip: AiTips) => {
-  router.push({
-    name: 'AiTipsDetail',
-    params: { id: tip.id }
-  })
+  // 如果有项目，跳转到第一个项目的详情页
+  if (tip.projects && tip.projects.length > 0) {
+    router.push(`/project/${tip.projects[0].id}`)
+  } else {
+    showToast('该锦囊暂无可用项目')
+  }
 }
 
 // 页面加载时获取数据
