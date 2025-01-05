@@ -80,6 +80,21 @@
             </svg>
           </div>
 
+          <!-- 运营物料 -->
+          <div class="flex items-center justify-between p-4 hover:bg-gray-50" @click="checkLogin(() => router.push('/operation-materials'))">
+            <div class="flex items-center">
+              <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+              </div>
+              <span class="ml-3 text-gray-700">运营物料</span>
+            </div>
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </div>
+
           <!-- 锦囊管理员维护 -->
           <div class="flex items-center justify-between p-4 hover:bg-gray-50" @click="checkLogin(() => router.push('/admin-manage'))">
             <div class="flex items-center">

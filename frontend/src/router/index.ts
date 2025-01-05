@@ -53,6 +53,42 @@ const router = createRouter({
       name: 'admin-manage',
       component: () => import('@/views/AdminManage.vue'),
       meta: { requiresAuth: true }
+    },
+    {
+      path: '/operation-materials',
+      name: 'OperationMaterials',
+      component: () => import('../views/OperationMaterials.vue'),
+      meta: {
+        title: '运营物料',
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/poster-generator',
+      name: 'PosterGenerator',
+      component: () => import('../views/PosterGenerator.vue'),
+      meta: {
+        title: '海报生成',
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/qrcode-generator',
+      name: 'QrcodeGenerator',
+      component: () => import('../views/QrcodeGenerator.vue'),
+      meta: {
+        title: '二维码生成',
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/copywriting-templates',
+      name: 'CopywritingTemplates',
+      component: () => import('../views/CopywritingTemplates.vue'),
+      meta: {
+        title: '文案模板',
+        requiresAuth: true
+      }
     }
   ]
 })

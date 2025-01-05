@@ -10,6 +10,7 @@ declare module 'vue' {
     BottomMenu: typeof import('./src/components/BottomMenu.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     Icons: typeof import('./src/components/Icons.vue')['default']
+    QrCode: typeof import('./src/components/QrCode.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SharePoster: typeof import('./src/components/SharePoster.vue')['default']
