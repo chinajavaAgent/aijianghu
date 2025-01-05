@@ -11,6 +11,9 @@ public class Project {
     @TableId(type = IdType.AUTO)
     private Long id;
     
+    @TableField("tip_id")
+    private Long tipId;
+    
     private String name;
     
     private String description;

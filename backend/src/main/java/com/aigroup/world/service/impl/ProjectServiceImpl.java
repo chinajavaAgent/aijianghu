@@ -33,15 +33,17 @@ public class ProjectServiceImpl implements ProjectService {
     private FileService fileService;
 
     @Override
-    public Page<Project> getProjects(Integer page, Integer size) {
+    public Page<Project> getProjects(Integer page, Integer size, Long tipId) {
         // 创建分页对象
         Page<Project> pageParam = new Page<>(page, size);
         
+        // 创建查询条件
+        LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper<Project>()
+            .eq(tipId != null, Project::getTipId, tipId)
+            .orderByDesc(Project::getCreateTime);
+        
         // 查询项目列表
-        Page<Project> projectPage = projectMapper.selectPage(pageParam,
-            new LambdaQueryWrapper<Project>()
-                .orderByDesc(Project::getCreateTime)
-        );
+        Page<Project> projectPage = projectMapper.selectPage(pageParam, queryWrapper);
 
         // 加载每个项目的案例和福利
         for (Project project : projectPage.getRecords()) {

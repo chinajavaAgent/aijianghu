@@ -25,8 +25,9 @@ public class ProjectController {
     @GetMapping
     public Result<Page<Project>> getProjects(
             @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(defaultValue = "10") Integer size) {
-        Page<Project> projects = projectService.getProjects(page, size);
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(required = false) Long tipId) {
+        Page<Project> projects = projectService.getProjects(page, size, tipId);
         return Result.success(projects);
     }
 

@@ -12,7 +12,7 @@ public interface ProjectService {
     /**
      * 分页获取项目列表
      */
-    Page<Project> getProjects(Integer page, Integer size);
+    Page<Project> getProjects(Integer page, Integer size, Long tipId);
 
     /**
      * 获取项目详情

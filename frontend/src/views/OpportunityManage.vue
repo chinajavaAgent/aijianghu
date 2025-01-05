@@ -369,7 +369,7 @@ const editTip = (tip: AiTips) => {
 const openProjectDialog = async (tip: AiTips) => {
   currentTip.value = tip
   try {
-    // 加载项目列表，使用tipId参数
+    // 加载项目列表，传入tipId参数
     const response = await getProjects(1, 10, tip.id)
     if (response.data && response.data.records) {
       projectForm.projects = response.data.records.map((project: Project) => ({
