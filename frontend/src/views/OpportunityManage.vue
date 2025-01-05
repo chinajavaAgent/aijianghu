@@ -104,32 +104,112 @@
       title="项目管理"
       show-cancel-button
       @confirm="handleProjectSubmit"
+      class="project-dialog"
     >
       <div class="p-4">
         <div class="mb-4">
-          <div class="flex justify-between items-center mb-2">
-            <h3 class="font-medium">项目列表</h3>
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="font-medium text-lg">项目列表</h3>
             <button @click="addProject" 
-              class="text-sm text-blue-600 hover:text-blue-800">
+              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
               添加项目
             </button>
           </div>
-          <div class="space-y-3">
+          <div class="space-y-6">
             <div v-for="(project, index) in projectForm.projects" :key="index"
-              class="bg-gray-50 rounded-lg p-3">
-              <div class="flex justify-between items-start mb-2">
-                <input v-model="project.title" type="text"
-                  class="flex-1 px-2 py-1 border rounded mr-2"
-                  placeholder="项目名称">
+              class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+              <div class="flex justify-between items-start mb-4">
+                <h4 class="font-medium text-gray-800">项目 {{ index + 1 }}</h4>
                 <button @click="removeProject(index)"
                   class="text-sm text-red-600 hover:text-red-800">
-                  删除
+                  删除项目
                 </button>
               </div>
-              <textarea v-model="project.description"
-                class="w-full px-2 py-1 border rounded mt-2"
-                rows="2"
-                placeholder="项目描述"></textarea>
+              
+              <!-- 项目基本信息 -->
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">项目名称</label>
+                  <input v-model="project.title" type="text"
+                    class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    placeholder="请输入项目名称">
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">项目介绍</label>
+                  <textarea v-model="project.description"
+                    class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    rows="3"
+                    placeholder="请输入项目详细介绍"></textarea>
+                </div>
+
+                <!-- 成功案例 -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">成功案例</label>
+                  <div class="space-y-4">
+                    <div v-for="(caseItem, caseIndex) in project.cases" :key="caseIndex"
+                      class="bg-white p-4 rounded-lg border border-gray-200">
+                      <div class="flex justify-between items-start mb-2">
+                        <span class="text-sm text-gray-600">案例 {{ caseIndex + 1 }}</span>
+                        <button @click="removeCase(project, caseIndex)"
+                          class="text-sm text-red-600 hover:text-red-800">
+                          删除案例
+                        </button>
+                      </div>
+                      <textarea v-model="caseItem.description"
+                        class="w-full px-3 py-2 border rounded-lg mb-2"
+                        rows="2"
+                        placeholder="请输入案例描述"></textarea>
+                      <div class="flex items-center space-x-2">
+                        <input v-model="caseItem.imageUrl" type="text"
+                          class="flex-1 px-3 py-2 border rounded-lg"
+                          placeholder="请输入案例图片URL">
+                        <button class="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200">
+                          上传图片
+                        </button>
+                      </div>
+                    </div>
+                    <button @click="addCase(project)"
+                      class="w-full px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50">
+                      添加案例
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 项目视频 -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">项目视频</label>
+                  <div class="flex items-center space-x-2">
+                    <input v-model="project.videoUrl" type="text"
+                      class="flex-1 px-3 py-2 border rounded-lg"
+                      placeholder="请输入视频URL">
+                    <button class="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200">
+                      上传视频
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 项目福利 -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">项目福利</label>
+                  <div class="space-y-2">
+                    <div v-for="(benefit, benefitIndex) in project.benefits" :key="benefitIndex"
+                      class="flex items-center space-x-2">
+                      <input v-model="project.benefits[benefitIndex]" type="text"
+                        class="flex-1 px-3 py-2 border rounded-lg"
+                        placeholder="请输入福利内容">
+                      <button @click="removeBenefit(project, benefitIndex)"
+                        class="text-sm text-red-600 hover:text-red-800">
+                        删除
+                      </button>
+                    </div>
+                    <button @click="addBenefit(project)"
+                      class="w-full px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50">
+                      添加福利
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -165,6 +245,12 @@ const projectForm = reactive({
   projects: [] as Array<{
     title: string
     description: string
+    cases: Array<{
+      description: string
+      imageUrl: string
+    }>
+    videoUrl: string
+    benefits: string[]
   }>
 })
 
@@ -206,7 +292,10 @@ const openProjectDialog = (tip: AiTips) => {
 const addProject = () => {
   projectForm.projects.push({
     title: '',
-    description: ''
+    description: '',
+    cases: [],
+    videoUrl: '',
+    benefits: []
   })
 }
 
@@ -294,10 +383,40 @@ const loadTipsList = async () => {
 onMounted(() => {
   loadTipsList()
 })
+
+// 添加案例
+const addCase = (project: any) => {
+  project.cases.push({
+    description: '',
+    imageUrl: ''
+  })
+}
+
+// 删除案例
+const removeCase = (project: any, index: number) => {
+  project.cases.splice(index, 1)
+}
+
+// 添加福利
+const addBenefit = (project: any) => {
+  project.benefits.push('')
+}
+
+// 删除福利
+const removeBenefit = (project: any, index: number) => {
+  project.benefits.splice(index, 1)
+}
 </script>
 
 <style scoped>
 .container {
   max-width: 1200px;
+}
+
+.project-dialog {
+  :deep(.van-dialog) {
+    width: 90%;
+    max-width: 800px;
+  }
 }
 </style> 
