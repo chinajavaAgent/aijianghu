@@ -12,6 +12,7 @@ declare module 'vue' {
     Icons: typeof import('./src/components/Icons.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SharePoster: typeof import('./src/components/SharePoster.vue')['default']
     Toast: typeof import('./src/components/Toast.vue')['default']
     VanDialog: typeof import('vant/es')['Dialog']
     VanPullRefresh: typeof import('vant/es')['PullRefresh']
