@@ -123,7 +123,7 @@
               <!-- 项目头部 -->
               <div class="flex justify-between items-center p-4 bg-white border-b border-gray-200">
                 <div class="flex items-center space-x-3">
-                  <span class="font-medium text-gray-800">{{ project.name || `项目 ${index + 1}` }}</span>
+                  <span class="font-medium text-gray-800">{{ project.title || `项目 ${index + 1}` }}</span>
                   <span class="text-sm text-gray-500">{{ project.cases?.length || 0 }}个案例</span>
                   <span class="text-sm text-gray-500">{{ project.benefits?.length || 0 }}项福利</span>
                 </div>
@@ -161,17 +161,31 @@
                 <!-- 基本信息 -->
                 <div v-if="project.currentStep === 0" class="space-y-4">
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">项目名称</label>
-                    <input v-model="project.name" type="text"
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                      项目名称
+                      <span class="text-red-500">*</span>
+                    </label>
+                    <input v-model="project.title" type="text"
                       class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                      placeholder="请输入项目名称">
+                      :class="{'border-red-500': !project.title?.trim()}"
+                      placeholder="请输入项目名称（必填）">
                   </div>
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">项目介绍</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                      项目介绍
+                      <span class="text-red-500">*</span>
+                    </label>
                     <textarea v-model="project.description"
                       class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                      :class="{'border-red-500': !project.description?.trim()}"
                       rows="3"
-                      placeholder="请输入项目详细介绍"></textarea>
+                      placeholder="请输入项目详细介绍（必填）"></textarea>
+                  </div>
+                  <div class="flex justify-end">
+                    <button @click="submitProject(project)"
+                      class="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                      保存基本信息
+                    </button>
                   </div>
                 </div>
 
@@ -182,16 +196,29 @@
                       class="bg-white p-4 rounded-lg border border-gray-200">
                       <div class="flex justify-between items-start mb-2">
                         <span class="text-sm font-medium text-gray-700">案例 {{ caseIndex + 1 }}</span>
-                        <button @click="removeCase(project, caseIndex)"
-                          class="text-sm text-red-600 hover:text-red-800">
-                          删除案例
-                        </button>
+                        <div class="flex items-center space-x-2">
+                          <button @click="submitCase(project, caseItem)"
+                            class="text-sm text-blue-600 hover:text-blue-800">
+                            提交
+                          </button>
+                          <button @click="removeCase(project, caseIndex)"
+                            class="text-sm text-red-600 hover:text-red-800">
+                            删除案例
+                          </button>
+                        </div>
                       </div>
-                      <textarea v-model="caseItem.description"
-                        class="w-full px-3 py-2 border rounded-lg mb-2"
-                        rows="2"
-                        placeholder="请输入案例描述"></textarea>
                       <div class="space-y-2">
+                        <div>
+                          <label class="block text-sm font-medium text-gray-700 mb-1">
+                            案例描述
+                            <span class="text-red-500">*</span>
+                          </label>
+                          <textarea v-model="caseItem.description"
+                            class="w-full px-3 py-2 border rounded-lg mb-2"
+                            :class="{'border-red-500': !caseItem.description?.trim()}"
+                            rows="2"
+                            placeholder="请输入案例描述（必填）"></textarea>
+                        </div>
                         <div v-if="caseItem.imageUrl" class="relative">
                           <img :src="caseItem.imageUrl" 
                             class="w-full h-48 object-cover rounded-lg" 
@@ -210,7 +237,7 @@
                           <button @click="triggerImageUpload(index, caseIndex)"
                             class="w-full h-32 flex flex-col items-center justify-center text-gray-500 hover:text-gray-700">
                             <i class="fas fa-camera text-2xl mb-2"></i>
-                            <span class="text-sm">点击上传案例图片</span>
+                            <span class="text-sm">点击上传案例图片（选填）</span>
                           </button>
                         </div>
                       </div>
@@ -371,7 +398,7 @@ const openProjectDialog = async (tip: AiTips) => {
 // 添加项目
 const addProject = () => {
   const newProject: Project = {
-    name: '',
+    title: '',
     description: '',
     videoUrl: '',
     status: 0,
@@ -409,11 +436,30 @@ const removeProject = async (index: number) => {
 // 提交项目表单
 const handleProjectSubmit = async () => {
   try {
+    // 验证所有项目的必填字段
+    for (const project of projectForm.projects) {
+      if (!project.title?.trim()) {
+        showToast('请输入项目名称')
+        return
+      }
+      if (!project.description?.trim()) {
+        showToast('请输入项目介绍')
+        return
+      }
+      // 验证案例内容
+      for (const caseItem of project.cases) {
+        if (!caseItem.description?.trim()) {
+          showToast('请输入案例内容')
+          return
+        }
+      }
+    }
+
     // 更新所有项目
     await Promise.all(projectForm.projects.map(async (project) => {
       if (project.id) {
         const updateData: ProjectUpdateDto = {
-          name: project.name,
+          title: project.title,
           description: project.description,
           videoUrl: project.videoUrl,
           status: project.status
@@ -497,21 +543,15 @@ onMounted(() => {
 })
 
 // 添加案例
-const addCase = async (project: Project) => {
-  if (!project.id) return
-  
-  try {
-    const newCase = {
-      description: '',
-      imageUrl: ''
-    }
-    const response = await addProjectCase(project.id, newCase)
-    project.cases.push(response.data)
-    showToast('添加成功')
-  } catch (error) {
-    console.error('添加案例失败:', error)
-    showToast('添加失败，请重试')
+const addCase = (project: Project) => {
+  if (!project.cases) {
+    project.cases = []
   }
+  const newCase: ProjectCase = {
+    description: '',
+    imageUrl: ''
+  }
+  project.cases.push(newCase)
 }
 
 // 删除案例
@@ -624,6 +664,66 @@ const handleVideoUpload = async (event: Event, project: Project) => {
   } catch (error) {
     console.error('上传视频失败:', error)
     showToast('上传失败，请重试')
+  }
+}
+
+// 提交单个案例
+const submitCase = async (project: Project, caseItem: ProjectCase) => {
+  try {
+    if (!caseItem.description?.trim()) {
+      showToast('请输入案例描述')
+      return
+    }
+
+    if (project.id && caseItem.id) {
+      // 更新已有案例
+      await updateCase(project.id, caseItem.id, {
+        description: caseItem.description,
+        imageUrl: caseItem.imageUrl
+      })
+    } else if (project.id) {
+      // 添加新案例
+      const response = await addProjectCase(project.id, {
+        description: caseItem.description,
+        imageUrl: caseItem.imageUrl
+      })
+      Object.assign(caseItem, response.data)
+    }
+    showToast('保存成功')
+  } catch (error) {
+    console.error('保存案例失败:', error)
+    showToast('保存失败，请重试')
+  }
+}
+
+// 提交单个项目的基本信息
+const submitProject = async (project: Project) => {
+  try {
+    if (!project.title?.trim()) {
+      showToast('请输入项目名称')
+      return
+    }
+    if (!project.description?.trim()) {
+      showToast('请输入项目介绍')
+      return
+    }
+
+    if (project.id) {
+      // 更新已有项目
+      await updateProject(project.id, {
+        title: project.title,
+        description: project.description,
+        videoUrl: project.videoUrl
+      })
+    } else {
+      // 创建新项目
+      const response = await createProject(project)
+      Object.assign(project, response.data)
+    }
+    showToast('保存成功')
+  } catch (error) {
+    console.error('保存项目失败:', error)
+    showToast('保存失败，请重试')
   }
 }
 </script>

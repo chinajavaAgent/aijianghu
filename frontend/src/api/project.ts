@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import type { Project, ProjectCase, ProjectBenefit } from '@/types/project'
+import type { Project, ProjectCase, ProjectBenefit, ProjectUpdateDto, ProjectCreateDto } from '@/types/project'
 
 // 获取项目列表
 export const getProjects = (page: number, size: number) => {
@@ -15,19 +15,39 @@ export const getProjects = (page: number, size: number) => {
 
 // 创建项目
 export const createProject = (data: Project) => {
+  // 转换前端的title为后端的name
+  const serverData: ProjectCreateDto = {
+    name: data.title,
+    description: data.description,
+    videoUrl: data.videoUrl,
+    status: data.status,
+    views: data.views,
+    likes: data.likes,
+    cases: data.cases,
+    benefits: data.benefits
+  }
+
   return request({
     url: '/api/projects',
     method: 'post',
-    data
+    data: serverData
   })
 }
 
 // 更新项目
-export const updateProject = (id: number, data: Partial<Project>) => {
+export const updateProject = (id: number, data: ProjectUpdateDto) => {
+  // 转换前端的title为后端的name
+  const serverData = {
+    name: data.title,
+    description: data.description,
+    videoUrl: data.videoUrl,
+    status: data.status
+  }
+
   return request({
     url: `/api/projects/${id}`,
     method: 'put',
-    data
+    data: serverData
   })
 }
 

@@ -2,7 +2,7 @@
 export interface Project {
   id?: number;
   tipId?: number;
-  name: string;
+  title: string;
   description: string;
   coverImage?: string;
   videoUrl?: string;
@@ -42,9 +42,24 @@ export interface ProjectBenefit {
 
 // 用于更新项目时的部分字段
 export interface ProjectUpdateDto {
-  name?: string;
+  title?: string;
   description?: string;
   videoUrl?: string;
   status?: number;
   coverImage?: string;
-} 
+}
+
+// 用于创建项目时的字段
+export interface ProjectCreateDto {
+  name: string;
+  description: string;
+  videoUrl?: string;
+  status: number;
+  views: number;
+  likes: number;
+  cases: ProjectCase[];
+  benefits: ProjectBenefit[];
+}
+
+// 导出所有类型
+export type { Project, ProjectCase, ProjectBenefit, ProjectUpdateDto, ProjectCreateDto } 
