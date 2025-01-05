@@ -1,20 +1,19 @@
 // AI锦囊类型定义
 export interface AiTips {
-    id: number;
+    id?: number;
     title: string;
     description: string;
-    content: string;
+    content?: string;
     price: number;
-    category: string;
-    tags: string;
-    authorId: number;
+    category?: string;
+    tags?: string;
+    authorId?: number;
     requiredLevel: number;
-    views: number;
-    likes: number;
-    status: number; // 0:草稿 1:已发布
-    createTime: string;
-    updateTime: string;
-    deleted: number; // 0:未删除 1:已删除
+    views?: number;
+    likes?: number;
+    status?: number; // 0:草稿 1:已发布
+    createTime?: string;
+    updateTime?: string;
 }
 
 // AI锦囊分页结果
