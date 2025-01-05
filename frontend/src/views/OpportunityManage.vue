@@ -160,13 +160,28 @@
                         class="w-full px-3 py-2 border rounded-lg mb-2"
                         rows="2"
                         placeholder="请输入案例描述"></textarea>
-                      <div class="flex items-center space-x-2">
-                        <input v-model="caseItem.imageUrl" type="text"
-                          class="flex-1 px-3 py-2 border rounded-lg"
-                          placeholder="请输入案例图片URL">
-                        <button class="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200">
-                          上传图片
-                        </button>
+                      <div class="space-y-2">
+                        <div v-if="caseItem.imageUrl" class="relative">
+                          <img :src="caseItem.imageUrl" 
+                            class="w-full h-48 object-cover rounded-lg" 
+                            alt="案例图片">
+                          <button @click="caseItem.imageUrl = ''"
+                            class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600">
+                            <i class="fas fa-times"></i>
+                          </button>
+                        </div>
+                        <div v-else class="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                          <input type="file" 
+                            accept="image/*" 
+                            class="hidden" 
+                            :ref="el => { if (el) imageInputRefs[`${index}-${caseIndex}`] = (el as HTMLInputElement) }"
+                            @change="handleImageUpload($event, caseItem)">
+                          <button @click="triggerImageUpload(index, caseIndex)"
+                            class="w-full h-32 flex flex-col items-center justify-center text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-camera text-2xl mb-2"></i>
+                            <span class="text-sm">点击上传案例图片</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
                     <button @click="addCase(project)"
@@ -405,6 +420,32 @@ const addBenefit = (project: any) => {
 // 删除福利
 const removeBenefit = (project: any, index: number) => {
   project.benefits.splice(index, 1)
+}
+
+// 图片上传相关
+const imageInputRefs = ref<{ [key: string]: HTMLInputElement }>({})
+
+// 触发图片上传
+const triggerImageUpload = (projectIndex: number, caseIndex: number) => {
+  const inputRef = imageInputRefs.value[`${projectIndex}-${caseIndex}`]
+  if (inputRef) {
+    inputRef.click()
+  }
+}
+
+// 处理图片上传
+const handleImageUpload = (event: Event, caseItem: any) => {
+  const input = event.target as HTMLInputElement
+  if (input.files && input.files[0]) {
+    const file = input.files[0]
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      if (e.target?.result) {
+        caseItem.imageUrl = e.target.result as string
+      }
+    }
+    reader.readAsDataURL(file)
+  }
 }
 </script>
 
