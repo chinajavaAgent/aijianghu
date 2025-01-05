@@ -254,9 +254,9 @@ const generatePoster = async () => {
         qrImage.src = qrCodeUrl
       })
 
-      // 绘制二维码
+      // 调整二维码和文字的位置
       const qrX = canvas.width - cardMargin - qrSize - 40
-      const qrY = bottomY - qrSize - 10
+      const qrY = bottomY - qrSize - 40  // 增加与底部文字的距离
       
       // 绘制二维码背景
       ctx.fillStyle = '#F8F8F8'
@@ -264,13 +264,14 @@ const generatePoster = async () => {
       ctx.roundRect(qrX - 10, qrY - 10, qrSize + 20, qrSize + 20, 10)
       ctx.fill()
       
+      // 绘制二维码
       ctx.drawImage(qrImage, qrX, qrY, qrSize, qrSize)
 
-      // 绘制扫码提示
+      // 绘制扫码提示文字
       ctx.fillStyle = '#666666'
       ctx.font = '24px sans-serif'
       ctx.textAlign = 'center'
-      ctx.fillText('扫描查看详情', qrX + qrSize/2, bottomY)
+      ctx.fillText('扫描查看详情', qrX + qrSize/2, bottomY + 5)  // 将文字移到底部
 
     } catch (error) {
       console.error('Failed to generate QR code:', error)
