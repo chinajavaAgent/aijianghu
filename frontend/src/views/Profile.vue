@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-[#FFF8E1] pb-20">
+  <div class="min-h-screen bg-gradient-to-br from-cyan-50 via-fuchsia-50 to-yellow-50 pb-20">
     <div class="container mx-auto px-4 py-6">
       <!-- 用户信息卡片 -->
       <div class="bg-white rounded-xl shadow-md p-6 mb-6">
