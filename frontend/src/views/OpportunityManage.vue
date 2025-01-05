@@ -115,42 +115,73 @@
               添加项目
             </button>
           </div>
-          <div class="space-y-6">
+
+          <!-- 项目列表 -->
+          <div class="space-y-4">
             <div v-for="(project, index) in projectForm.projects" :key="index"
-              class="bg-gray-50 rounded-lg p-6 border border-gray-200">
-              <div class="flex justify-between items-start mb-4">
-                <h4 class="font-medium text-gray-800">项目 {{ index + 1 }}</h4>
-                <button @click="removeProject(index)"
-                  class="text-sm text-red-600 hover:text-red-800">
-                  删除项目
-                </button>
-              </div>
-              
-              <!-- 项目基本信息 -->
-              <div class="space-y-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">项目名称</label>
-                  <input v-model="project.title" type="text"
-                    class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                    placeholder="请输入项目名称">
+              class="bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <!-- 项目头部 -->
+              <div class="flex justify-between items-center p-4 bg-white border-b border-gray-200">
+                <div class="flex items-center space-x-3">
+                  <span class="font-medium text-gray-800">{{ project.title || `项目 ${index + 1}` }}</span>
+                  <span class="text-sm text-gray-500">{{ project.cases?.length || 0 }}个案例</span>
+                  <span class="text-sm text-gray-500">{{ project.benefits?.length || 0 }}项福利</span>
                 </div>
-                
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">项目介绍</label>
-                  <textarea v-model="project.description"
-                    class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                    rows="3"
-                    placeholder="请输入项目详细介绍"></textarea>
+                <div class="flex items-center space-x-2">
+                  <button @click="project.isExpanded = !project.isExpanded"
+                    class="text-blue-600 hover:text-blue-800">
+                    {{ project.isExpanded ? '收起' : '展开' }}
+                  </button>
+                  <button @click="removeProject(index)"
+                    class="text-red-600 hover:text-red-800">
+                    删除
+                  </button>
+                </div>
+              </div>
+
+              <!-- 项目详情（可展开/收起） -->
+              <div v-show="project.isExpanded" class="p-4">
+                <!-- 步骤导航 -->
+                <div class="flex border-b border-gray-200 mb-4">
+                  <button 
+                    v-for="(step, stepIndex) in projectSteps" 
+                    :key="stepIndex"
+                    @click="project.currentStep = stepIndex"
+                    :class="[
+                      'px-4 py-2 text-sm font-medium -mb-px',
+                      project.currentStep === stepIndex
+                        ? 'text-blue-600 border-b-2 border-blue-600'
+                        : 'text-gray-500 hover:text-gray-700'
+                    ]"
+                  >
+                    {{ step }}
+                  </button>
+                </div>
+
+                <!-- 基本信息 -->
+                <div v-if="project.currentStep === 0" class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">项目名称</label>
+                    <input v-model="project.title" type="text"
+                      class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                      placeholder="请输入项目名称">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">项目介绍</label>
+                    <textarea v-model="project.description"
+                      class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                      rows="3"
+                      placeholder="请输入项目详细介绍"></textarea>
+                  </div>
                 </div>
 
                 <!-- 成功案例 -->
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">成功案例</label>
+                <div v-if="project.currentStep === 1">
                   <div class="space-y-4">
                     <div v-for="(caseItem, caseIndex) in project.cases" :key="caseIndex"
                       class="bg-white p-4 rounded-lg border border-gray-200">
                       <div class="flex justify-between items-start mb-2">
-                        <span class="text-sm text-gray-600">案例 {{ caseIndex + 1 }}</span>
+                        <span class="text-sm font-medium text-gray-700">案例 {{ caseIndex + 1 }}</span>
                         <button @click="removeCase(project, caseIndex)"
                           class="text-sm text-red-600 hover:text-red-800">
                           删除案例
@@ -192,8 +223,7 @@
                 </div>
 
                 <!-- 项目视频 -->
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">项目视频</label>
+                <div v-if="project.currentStep === 2">
                   <div class="space-y-2">
                     <div v-if="project.videoUrl" class="relative">
                       <video 
@@ -222,8 +252,7 @@
                 </div>
 
                 <!-- 项目福利 -->
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">项目福利</label>
+                <div v-if="project.currentStep === 3">
                   <div class="space-y-2">
                     <div v-for="(benefit, benefitIndex) in project.benefits" :key="benefitIndex"
                       class="flex items-center space-x-2">
@@ -283,8 +312,13 @@ const projectForm = reactive({
     }>
     videoUrl: string
     benefits: string[]
+    isExpanded: boolean
+    currentStep: number
   }>
 })
+
+// 项目步骤
+const projectSteps = ['基本信息', '成功案例', '项目视频', '项目福利']
 
 // 显示添加对话框
 const showAddDialog = () => {
@@ -327,7 +361,9 @@ const addProject = () => {
     description: '',
     cases: [],
     videoUrl: '',
-    benefits: []
+    benefits: [],
+    isExpanded: true,
+    currentStep: 0
   })
 }
 
