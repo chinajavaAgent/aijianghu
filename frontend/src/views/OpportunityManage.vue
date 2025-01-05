@@ -9,56 +9,51 @@
 
     <div class="container mx-auto px-4 py-6">
       <!-- 锦囊列表 -->
-      <div class="bg-white/80 backdrop-blur-sm rounded-xl shadow-md p-6 mb-6">
+      <div class="bg-white/80 backdrop-blur-sm rounded-xl shadow-md p-6">
         <div class="flex justify-between items-center mb-6">
           <h2 class="text-lg font-semibold">锦囊列表</h2>
           <button @click="showDialog = true" 
-            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-sm">
             添加锦囊
           </button>
         </div>
 
         <!-- 锦囊列表 -->
-        <div class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div v-for="tip in tipsList" :key="tip.id" 
-            class="border rounded-lg p-6 hover:shadow-md transition-shadow">
-            <!-- 锦囊基本信息 -->
-            <div class="flex justify-between items-start mb-4">
-              <div class="flex-1">
-                <h3 class="text-xl font-medium">{{ tip.title }}</h3>
-                <p class="text-gray-600 mt-2">{{ tip.description }}</p>
-                <div class="flex items-center space-x-4 mt-3">
-                  <span class="inline-flex items-center text-sm text-gray-500">
-                    <i class="fas fa-signal mr-1"></i>
-                    等级要求：{{ tip.requiredLevel }}
-                  </span>
-                  <span class="inline-flex items-center text-sm text-orange-500 font-medium">
-                    <i class="fas fa-yen-sign mr-1"></i>
-                    {{ tip.price }} 元
-                  </span>
-                  <span class="inline-flex items-center text-sm text-gray-500">
-                    <i class="fas fa-tag mr-1"></i>
-                    {{ tip.category }}
-                  </span>
-                  <span class="inline-flex items-center text-sm text-gray-500">
-                    <i class="fas fa-eye mr-1"></i>
-                    {{ tip.views }} 次浏览
-                  </span>
-                  <span class="inline-flex items-center text-sm text-gray-500">
-                    <i class="fas fa-heart mr-1"></i>
-                    {{ tip.likes }} 次点赞
-                  </span>
+            class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+            <div class="p-6">
+              <div class="flex justify-between items-start">
+                <div class="flex-1">
+                  <div class="flex items-center space-x-3 mb-3">
+                    <h3 class="text-lg font-semibold text-gray-800">{{ tip.title }}</h3>
+                    <div class="flex items-center px-3 py-1 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg shadow-sm">
+                      <span class="text-lg text-white mr-1">¥</span>
+                      <span class="text-white font-semibold">{{ tip.price }}</span>
+                    </div>
+                    <div class="px-3 py-1 bg-blue-50 rounded-lg">
+                      <span class="text-blue-600 font-medium">
+                        <i class="fas fa-crown mr-1"></i>
+                        Lv.{{ tip.requiredLevel }}
+                      </span>
+                    </div>
+                  </div>
+                  <p class="text-gray-600 text-sm">{{ tip.description }}</p>
                 </div>
-              </div>
-              <div class="flex space-x-2 ml-4">
-                <button @click="editTip(tip)" 
-                  class="px-3 py-1 text-sm text-blue-600 border border-blue-600 rounded hover:bg-blue-50">
-                  编辑
-                </button>
-                <button @click="deleteTip(tip.id)" 
-                  class="px-3 py-1 text-sm text-red-600 border border-red-600 rounded hover:bg-red-50">
-                  删除
-                </button>
+                <div class="flex flex-col space-y-2">
+                  <button @click="editTip(tip)" 
+                    class="px-3 py-1 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
+                    编辑
+                  </button>
+                  <button @click="deleteTip(tip.id)" 
+                    class="px-3 py-1 text-sm text-red-600 border border-red-600 rounded-lg hover:bg-red-50 transition-colors">
+                    删除
+                  </button>
+                  <button @click="openProjectDialog(tip)" 
+                    class="px-3 py-1 text-sm text-green-600 border border-green-600 rounded-lg hover:bg-green-50 transition-colors">
+                    项目
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -102,8 +97,46 @@
         </div>
       </div>
     </van-dialog>
+
+    <!-- 项目管理弹窗 -->
+    <van-dialog
+      v-model:show="projectDialogVisible"
+      title="项目管理"
+      show-cancel-button
+      @confirm="handleProjectSubmit"
+    >
+      <div class="p-4">
+        <div class="mb-4">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="font-medium">项目列表</h3>
+            <button @click="addProject" 
+              class="text-sm text-blue-600 hover:text-blue-800">
+              添加项目
+            </button>
+          </div>
+          <div class="space-y-3">
+            <div v-for="(project, index) in projectForm.projects" :key="index"
+              class="bg-gray-50 rounded-lg p-3">
+              <div class="flex justify-between items-start mb-2">
+                <input v-model="project.title" type="text"
+                  class="flex-1 px-2 py-1 border rounded mr-2"
+                  placeholder="项目名称">
+                <button @click="removeProject(index)"
+                  class="text-sm text-red-600 hover:text-red-800">
+                  删除
+                </button>
+              </div>
+              <textarea v-model="project.description"
+                class="w-full px-2 py-1 border rounded mt-2"
+                rows="2"
+                placeholder="项目描述"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </van-dialog>
   </div>
-</template> 
+</template>
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
@@ -123,6 +156,16 @@ const form = reactive({
   description: '',
   price: 0,
   requiredLevel: 1
+})
+
+// 项目管理相关
+const projectDialogVisible = ref(false)
+const currentTip = ref<AiTips | null>(null)
+const projectForm = reactive({
+  projects: [] as Array<{
+    title: string
+    description: string
+  }>
 })
 
 // 显示添加对话框
@@ -149,6 +192,43 @@ const editTip = (tip: AiTips) => {
     requiredLevel: tip.requiredLevel
   })
   showDialog.value = true
+}
+
+// 显示项目管理
+const openProjectDialog = (tip: AiTips) => {
+  currentTip.value = tip
+  // 加载项目列表
+  projectForm.projects = tip.content ? JSON.parse(tip.content) : []
+  projectDialogVisible.value = true
+}
+
+// 添加项目
+const addProject = () => {
+  projectForm.projects.push({
+    title: '',
+    description: ''
+  })
+}
+
+// 删除项目
+const removeProject = (index: number) => {
+  projectForm.projects.splice(index, 1)
+}
+
+// 提交项目表单
+const handleProjectSubmit = async () => {
+  if (!currentTip.value) return
+  
+  try {
+    await updateAiTips(currentTip.value.id, {
+      content: JSON.stringify(projectForm.projects)
+    })
+    showToast('保存成功')
+    projectDialogVisible.value = false
+    loadTipsList()
+  } catch (error) {
+    console.error('保存项目失败:', error)
+  }
 }
 
 // 删除锦囊
@@ -218,6 +298,6 @@ onMounted(() => {
 
 <style scoped>
 .container {
-  max-width: 768px;
+  max-width: 1200px;
 }
 </style> 
