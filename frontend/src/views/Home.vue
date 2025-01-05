@@ -1,10 +1,15 @@
 <template>
-  <div class="min-h-screen bg-[#FFF8E1]">
+  <div class="min-h-screen bg-gradient-to-br from-cyan-50 via-fuchsia-50 to-yellow-50">
     <!-- 顶部横幅 -->
-    <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
-      <div class="container mx-auto px-4 text-center">
-        <h1 class="text-4xl font-bold mb-4">AI江湖 - 你的AI资源与机遇平台</h1>
-        <p class="text-xl opacity-90">汇聚海量AI资源，创造无限商业可能</p>
+    <div class="bg-gradient-to-r from-cyan-500 via-fuchsia-500 to-yellow-400 text-white py-16 relative overflow-hidden">
+      <!-- 添加动态光效 -->
+      <div class="absolute inset-0">
+        <div class="absolute inset-0 bg-gradient-to-r from-cyan-400/30 via-fuchsia-400/30 to-yellow-400/30 animate-pulse"></div>
+        <div class="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJ3YXZlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNMjggNjZDNDAgNjYgNDAgMzQgNTYgMzRMNTYgMEw1NiAxMDBMMjggNjZaIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDMpIi8+PHBhdGggZD0iTTI4IDY2QzE2IDY2IDE2IDM0IDAgMzRMMCAwTDAgMTAwTDI4IDY2WiIgZmlsbD0icmJnYSgyNTUsMjU1LDI1NSwwLjAzKSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCN3YXZlKSIvPjwvc3ZnPg==')] opacity-10"></div>
+      </div>
+      <div class="container mx-auto px-4 text-center relative z-10">
+        <h1 class="text-4xl font-bold mb-4 drop-shadow-lg">AI群江湖 - 你的AI资源与机遇平台</h1>
+        <p class="text-xl opacity-90">汇聚海量AI资源，副业，创造无限商业可能</p>
       </div>
     </div>
 
@@ -12,10 +17,10 @@
     <div class="container mx-auto px-4 py-12">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <!-- AI资源库 -->
-        <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+        <div class="bg-gradient-to-br from-white to-cyan-50 rounded-xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 hover:shadow-xl border border-cyan-100/50">
           <div class="text-center mb-4">
-            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-16 h-16 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyan-200">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
               </svg>
             </div>
@@ -28,7 +33,7 @@
           </div>
           <div class="text-center">
             <router-link to="/opportunities" class="inline-block">
-              <button class="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors">
+              <button class="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white px-6 py-2 rounded-full hover:shadow-lg hover:from-cyan-600 hover:to-cyan-700 transition-all duration-300">
                 探索资源
               </button>
             </router-link>
@@ -36,10 +41,10 @@
         </div>
 
         <!-- AI副业机会 -->
-        <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+        <div class="bg-gradient-to-br from-white to-fuchsia-50 rounded-xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 hover:shadow-xl border border-fuchsia-100/50">
           <div class="text-center mb-4">
-            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-16 h-16 bg-gradient-to-br from-fuchsia-400 to-fuchsia-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-fuchsia-200">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
@@ -51,17 +56,17 @@
             </p>
           </div>
           <div class="text-center">
-            <button class="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition-colors">
+            <button class="bg-gradient-to-r from-fuchsia-500 to-fuchsia-600 text-white px-6 py-2 rounded-full hover:shadow-lg hover:from-fuchsia-600 hover:to-fuchsia-700 transition-all duration-300">
               发现机会
             </button>
           </div>
         </div>
 
         <!-- AI流量池 -->
-        <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+        <div class="bg-gradient-to-br from-white to-yellow-50 rounded-xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 hover:shadow-xl border border-yellow-100/50">
           <div class="text-center mb-4">
-            <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-yellow-200">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
               </svg>
             </div>
@@ -73,7 +78,7 @@
             </p>
           </div>
           <div class="text-center">
-            <button class="bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700 transition-colors">
+            <button class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-6 py-2 rounded-full hover:shadow-lg hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300">
               了解更多
             </button>
           </div>
@@ -82,53 +87,40 @@
     </div>
 
     <!-- 数据统计 -->
-    <div class="bg-gray-100 py-12">
+    <div class="bg-gradient-to-br from-white to-gray-50 py-12">
       <div class="container mx-auto px-4">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div>
-            <div class="text-3xl font-bold text-blue-600 mb-2">1000+</div>
+          <div class="bg-gradient-to-br from-white to-cyan-50 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+            <div class="text-3xl font-bold text-cyan-600 mb-2">1000+</div>
             <div class="text-gray-600">AI工具资源</div>
           </div>
-          <div>
-            <div class="text-3xl font-bold text-green-600 mb-2">500+</div>
+          <div class="bg-gradient-to-br from-white to-fuchsia-50 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+            <div class="text-3xl font-bold text-fuchsia-600 mb-2">500+</div>
             <div class="text-gray-600">副业项目</div>
           </div>
-          <div>
-            <div class="text-3xl font-bold text-purple-600 mb-2">50000+</div>
+          <div class="bg-gradient-to-br from-white to-yellow-50 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+            <div class="text-3xl font-bold text-yellow-600 mb-2">50000+</div>
             <div class="text-gray-600">用户数量</div>
           </div>
-          <div>
-            <div class="text-3xl font-bold text-red-600 mb-2">100+</div>
+          <div class="bg-gradient-to-br from-white to-orange-50 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+            <div class="text-3xl font-bold text-orange-600 mb-2">100+</div>
             <div class="text-gray-600">成功案例</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 最新资源展示 -->
-    <div class="container mx-auto px-4 py-12">
-      <h2 class="text-2xl font-bold text-gray-800 mb-8 text-center">最新AI资源</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div v-for="i in 6" :key="i" class="bg-white rounded-lg shadow-md overflow-hidden">
-          <div class="aspect-w-16 aspect-h-9 bg-gray-200"></div>
-          <div class="p-4">
-            <h3 class="text-lg font-semibold mb-2">AI资源标题</h3>
-            <p class="text-gray-600 text-sm mb-4">这是一个简短的资源描述，介绍其主要功能和特点。</p>
-            <div class="flex justify-between items-center">
-              <span class="text-sm text-gray-500">更新时间：2023-12-25</span>
-              <span class="text-sm text-blue-600">查看详情 →</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- 加入我们 -->
-    <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
-      <div class="container mx-auto px-4 text-center">
+    <div class="bg-gradient-to-r from-cyan-500 via-fuchsia-500 to-yellow-400 text-white py-16 relative overflow-hidden">
+      <!-- 添加动态光效 -->
+      <div class="absolute inset-0">
+        <div class="absolute inset-0 bg-gradient-to-r from-cyan-400/30 via-fuchsia-400/30 to-yellow-400/30 animate-pulse"></div>
+        <div class="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJ3YXZlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNMjggNjZDNDAgNjYgNDAgMzQgNTYgMzRMNTYgMEw1NiAxMDBMMjggNjZaIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDMpIi8+PHBhdGggZD0iTTI4IDY2QzE2IDY2IDE2IDM0IDAgMzRMMCAwTDAgMTAwTDI4IDY2WiIgZmlsbD0icmJnYSgyNTUsMjU1LDI1NSwwLjAzKSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCN3YXZlKSIvPjwvc3ZnPg==')] opacity-10"></div>
+      </div>
+      <div class="container mx-auto px-4 text-center relative z-10">
         <h2 class="text-3xl font-bold mb-4">加入AI江湖，开启你的AI之旅</h2>
         <p class="text-xl mb-8 opacity-90">与数万用户一起，探索AI带来的无限可能</p>
-        <button class="bg-white text-blue-600 px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition-colors">
+        <button class="bg-white text-gray-800 px-8 py-3 rounded-full text-lg font-semibold hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl">
           立即加入
         </button>
       </div>
@@ -154,5 +146,18 @@
   right: 0;
   bottom: 0;
   left: 0;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 </style> 

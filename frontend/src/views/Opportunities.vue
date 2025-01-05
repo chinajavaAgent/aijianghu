@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-[#FFF8E1] py-6 sm:py-12">
+  <div class="min-h-screen bg-gradient-to-br from-cyan-50 via-fuchsia-50 to-yellow-50 py-6 sm:py-12">
     <div class="container mx-auto px-4">
       <!-- 页面标题 -->
       <div class="text-center mb-8 sm:mb-12">

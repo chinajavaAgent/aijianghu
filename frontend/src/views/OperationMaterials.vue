@@ -99,7 +99,7 @@ const selectedProject = ref<number | null>(null)
 // 项目列表数据
 const projects = [
   { id: 1, name: 'AI锦囊' },
-  { id: 2, name: 'AI江湖' },
+  { id: 2, name: 'AI群江湖' },
   { id: 3, name: '创业项目' },
   { id: 4, name: '副业项目' }
 ]
