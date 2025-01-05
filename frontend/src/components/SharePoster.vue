@@ -454,7 +454,7 @@ const downloadPoster = () => {
 .poster-container {
   position: relative;
   width: 100%;
-  padding-bottom: 177.78%; /* 9:16 ratio */
+  padding-bottom: 100%; /* 改为1:1比例 */
   background-color: #f3f4f6;
   border-radius: 0.5rem;
 }
