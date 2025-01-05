@@ -2,13 +2,14 @@ import request from '@/utils/request'
 import type { Project, ProjectCase, ProjectBenefit } from '@/types/project'
 
 // 获取项目列表
-export const getProjects = (page: number, size: number) => {
+export const getProjects = (page: number, size: number, tipId?: number) => {
   return request({
     url: '/api/projects',
     method: 'get',
     params: {
       page,
-      size
+      size,
+      tipId
     }
   })
 }

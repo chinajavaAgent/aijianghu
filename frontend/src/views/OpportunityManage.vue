@@ -369,13 +369,17 @@ const editTip = (tip: AiTips) => {
 const openProjectDialog = async (tip: AiTips) => {
   currentTip.value = tip
   try {
-    // 加载项目列表
-    const response = await getProjects(1, 10)  // 使用分页参数
-    projectForm.projects = response.data.records.map((project: Project) => ({  // 从分页对象中获取records
-      ...project,
-      isExpanded: true,
-      currentStep: 0
-    }))
+    // 加载项目列表，使用tipId参数
+    const response = await getProjects(1, 10, tip.id)
+    if (response.data && response.data.records) {
+      projectForm.projects = response.data.records.map((project: Project) => ({
+        ...project,
+        isExpanded: true,
+        currentStep: 0
+      }))
+    } else {
+      projectForm.projects = []
+    }
     projectDialogVisible.value = true
   } catch (error) {
     console.error('加载项目列表失败:', error)
