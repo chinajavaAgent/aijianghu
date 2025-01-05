@@ -123,200 +123,154 @@ const generatePoster = async () => {
 
   try {
     console.log('Starting poster generation...')
-    console.log('Canvas dimensions:', { width: canvas.width, height: canvas.height })
     
-    // 设置画布大小
-    canvas.width = 750
-    canvas.height = 1334
+    // 设置画布大小为正方形
+    canvas.width = 800
+    canvas.height = 800
     
-    // 验证画布尺寸是否正确设置
-    if (canvas.width !== 750 || canvas.height !== 1334) {
-      console.error('Canvas dimensions were not set correctly')
-      throw new Error('画布尺寸设置失败')
-    }
-    
-    // 1. 绘制白色背景
-    ctx.fillStyle = '#ffffff'
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-    console.log('Background drawn')
-
-    // 2. 绘制顶部渐变背景
-    const gradient = ctx.createLinearGradient(0, 0, 0, 300)
-    gradient.addColorStop(0, '#3B82F6')
-    gradient.addColorStop(1, '#8B5CF6')
+    // 1. 绘制背景
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+    gradient.addColorStop(0, '#40E0D0')  // 绿松石色
+    gradient.addColorStop(1, '#4169E1')  // 皇家蓝
     ctx.fillStyle = gradient
-    ctx.fillRect(0, 0, canvas.width, 300)
-    console.log('Gradient background drawn')
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-    // 3. 绘制标题
-    ctx.fillStyle = '#ffffff'
-    ctx.font = 'bold 40px sans-serif'
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
-    const title = props.title || 'AI副业项目'
-    ctx.fillText(title, canvas.width / 2, 100)
-    console.log('Title drawn:', title)
+    // 2. 绘制白色卡片背景
+    const cardMargin = 40
+    const cardWidth = canvas.width - (cardMargin * 2)
+    const cardHeight = canvas.height - (cardMargin * 2)
+    ctx.fillStyle = '#FFFFFF'
+    ctx.beginPath()
+    ctx.roundRect(cardMargin, cardMargin, cardWidth, cardHeight, 20)
+    ctx.fill()
 
-    // 4. 绘制价格
-    const price = typeof props.price === 'number' ? props.price.toFixed(2) : props.price
-    ctx.font = 'bold 36px sans-serif'
-    ctx.fillText(`￥${price}`, canvas.width / 2, 180)
-    console.log('Price drawn:', price)
+    let currentY = cardMargin + 60
 
-    let currentY = 320 // 跟踪当前绘制位置的Y坐标
+    // 3. 绘制图标（这里用文字代替）
+    ctx.fillStyle = '#666666'
+    ctx.font = '32px sans-serif'
+    ctx.textAlign = 'left'
+    ctx.fillText('🚲', cardMargin + 40, currentY)
 
-    // 5. 绘制封面图片
-    if (props.coverImage) {
-      console.log('Loading cover image:', props.coverImage)
-      try {
-        const image = new Image()
-        image.crossOrigin = 'anonymous'
-        await new Promise<void>((resolve, reject) => {
-          image.onload = () => {
-            console.log('Image loaded successfully')
-            resolve()
-          }
-          image.onerror = (e) => {
-            console.error('Image load error:', e)
-            reject(new Error('Failed to load image'))
-          }
-          // 确保 coverImage 不为 undefined
-          const imageUrl = props.coverImage || ''
-          // 添加时间戳防止缓存
-          image.src = `${imageUrl}?t=${Date.now()}`
-        })
+    // 4. 绘制日期
+    ctx.fillStyle = '#666666'
+    ctx.font = '24px sans-serif'
+    ctx.fillText(new Date().toLocaleDateString('zh-CN'), cardMargin + 40, currentY + 50)
 
-        // 计算图片尺寸（保持16:9比例）
-        const imageWidth = 670
-        const imageHeight = Math.round(imageWidth * 9 / 16)
-        const imageX = (canvas.width - imageWidth) / 2
+    currentY += 100
 
-        // 绘制图片
-        ctx.drawImage(image, imageX, currentY, imageWidth, imageHeight)
-        console.log('Cover image drawn')
+    // 5. 绘制标题
+    ctx.fillStyle = '#333333'
+    ctx.font = 'bold 48px sans-serif'
+    ctx.fillText('👋 ' + props.title, cardMargin + 40, currentY)
 
-        // 更新Y坐标
-        currentY += imageHeight + 40
-      } catch (error) {
-        console.error('Failed to load or draw cover image:', error)
-      }
-    }
+    currentY += 80
 
     // 6. 绘制项目介绍
-    if (props.introduction) {
-      ctx.fillStyle = '#333333'
-      ctx.font = '28px sans-serif'
-      ctx.textAlign = 'left'
-      ctx.textBaseline = 'top'
-
-      const maxWidth = 670
-      const lineHeight = 42
-      const padding = 40
-      const words = props.introduction.split('')
-      let line = ''
-
-      console.log('Drawing introduction text')
-      for (let i = 0; i < words.length; i++) {
-        const testLine = line + words[i]
-        const metrics = ctx.measureText(testLine)
-        
-        if (metrics.width > maxWidth - padding * 2) {
-          ctx.fillText(line, padding, currentY)
-          currentY += lineHeight
-          line = words[i]
-        } else {
-          line = testLine
-        }
+    ctx.font = '32px sans-serif'
+    ctx.fillStyle = '#666666'
+    const maxWidth = cardWidth - 80
+    const lineHeight = 50
+    
+    // 将项目介绍文字按行分割
+    const words = props.introduction.split('')
+    let line = ''
+    let lines = []
+    
+    for (let word of words) {
+      const testLine = line + word
+      const metrics = ctx.measureText(testLine)
+      if (metrics.width > maxWidth) {
+        lines.push(line)
+        line = word
+      } else {
+        line = testLine
       }
-      if (line) {
-        ctx.fillText(line, padding, currentY)
-        currentY += lineHeight
-      }
-      console.log('Introduction text drawn')
+    }
+    if (line) {
+      lines.push(line)
     }
 
-    // 7. 绘制分隔线
-    currentY += 40
-    ctx.strokeStyle = '#E5E7EB'
-    ctx.lineWidth = 1
-    ctx.beginPath()
-    ctx.moveTo(40, currentY)
-    ctx.lineTo(canvas.width - 40, currentY)
-    ctx.stroke()
-    console.log('Separator line drawn')
+    // 限制最多显示4行，超出部分用省略号表示
+    if (lines.length > 4) {
+      lines = lines.slice(0, 3)
+      lines.push(lines[3] + '...')
+    }
 
-    // 8. 绘制二维码标题
-    currentY += 40
+    // 绘制每一行文字
+    lines.forEach((line, index) => {
+      ctx.fillText(line, cardMargin + 40, currentY + index * lineHeight)
+    })
+
+    currentY += lines.length * lineHeight + 80
+
+    // 7. 绘制底部信息
+    ctx.fillStyle = '#999999'
+    ctx.font = '24px sans-serif'
+    ctx.textAlign = 'left'
+    ctx.fillText('是魔王吧', cardMargin + 40, canvas.height - cardMargin - 80)
+
+    // 8. 绘制字数统计
+    ctx.textAlign = 'right'
+    ctx.fillText(`字数：${props.introduction.length}`, canvas.width - cardMargin - 40, canvas.height - cardMargin - 80)
+
+    // 9. 绘制底部标题和二维码
+    ctx.textAlign = 'left'
     ctx.fillStyle = '#666666'
-    ctx.font = '28px sans-serif'
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
-    ctx.fillText('扫码查看详情', canvas.width / 2, currentY)
-    console.log('QR code title drawn')
+    ctx.fillText('流光卡片', cardMargin + 40, canvas.height - cardMargin - 40)
 
-    // 9. 生成并绘制二维码
+    // 10. 绘制二维码
     try {
-      console.log('Generating QR code for URL:', props.shareUrl)
+      const qrSize = 100
       const qrCodeUrl = await QRCode.toDataURL(props.shareUrl, {
-        width: 200,
-        margin: 1,
+        width: qrSize,
+        margin: 0,
         color: {
           dark: '#000000',
-          light: '#ffffff'
+          light: '#FFFFFF'
         }
       })
 
-      const qrCode = new Image()
+      const qrImage = new Image()
       await new Promise((resolve, reject) => {
-        qrCode.onload = resolve
-        qrCode.onerror = reject
-        qrCode.src = qrCodeUrl
+        qrImage.onload = resolve
+        qrImage.onerror = reject
+        qrImage.src = qrCodeUrl
       })
 
-      currentY += 40
-      const qrSize = 200
-      const qrX = (canvas.width - qrSize) / 2
-      
-      // 绘制二维码背景
-      ctx.fillStyle = '#ffffff'
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.1)'
-      ctx.shadowBlur = 10
-      ctx.fillRect(qrX - 10, currentY - 10, qrSize + 20, qrSize + 20)
-      ctx.shadowColor = 'transparent'
-      
       // 绘制二维码
-      ctx.drawImage(qrCode, qrX, currentY, qrSize, qrSize)
-      console.log('QR code drawn')
+      ctx.drawImage(qrImage, canvas.width - cardMargin - qrSize - 40, canvas.height - cardMargin - qrSize - 20, qrSize, qrSize)
+
+      // 绘制扫码提示
+      ctx.textAlign = 'center'
+      ctx.fillText('扫描二维码', canvas.width - cardMargin - qrSize/2 - 40, canvas.height - cardMargin - 40)
+
     } catch (error) {
-      console.error('Failed to generate or draw QR code:', error)
+      console.error('Failed to generate QR code:', error)
+      throw new Error('生成二维码失败，请重试')
     }
 
-    console.log('Poster generation completed')
   } catch (error) {
-    console.error('Poster generation failed:', error)
-    ElMessage.error('生成海报失败，请重试')
+    console.error('Error in generatePoster:', error)
     throw error
   }
 }
 
 const downloadPoster = () => {
-  if (!posterCanvas.value) {
-    console.error('Canvas element not found during download')
-    return
-  }
-
+  if (!posterCanvas.value) return
+  
   try {
-    console.log('Starting poster download...')
     const link = document.createElement('a')
-    link.download = `${props.title}-分享海报.png`
+    link.download = `${props.title}-卡片.png`
     link.href = posterCanvas.value.toDataURL('image/png')
+    document.body.appendChild(link)
     link.click()
-    console.log('Poster downloaded successfully')
-    ElMessage.success('海报保存成功')
-    visible.value = false
+    document.body.removeChild(link)
+    
+    ElMessage.success('卡片保存成功')
   } catch (error) {
     console.error('Failed to download poster:', error)
-    ElMessage.error('保存海报失败')
+    ElMessage.error('保存失败，请重试')
   }
 }
 </script>
