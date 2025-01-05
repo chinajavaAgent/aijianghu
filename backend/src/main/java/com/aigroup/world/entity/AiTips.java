@@ -1,11 +1,13 @@
 package com.aigroup.world.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * AI锦囊实体类
@@ -44,4 +46,7 @@ public class AiTips {
     private LocalDateTime updateTime;
     
     private Integer deleted; // 0:未删除 1:已删除
+    
+    @TableField(exist = false)
+    private List<Project> projects;
 } 

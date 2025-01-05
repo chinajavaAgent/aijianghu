@@ -35,6 +35,21 @@
           <div class="p-6">
             <h2 class="text-xl font-bold text-gray-800 mb-2">{{ tip.title }}</h2>
             <p class="text-gray-600 text-sm mb-4">{{ tip.description }}</p>
+            
+            <!-- 项目信息 -->
+            <div v-if="tip.projects && tip.projects.length > 0" class="mb-4">
+              <h3 class="text-sm font-semibold text-gray-700 mb-2">相关项目</h3>
+              <div class="space-y-2">
+                <div v-for="project in tip.projects" :key="project.id" 
+                  class="bg-gray-50 p-2 rounded-lg">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-600">{{ project.name }}</span>
+                    <span class="text-xs text-gray-500">{{ project.cases?.length || 0 }} 个案例</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
             <div class="flex items-center justify-between text-sm text-gray-500">
               <div class="flex items-center space-x-4">
                 <span class="flex items-center">

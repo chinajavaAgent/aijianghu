@@ -1,12 +1,15 @@
 package com.aigroup.world.service.impl;
 
 import com.aigroup.world.entity.AiTips;
+import com.aigroup.world.entity.Project;
 import com.aigroup.world.mapper.AiTipsMapper;
 import com.aigroup.world.service.AiTipsService;
+import com.aigroup.world.service.ProjectService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
@@ -17,6 +20,9 @@ import java.time.LocalDateTime;
 @Service
 public class AiTipsServiceImpl extends ServiceImpl<AiTipsMapper, AiTips> implements AiTipsService {
 
+    @Autowired
+    private ProjectService projectService;
+
     @Override
     public IPage<AiTips> getAiTipsList(Integer page, Integer size, String category) {
         LambdaQueryWrapper<AiTips> wrapper = new LambdaQueryWrapper<>();
@@ -25,7 +31,18 @@ public class AiTipsServiceImpl extends ServiceImpl<AiTipsMapper, AiTips> impleme
             wrapper.eq(AiTips::getCategory, category);
         }
         wrapper.orderByDesc(AiTips::getCreateTime);
-        return page(new Page<>(page, size), wrapper);
+        
+        // 获取分页数据
+        IPage<AiTips> pageResult = page(new Page<>(page, size), wrapper);
+        
+        // 加载每个锦囊的项目信息
+        for (AiTips tip : pageResult.getRecords()) {
+            // 获取该锦囊关联的项目列表
+            Page<Project> projectPage = projectService.getProjects(1, 100, tip.getId());
+            tip.setProjects(projectPage.getRecords());
+        }
+        
+        return pageResult;
     }
 
     @Override
