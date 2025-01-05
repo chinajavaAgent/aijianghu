@@ -177,7 +177,7 @@
 
                 <!-- 成功案例 -->
                 <div v-if="project.currentStep === 1">
-                  <div class="space-y-4">
+                  <div class="space-y-4 max-h-[400px] overflow-y-auto pr-2">
                     <div v-for="(caseItem, caseIndex) in project.cases" :key="caseIndex"
                       class="bg-white p-4 rounded-lg border border-gray-200">
                       <div class="flex justify-between items-start mb-2">
@@ -670,7 +670,7 @@ const handleVideoUpload = async (event: Event, project: Project) => {
   :deep(.van-dialog) {
     width: 90%;
     max-width: 800px;
-    height: 60vh;  /* 还原为固定高度 */
+    height: 60vh;
     display: flex;
     flex-direction: column;
     
@@ -710,5 +710,24 @@ const handleVideoUpload = async (event: Event, project: Project) => {
       border-top: 1px solid #eee;
     }
   }
+}
+
+/* 案例列表滚动条样式 */
+.space-y-4::-webkit-scrollbar {
+  width: 6px;
+}
+
+.space-y-4::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.space-y-4::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.space-y-4::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 </style> 
