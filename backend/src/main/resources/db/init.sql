@@ -56,4 +56,24 @@ CREATE TABLE IF NOT EXISTS `user_resource` (
     `deleted` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否删除：0-未删除，1-已删除',
     PRIMARY KEY (`id`),
     KEY `idx_user_resource` (`user_id`, `resource_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户资源关联表'; 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户资源关联表';
+
+-- 创建AI锦囊表
+CREATE TABLE IF NOT EXISTS `ai_tips` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `title` varchar(100) NOT NULL COMMENT '标题',
+    `content` text NOT NULL COMMENT '内容',
+    `category` varchar(50) DEFAULT NULL COMMENT '分类',
+    `tags` varchar(255) DEFAULT NULL COMMENT '标签，多个标签用逗号分隔',
+    `author_id` bigint(20) NOT NULL COMMENT '作者ID',
+    `views` int(11) DEFAULT 0 COMMENT '浏览次数',
+    `likes` int(11) DEFAULT 0 COMMENT '点赞次数',
+    `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态：0-草稿，1-已发布',
+    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否删除：0-未删除，1-已删除',
+    PRIMARY KEY (`id`),
+    KEY `idx_author` (`author_id`),
+    KEY `idx_category` (`category`),
+    FULLTEXT KEY `idx_content` (`title`, `content`, `tags`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='AI锦囊表'; 

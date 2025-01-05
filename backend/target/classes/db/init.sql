@@ -56,4 +56,4 @@ CREATE TABLE IF NOT EXISTS `user_resource` (
     `deleted` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否删除：0-未删除，1-已删除',
     PRIMARY KEY (`id`),
     KEY `idx_user_resource` (`user_id`, `resource_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户资源关联表'; 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户资源关联表';

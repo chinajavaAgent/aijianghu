@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen bg-[#FFF8E1] pb-20">
+  <div class="min-h-screen bg-gradient-to-br from-cyan-50 via-fuchsia-50 to-yellow-50 pb-20">
     <!-- 顶部导航栏 -->
-    <div class="bg-white shadow-sm sticky top-0 z-10">
+    <div class="bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-10">
       <div class="container mx-auto px-4">
         <h1 class="text-xl font-bold text-gray-800 py-4">AI锦囊管理</h1>
       </div>
@@ -9,7 +9,7 @@
 
     <div class="container mx-auto px-4 py-6">
       <!-- 锦囊列表 -->
-      <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+      <div class="bg-white/80 backdrop-blur-sm rounded-xl shadow-md p-6 mb-6">
         <div class="flex justify-between items-center mb-6">
           <h2 class="text-lg font-semibold">锦囊列表</h2>
           <button @click="showAddPackageDialog = true" 
