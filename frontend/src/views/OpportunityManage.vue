@@ -123,7 +123,7 @@
               <!-- 项目头部 -->
               <div class="flex justify-between items-center p-4 bg-white border-b border-gray-200">
                 <div class="flex items-center space-x-3">
-                  <span class="font-medium text-gray-800">{{ project.title || `项目 ${index + 1}` }}</span>
+                  <span class="font-medium text-gray-800">{{ project.name || `项目 ${index + 1}` }}</span>
                   <span class="text-sm text-gray-500">{{ project.cases?.length || 0 }}个案例</span>
                   <span class="text-sm text-gray-500">{{ project.benefits?.length || 0 }}项福利</span>
                 </div>
@@ -165,9 +165,9 @@
                       项目名称
                       <span class="text-red-500">*</span>
                     </label>
-                    <input v-model="project.title" type="text"
+                    <input v-model="project.name" type="text"
                       class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                      :class="{'border-red-500': !project.title?.trim()}"
+                      :class="{'border-red-500': !project.name?.trim()}"
                       placeholder="请输入项目名称（必填）">
                   </div>
                   <div>
@@ -325,7 +325,7 @@ import {
   updateBenefit,
   deleteBenefit
 } from '@/api/project'
-import type { Project, ProjectCase, ProjectBenefit, ProjectUpdateDto } from '@/types/project'
+import { Project, ProjectCase, ProjectBenefit, ProjectUpdateDto } from '@/types/project'
 
 // 锦囊列表数据
 const tipsList = ref<AiTips[]>([])
@@ -383,8 +383,16 @@ const openProjectDialog = async (tip: AiTips) => {
   try {
     // 加载项目列表
     const response = await getProjects(1, 10)  // 使用分页参数
-    projectForm.projects = response.data.records.map((project: Project) => ({  // 从分页对象中获取records
+    projectForm.projects = response.data.records.map((project: any) => ({
       ...project,
+      name: project.name,  // 确保使用后端返回的name字段
+      description: project.description,
+      videoUrl: project.videoUrl,
+      status: project.status || 0,
+      views: project.views || 0,
+      likes: project.likes || 0,
+      cases: project.cases || [],
+      benefits: project.benefits || [],
       isExpanded: true,
       currentStep: 0
     }))
@@ -398,7 +406,7 @@ const openProjectDialog = async (tip: AiTips) => {
 // 添加项目
 const addProject = () => {
   const newProject: Project = {
-    title: '',
+    name: '',
     description: '',
     videoUrl: '',
     status: 0,
@@ -438,7 +446,7 @@ const handleProjectSubmit = async () => {
   try {
     // 验证所有项目的必填字段
     for (const project of projectForm.projects) {
-      if (!project.title?.trim()) {
+      if (!project.name?.trim()) {
         showToast('请输入项目名称')
         return
       }
@@ -459,7 +467,7 @@ const handleProjectSubmit = async () => {
     await Promise.all(projectForm.projects.map(async (project) => {
       if (project.id) {
         const updateData: ProjectUpdateDto = {
-          title: project.title,
+          name: project.name,
           description: project.description,
           videoUrl: project.videoUrl,
           status: project.status
@@ -699,7 +707,7 @@ const submitCase = async (project: Project, caseItem: ProjectCase) => {
 // 提交单个项目的基本信息
 const submitProject = async (project: Project) => {
   try {
-    if (!project.title?.trim()) {
+    if (!project.name?.trim()) {
       showToast('请输入项目名称')
       return
     }
@@ -711,7 +719,7 @@ const submitProject = async (project: Project) => {
     if (project.id) {
       // 更新已有项目
       await updateProject(project.id, {
-        title: project.title,
+        name: project.name,
         description: project.description,
         videoUrl: project.videoUrl
       })
