@@ -142,15 +142,17 @@
         </div>
         <div class="mb-4">
           <label class="block text-sm font-medium text-gray-700 mb-1">视频教程</label>
-          <div v-for="(video, index) in projectForm.videos" :key="index" class="flex items-center mb-2">
+          <div v-for="(video, index) in projectForm.videos" :key="index" class="flex flex-col mb-2">
             <input v-model="video.title" type="text" 
-              class="flex-1 px-3 py-2 border rounded-lg mr-2"
+              class="w-full px-3 py-2 border rounded-lg mb-2"
               placeholder="视频标题">
-            <input v-model="video.url" type="text" 
-              class="flex-1 px-3 py-2 border rounded-lg mr-2"
-              placeholder="视频链接">
-            <button @click="projectForm.videos.splice(index, 1)" 
-              class="text-red-600 hover:text-red-800">删除</button>
+            <div class="flex items-center">
+              <input v-model="video.url" type="text" 
+                class="flex-1 px-3 py-2 border rounded-lg mr-2"
+                placeholder="视频链接">
+              <button @click="projectForm.videos.splice(index, 1)" 
+                class="text-red-600 hover:text-red-800 whitespace-nowrap">删除</button>
+            </div>
           </div>
           <button @click="projectForm.videos.push({ title: '', url: '' })" 
             class="text-blue-600 hover:text-blue-800 text-sm">
