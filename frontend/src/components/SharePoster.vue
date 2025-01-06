@@ -22,56 +22,6 @@
           </button>
         </div>
 
-        <!-- 背景颜色选择器 -->
-        <div class="mb-4">
-          <h4 class="text-sm font-medium mb-2">选择背景样式</h4>
-          <div class="flex flex-wrap gap-2">
-            <!-- 预设颜色方案 -->
-            <div v-for="(scheme, index) in colorSchemes" 
-              :key="index"
-              @click="selectColorScheme(scheme)"
-              class="relative w-12 h-12 rounded-md cursor-pointer overflow-hidden hover:ring-2 hover:ring-blue-500 transition-all"
-              :class="{'ring-2 ring-blue-500': isCurrentScheme(scheme)}">
-              <div v-if="scheme.type === 'gradient'"
-                class="w-full h-full"
-                :style="{
-                  background: `linear-gradient(to bottom, ${scheme.startColor}, ${scheme.endColor})`
-                }">
-              </div>
-              <div v-else
-                class="w-full h-full"
-                :style="{
-                  backgroundColor: scheme.startColor
-                }">
-              </div>
-              <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-20 text-white text-[8px] text-center py-0.5">
-                {{ scheme.name }}
-              </div>
-            </div>
-            
-            <!-- 自定义颜色选择器 -->
-            <div class="flex items-center gap-2">
-              <select v-model="customBackground.type" 
-                class="border rounded px-1 py-0.5 text-sm">
-                <option value="gradient">渐变</option>
-                <option value="solid">纯色</option>
-                <option value="paper">纸张</option>
-              </select>
-              
-              <div class="flex items-center gap-1">
-                <input type="color" 
-                  v-model="customBackground.startColor"
-                  class="w-6 h-6 p-0 border rounded">
-                
-                <input v-if="customBackground.type === 'gradient'" 
-                  type="color" 
-                  v-model="customBackground.endColor"
-                  class="w-6 h-6 p-0 border rounded">
-              </div>
-            </div>
-          </div>
-        </div>
-
         <!-- 海报预览区域 -->
         <div class="relative bg-gray-50 rounded-lg overflow-hidden mb-6">
           <div class="poster-container">
@@ -106,143 +56,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick, reactive, watch } from 'vue'
+import { ref, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 import QRCode from 'qrcode'
+import { getSharePoster } from '@/api/tips'
 
 const props = defineProps<{
   title?: string
   price?: string | number
   introduction?: string
-  coverImage?: string
   shareUrl: string
 }>()
-
-interface ColorScheme {
-  startColor: string
-  endColor?: string
-  type: 'gradient' | 'solid' | 'paper'
-  name: string
-  texture?: string
-}
-
-// 预设颜色方案
-const colorSchemes: ColorScheme[] = [
-  {
-    startColor: '#F5F5F5',
-    type: 'paper',
-    name: '米色纸张',
-    texture: '/textures/paper-1.png'
-  },
-  {
-    startColor: '#E8E8E8',
-    type: 'paper',
-    name: '灰色纸张',
-    texture: '/textures/paper-2.png'
-  },
-  {
-    startColor: '#40E0D0',
-    endColor: '#4169E1',
-    type: 'gradient',
-    name: '默认蓝绿'
-  },
-  {
-    startColor: '#FF6B6B',
-    endColor: '#4ECDC4',
-    type: 'gradient',
-    name: '珊瑚红'
-  },
-  {
-    startColor: '#A8E6CF',
-    endColor: '#FFD3B6',
-    type: 'gradient',
-    name: '清新绿'
-  },
-  {
-    startColor: '#3494E6',
-    endColor: '#EC6EAD',
-    type: 'gradient',
-    name: '梦幻紫'
-  },
-  {
-    startColor: '#11998E',
-    endColor: '#38EF7D',
-    type: 'gradient',
-    name: '森林绿'
-  },
-  {
-    startColor: '#FC466B',
-    type: 'solid',
-    name: '活力红'
-  },
-  {
-    startColor: '#3B4371',
-    type: 'solid',
-    name: '深邃蓝'
-  }
-]
-
-interface Background {
-  startColor: string
-  endColor: string
-  type: 'gradient' | 'solid' | 'paper'
-  texture?: string
-}
-
-// 当前选中的背景方案
-const customBackground = reactive<Background>({
-  startColor: '#F5F5F5',
-  endColor: '#4169E1',
-  type: 'paper',
-  texture: '/textures/paper-1.png'
-})
 
 const visible = ref(false)
 const generating = ref(false)
 const posterCanvas = ref<HTMLCanvasElement | null>(null)
-
-// 监听颜色变化
-watch(
-  () => [customBackground.startColor, customBackground.endColor, customBackground.type],
-  () => {
-    if (visible.value) {
-      generatePoster()
-    }
-  },
-  { deep: true }
-)
-
-// 选择颜色方案
-const selectColorScheme = (scheme: ColorScheme) => {
-  customBackground.type = scheme.type
-  customBackground.startColor = scheme.startColor
-  if (scheme.type === 'gradient' && scheme.endColor) {
-    customBackground.endColor = scheme.endColor
-  }
-  generatePoster()
-}
-
-// 检查是否是当前选中的方案
-const isCurrentScheme = (scheme: ColorScheme) => {
-  if (scheme.type === 'solid') {
-    return customBackground.type === 'solid' && 
-           customBackground.startColor === scheme.startColor
-  }
-  return customBackground.type === 'gradient' && 
-         customBackground.startColor === scheme.startColor && 
-         customBackground.endColor === scheme.endColor
-}
-
-// 加载纹理图片
-const loadTexture = async (url: string): Promise<HTMLImageElement> => {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.crossOrigin = 'anonymous'
-    img.onload = () => resolve(img)
-    img.onerror = reject
-    img.src = url
-  })
-}
 
 const showPoster = async () => {
   visible.value = true
@@ -260,171 +88,112 @@ const showPoster = async () => {
 }
 
 const generatePoster = async () => {
-  // 多次尝试获取 Canvas 元素
-  let retries = 3
-  while (!posterCanvas.value && retries > 0) {
-    console.log(`Waiting for canvas element, retries left: ${retries}`)
-    await new Promise(resolve => setTimeout(resolve, 100))
-    retries--
-  }
-
   if (!posterCanvas.value) {
-    console.error('Canvas element not found after retries')
     throw new Error('无法获取画布元素，请重试')
   }
 
   const canvas = posterCanvas.value
   const ctx = canvas.getContext('2d')
   if (!ctx) {
-    console.error('Failed to get canvas context')
     throw new Error('无法获取画布上下文，请重试')
   }
 
   try {
-    console.log('Starting poster generation...')
+    // 获取海报数据
+    const response = await getSharePoster()
+    if (!response.data) {
+      throw new Error('获取海报数据失败')
+    }
+
+    const posterData = response.data
     
-    // 设置画布大小为正方形
+    // 设置画布大小
     canvas.width = 800
     canvas.height = 800
     
     // 1. 绘制背景
-    const bg = customBackground
-    
-    if (bg.type === 'paper' && bg.texture) {
-      try {
-        // 加载纹理图片
-        const textureImg = await loadTexture(bg.texture)
-        
-        // 创建纹理图案
-        const pattern = ctx.createPattern(textureImg, 'repeat')
-        if (pattern) {
-          ctx.fillStyle = pattern
-          ctx.fillRect(0, 0, canvas.width, canvas.height)
-        }
-        
-        // 添加一层浅色遮罩使纹理更柔和
-        ctx.fillStyle = `${bg.startColor}99`  // 添加60%透明度
-        ctx.fillRect(0, 0, canvas.width, canvas.height)
-      } catch (error) {
-        console.error('Failed to load texture:', error)
-        // 如果纹理加载失败，使用纯色背景
-        ctx.fillStyle = bg.startColor
-        ctx.fillRect(0, 0, canvas.width, canvas.height)
-      }
-    } else if (bg.type === 'solid') {
-      ctx.fillStyle = bg.startColor
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-    } else {
-      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
-      gradient.addColorStop(0, bg.startColor)
-      gradient.addColorStop(1, bg.endColor)
-      ctx.fillStyle = gradient
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-    }
+    ctx.fillStyle = posterData.backgroundColor || '#FFFFFF'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
 
     // 2. 绘制卡片内容
     const cardMargin = 40
     const cardWidth = canvas.width - (cardMargin * 2)
     const cardHeight = canvas.height - (cardMargin * 2)
 
-    // 如果是纸张风格，不需要绘制白色背景
-    if (bg.type !== 'paper') {
-      ctx.fillStyle = '#FFFFFF'
-      ctx.beginPath()
-      ctx.roundRect(cardMargin, cardMargin, cardWidth, cardHeight, 20)
-      ctx.fill()
-    }
-
     let currentY = cardMargin + 60
 
-    // 3. 绘制图标（这里用文字代替）
-    ctx.fillStyle = bg.type === 'paper' ? '#333333' : '#666666'
-    ctx.font = '32px sans-serif'
-    ctx.textAlign = 'left'
-    ctx.fillText('🚲', cardMargin + 40, currentY)
-
-    // 4. 绘制日期
-    ctx.fillStyle = bg.type === 'paper' ? '#333333' : '#666666'
-    ctx.font = '24px sans-serif'
-    ctx.fillText(new Date().toLocaleDateString('zh-CN'), cardMargin + 40, currentY + 50)
-
-    currentY += 100
-
-    // 5. 绘制标题
+    // 3. 绘制标题
     ctx.fillStyle = '#333333'
     ctx.font = 'bold 48px sans-serif'
-    ctx.fillText('👋 ' + props.title, cardMargin + 40, currentY)
+    ctx.fillText(posterData.title || props.title || '', cardMargin + 40, currentY)
 
     currentY += 80
 
-    // 6. 绘制项目介绍
-    ctx.font = '32px sans-serif'
-    ctx.fillStyle = '#666666'
-    const maxWidth = cardWidth - 80
-    const lineHeight = 50
-    
-    // 将项目介绍文字按行分割
-    const words = (props.introduction || '').split('')
-    let line = ''
-    let lines = []
-    
-    for (let word of words) {
-      const testLine = line + word
-      const metrics = ctx.measureText(testLine)
-      if (metrics.width > maxWidth) {
-        lines.push(line)
-        line = word
-      } else {
-        line = testLine
+    // 4. 绘制项目介绍
+    if (posterData.description) {
+      ctx.font = '32px sans-serif'
+      ctx.fillStyle = '#666666'
+      const maxWidth = cardWidth - 80
+      const lineHeight = 50
+      
+      // 将项目介绍文字按行分割
+      const words = posterData.description.split('')
+      let line = ''
+      let lines = []
+      
+      for (let word of words) {
+        const testLine = line + word
+        const metrics = ctx.measureText(testLine)
+        if (metrics.width > maxWidth) {
+          lines.push(line)
+          line = word
+        } else {
+          line = testLine
+        }
       }
+      if (line) {
+        lines.push(line)
+      }
+
+      // 限制最多显示3行，超出部分用省略号表示
+      if (lines.length > 3) {
+        lines = lines.slice(0, 2)
+        lines.push(lines[2] + '...')
+      }
+
+      // 绘制每一行文字
+      lines.forEach((line, index) => {
+        ctx.fillText(line, cardMargin + 40, currentY + index * lineHeight)
+      })
+
+      currentY += lines.length * lineHeight + 60
     }
-    if (line) {
-      lines.push(line)
+
+    // 5. 绘制成功案例
+    if (posterData.cases?.length) {
+      ctx.fillStyle = '#333333'
+      ctx.font = 'bold 32px sans-serif'
+      ctx.fillText('成功案例：', cardMargin + 40, currentY)
+      
+      currentY += 40
+
+      ctx.font = '28px sans-serif'
+      ctx.fillStyle = '#666666'
+      posterData.cases.forEach((item, index) => {
+        ctx.fillText(item, cardMargin + 40, currentY + index * 40)
+      })
+
+      currentY += posterData.cases.length * 40 + 60
     }
 
-    // 限制最多显示3行，超出部分用省略号表示
-    if (lines.length > 3) {
-      lines = lines.slice(0, 2)
-      lines.push(lines[2] + '...')
-    }
-
-    // 绘制每一行文字
-    lines.forEach((line, index) => {
-      ctx.fillText(line, cardMargin + 40, currentY + index * lineHeight)
-    })
-
-    currentY += lines.length * lineHeight + 60
-
-    // 7. 绘制成功案例
-    ctx.fillStyle = '#333333'
-    ctx.font = 'bold 32px sans-serif'
-    ctx.fillText('成功案例：', cardMargin + 40, currentY)
-    
-    currentY += 40
-
-    // 案例列表
-    const cases = [
-      { icon: '💼', text: '小王：月收入增长10倍' },
-      { icon: '👩‍💼', text: '张三：一周成功转型' },
-      { icon: '👨‍💻', text: '李四：客户量翻3倍' }
-    ]
-
-    ctx.font = '28px sans-serif'
-    ctx.fillStyle = '#666666'
-    cases.forEach((item, index) => {
-      ctx.fillText(`${item.icon} ${item.text}`, cardMargin + 40, currentY + index * 40)
-    })
-
-    currentY += cases.length * 40 + 60
-
-    // 8. 绘制底部信息
+    // 6. 绘制底部信息
     const bottomY = canvas.height - cardMargin - 60
     
     // 左侧品牌名
     ctx.fillStyle = '#333333'
     ctx.font = 'bold 28px sans-serif'
     ctx.textAlign = 'left'
-    ctx.fillText('AI锦囊', cardMargin + 40, bottomY)
+    ctx.fillText(posterData.brandName || 'AI锦囊', cardMargin + 40, bottomY)
 
     // 右侧二维码
     try {
@@ -434,7 +203,7 @@ const generatePoster = async () => {
         margin: 0,
         color: {
           dark: '#000000',
-          light: bg.type === 'paper' ? '#FFFFFF99' : '#FFFFFF'
+          light: '#FFFFFF'
         }
       })
 
@@ -445,9 +214,8 @@ const generatePoster = async () => {
         qrImage.src = qrCodeUrl
       })
 
-      // 调整二维码和文字的位置
       const qrX = canvas.width - cardMargin - qrSize - 40
-      const qrY = bottomY - qrSize - 40  // 增加与底部文字的距离
+      const qrY = bottomY - qrSize - 40
       
       // 绘制二维码背景
       ctx.fillStyle = '#F8F8F8'
@@ -462,7 +230,7 @@ const generatePoster = async () => {
       ctx.fillStyle = '#666666'
       ctx.font = '24px sans-serif'
       ctx.textAlign = 'center'
-      ctx.fillText('扫描查看详情', qrX + qrSize/2, bottomY + 5)  // 将文字移到底部
+      ctx.fillText(posterData.qrCodeTip || '扫描查看详情', qrX + qrSize/2, bottomY + 5)
 
     } catch (error) {
       console.error('Failed to generate QR code:', error)
@@ -480,13 +248,13 @@ const downloadPoster = () => {
   
   try {
     const link = document.createElement('a')
-    link.download = `${props.title}-卡片.png`
+    link.download = `${props.title}-海报.png`
     link.href = posterCanvas.value.toDataURL('image/png')
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
     
-    ElMessage.success('卡片保存成功')
+    ElMessage.success('海报保存成功')
   } catch (error) {
     console.error('Failed to download poster:', error)
     ElMessage.error('保存失败，请重试')
@@ -498,7 +266,7 @@ const downloadPoster = () => {
 .poster-container {
   position: relative;
   width: 100%;
-  padding-bottom: 100%; /* 改为1:1比例 */
+  padding-bottom: 100%; /* 1:1比例 */
   background-color: #f3f4f6;
   border-radius: 0.5rem;
 }
