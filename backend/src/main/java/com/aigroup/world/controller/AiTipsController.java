@@ -114,18 +114,29 @@ public class AiTipsController {
                 info.setDescription(project.getDescription());
                 info.setVideoUrl(project.getVideoUrl());
                 
-                // 获取项目案例
-                if (project.getCases() != null) {
-                    info.setCases(project.getCases().stream()
-                        .map(ProjectCase::getDescription)
-                        .collect(Collectors.toList()));
+                // 获取所有项目案例
+                if (project.getCases() != null && !project.getCases().isEmpty()) {
+                    List<String> cases = project.getCases().stream()
+                        .map(projectCase -> {
+                            StringBuilder caseInfo = new StringBuilder();
+                            // 添加案例描述
+                            caseInfo.append(projectCase.getDescription());
+                            // 如果有图片，添加图片URL
+                            if (projectCase.getImageUrl() != null && !projectCase.getImageUrl().isEmpty()) {
+                                caseInfo.append(" [图片: ").append(projectCase.getImageUrl()).append("]");
+                            }
+                            return caseInfo.toString();
+                        })
+                        .collect(Collectors.toList());
+                    info.setCases(cases);
                 }
                 
-                // 获取项目福利
-                if (project.getBenefits() != null) {
-                    info.setBenefits(project.getBenefits().stream()
+                // 获取所有项目福利
+                if (project.getBenefits() != null && !project.getBenefits().isEmpty()) {
+                    List<String> benefits = project.getBenefits().stream()
                         .map(ProjectBenefit::getContent)
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList());
+                    info.setBenefits(benefits);
                 }
                 
                 return info;

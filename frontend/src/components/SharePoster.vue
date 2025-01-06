@@ -404,20 +404,36 @@ const generatePoster = async () => {
         currentY += lines.length * lineHeight + 30
       }
 
-      // 绘制项目案例（只显示1个）
+      // 绘制所有项目案例
       if (project.cases?.length) {
-        ctx.fillStyle = '#666666'
-        ctx.font = '28px sans-serif'
-        ctx.fillText(`案例：${project.cases[0]}`, cardMargin + 40, currentY)
+        ctx.fillStyle = '#333333'
+        ctx.font = 'bold 28px sans-serif'
+        ctx.fillText('项目案例：', cardMargin + 40, currentY)
         currentY += 40
+
+        ctx.font = '26px sans-serif'
+        ctx.fillStyle = '#666666'
+        project.cases.forEach((case_: string, index: number) => {
+          ctx.fillText(`${index + 1}. ${case_}`, cardMargin + 40, currentY)
+          currentY += 35
+        })
+        currentY += 20
       }
 
-      // 绘制项目福利（只显示1个）
+      // 绘制所有项目福利
       if (project.benefits?.length) {
-        ctx.fillStyle = '#666666'
-        ctx.font = '28px sans-serif'
-        ctx.fillText(`福利：${project.benefits[0]}`, cardMargin + 40, currentY)
+        ctx.fillStyle = '#333333'
+        ctx.font = 'bold 28px sans-serif'
+        ctx.fillText('项目福利：', cardMargin + 40, currentY)
         currentY += 40
+
+        ctx.font = '26px sans-serif'
+        ctx.fillStyle = '#666666'
+        project.benefits.forEach((benefit: string, index: number) => {
+          ctx.fillText(`${index + 1}. ${benefit}`, cardMargin + 40, currentY)
+          currentY += 35
+        })
+        currentY += 20
       }
 
       currentY += 30 // 项目之间的间距
