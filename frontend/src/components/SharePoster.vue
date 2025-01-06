@@ -347,89 +347,83 @@ const generatePoster = async () => {
 
     currentY += 80
 
-    // 4. 绘制项目名称
+    // 4. 绘制锦囊标题
     ctx.fillStyle = '#333333'
-    ctx.font = 'bold 36px sans-serif'
+    ctx.font = 'bold 40px sans-serif'
     ctx.fillText(posterData.title, cardMargin + 40, currentY)
 
     currentY += 60
 
-    // 5. 绘制项目介绍
-    if (posterData.description) {
-      ctx.font = '32px sans-serif'
-      ctx.fillStyle = '#666666'
-      ctx.textAlign = 'left'
-      const maxWidth = cardWidth - 80
-      const lineHeight = 50
+    // 5. 遍历绘制项目信息
+    for (let i = 0; i < Math.min(posterData.projects.length, 3); i++) { // 最多显示3个项目
+      const project = posterData.projects[i]
       
-      // 将项目介绍文字按行分割
-      const words = posterData.description.split('')
-      let line = ''
-      let lines = []
-      
-      for (let word of words) {
-        const testLine = line + word
-        const metrics = ctx.measureText(testLine)
-        if (metrics.width > maxWidth) {
-          lines.push(line)
-          line = word
-        } else {
-          line = testLine
+      // 绘制项目标题
+      ctx.fillStyle = '#333333'
+      ctx.font = 'bold 32px sans-serif'
+      ctx.fillText(`项目 ${i + 1}：${project.title}`, cardMargin + 40, currentY)
+      currentY += 50
+
+      // 绘制项目介绍
+      if (project.description) {
+        ctx.font = '28px sans-serif'
+        ctx.fillStyle = '#666666'
+        const maxWidth = cardWidth - 80
+        const lineHeight = 40
+        
+        // 将项目介绍文字按行分割
+        const words = project.description.split('')
+        let line = ''
+        let lines = []
+        
+        for (let word of words) {
+          const testLine = line + word
+          const metrics = ctx.measureText(testLine)
+          if (metrics.width > maxWidth) {
+            lines.push(line)
+            line = word
+          } else {
+            line = testLine
+          }
         }
-      }
-      if (line) {
-        lines.push(line)
+        if (line) {
+          lines.push(line)
+        }
+
+        // 限制最多显示2行，超出部分用省略号表示
+        if (lines.length > 2) {
+          lines = lines.slice(0, 1)
+          lines.push(lines[1] + '...')
+        }
+
+        // 绘制每一行文字
+        lines.forEach((line, index) => {
+          ctx.fillText(line, cardMargin + 40, currentY + index * lineHeight)
+        })
+
+        currentY += lines.length * lineHeight + 30
       }
 
-      // 限制最多显示3行，超出部分用省略号表示
-      if (lines.length > 3) {
-        lines = lines.slice(0, 2)
-        lines.push(lines[2] + '...')
+      // 绘制项目案例（只显示1个）
+      if (project.cases?.length) {
+        ctx.fillStyle = '#666666'
+        ctx.font = '28px sans-serif'
+        ctx.fillText(`案例：${project.cases[0]}`, cardMargin + 40, currentY)
+        currentY += 40
       }
 
-      // 绘制每一行文字
-      lines.forEach((line, index) => {
-        ctx.fillText(line, cardMargin + 40, currentY + index * lineHeight)
-      })
+      // 绘制项目福利（只显示1个）
+      if (project.benefits?.length) {
+        ctx.fillStyle = '#666666'
+        ctx.font = '28px sans-serif'
+        ctx.fillText(`福利：${project.benefits[0]}`, cardMargin + 40, currentY)
+        currentY += 40
+      }
 
-      currentY += lines.length * lineHeight + 60
+      currentY += 30 // 项目之间的间距
     }
 
-    // 6. 绘制项目案例
-    if (posterData.cases?.length) {
-      ctx.fillStyle = '#333333'
-      ctx.font = 'bold 32px sans-serif'
-      ctx.fillText('项目案例：', cardMargin + 40, currentY)
-      
-      currentY += 40
-
-      ctx.font = '28px sans-serif'
-      ctx.fillStyle = '#666666'
-      posterData.cases.forEach((case_: string, index: number) => {
-        ctx.fillText(`· ${case_}`, cardMargin + 40, currentY + index * 40)
-      })
-
-      currentY += posterData.cases.length * 40 + 60
-    }
-
-    // 7. 绘制项目福利
-    if (posterData.benefits?.length) {
-      ctx.fillStyle = '#333333'
-      ctx.font = 'bold 32px sans-serif'
-      ctx.fillText('项目福利：', cardMargin + 40, currentY)
-      
-      currentY += 40
-
-      ctx.font = '28px sans-serif'
-      ctx.fillStyle = '#666666'
-      posterData.benefits.forEach((benefit: string, index: number) => {
-        ctx.fillText(`· ${benefit}`, cardMargin + 40, currentY + index * 40)
-      })
-
-      currentY += posterData.benefits.length * 40 + 60
-    }
-
-    // 8. 绘制底部信息
+    // 6. 绘制底部信息
     const bottomY = canvas.height - cardMargin - 60
     
     // 左侧品牌名

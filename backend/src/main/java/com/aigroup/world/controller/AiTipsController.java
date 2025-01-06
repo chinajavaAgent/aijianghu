@@ -2,7 +2,9 @@ package com.aigroup.world.controller;
 
 import com.aigroup.world.common.Result;
 import com.aigroup.world.entity.AiTips;
+import com.aigroup.world.entity.Project;
 import com.aigroup.world.entity.ProjectCase;
+import com.aigroup.world.entity.ProjectBenefit;
 import com.aigroup.world.service.AiTipsService;
 import com.aigroup.world.dto.SharePosterData;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * AI锦囊Controller
@@ -100,19 +103,36 @@ public class AiTipsController {
 
         SharePosterData posterData = new SharePosterData();
         posterData.setTitle(aiTips.getTitle());
-        posterData.setDescription(aiTips.getDescription());
         posterData.setBrandName("AI群江湖");
         posterData.setQrCodeTip("扫码查看详情");
 
-        // 如果有项目，添加项目案例
-        if (aiTips.getProjects() != null && !aiTips.getProjects().isEmpty()) {
-            List<ProjectCase> cases = aiTips.getProjects().stream()
-                .filter(project -> project.getCases() != null && !project.getCases().isEmpty())
-                .flatMap(project -> project.getCases().stream())
-                .collect(java.util.stream.Collectors.toList());
-            posterData.setCases(cases);
-        }
+        // 获取锦囊下的所有项目信息
+        List<SharePosterData.ProjectInfo> projectInfos = aiTips.getProjects().stream()
+            .map(project -> {
+                SharePosterData.ProjectInfo info = new SharePosterData.ProjectInfo();
+                info.setTitle(project.getName());
+                info.setDescription(project.getDescription());
+                info.setVideoUrl(project.getVideoUrl());
+                
+                // 获取项目案例
+                if (project.getCases() != null) {
+                    info.setCases(project.getCases().stream()
+                        .map(ProjectCase::getDescription)
+                        .collect(Collectors.toList()));
+                }
+                
+                // 获取项目福利
+                if (project.getBenefits() != null) {
+                    info.setBenefits(project.getBenefits().stream()
+                        .map(ProjectBenefit::getContent)
+                        .collect(Collectors.toList()));
+                }
+                
+                return info;
+            })
+            .collect(Collectors.toList());
 
+        posterData.setProjects(projectInfos);
         return Result.success(posterData);
     }
 } 
