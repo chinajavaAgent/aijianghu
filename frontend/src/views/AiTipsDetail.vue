@@ -117,7 +117,10 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div v-for="(item, index) in currentProject.cases" :key="index"
                 class="bg-gray-50 rounded-lg p-4">
-                <img :src="item.imageUrl" :alt="item.description" class="w-full h-48 object-cover rounded-lg mb-4">
+                <img v-if="item.imageUrl" 
+                  :src="item.imageUrl" 
+                  :alt="item.description" 
+                  class="w-full h-48 object-cover rounded-lg mb-4">
                 <p class="text-gray-600">{{ item.description }}</p>
               </div>
             </div>
