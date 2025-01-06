@@ -3,9 +3,12 @@ package com.aigroup.world.controller;
 import com.aigroup.world.common.Result;
 import com.aigroup.world.entity.AiTips;
 import com.aigroup.world.service.AiTipsService;
+import com.aigroup.world.dto.SharePosterData;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * AI锦囊Controller
@@ -82,5 +85,34 @@ public class AiTipsController {
     @DeleteMapping("/{id}/like")
     public Result<Boolean> unlikeAiTips(@PathVariable Long id) {
         return Result.success(aiTipsService.updateLikes(id, -1));
+    }
+
+    /**
+     * 获取分享海报数据
+     */
+    @GetMapping("/{id}/poster")
+    public Result<SharePosterData> getSharePoster(@PathVariable Long id) {
+        AiTips aiTips = aiTipsService.getAiTipsDetail(id);
+        if (aiTips == null) {
+            return Result.error("锦囊不存在");
+        }
+
+        SharePosterData posterData = new SharePosterData();
+        posterData.setTitle(aiTips.getTitle());
+        posterData.setDescription(aiTips.getDescription());
+        posterData.setBrandName("AI群江湖");
+        posterData.setQrCodeTip("扫码查看详情");
+
+        // 如果有项目，添加项目案例
+        if (aiTips.getProjects() != null && !aiTips.getProjects().isEmpty()) {
+            List<String> cases = aiTips.getProjects().stream()
+                .filter(project -> project.getCases() != null && !project.getCases().isEmpty())
+                .flatMap(project -> project.getCases().stream())
+                .map(projectCase -> projectCase.getDescription())
+                .collect(java.util.stream.Collectors.toList());
+            posterData.setCases(cases);
+        }
+
+        return Result.success(posterData);
     }
 } 
