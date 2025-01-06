@@ -82,9 +82,9 @@ export function unlikeAiTips(id: number) {
 /**
  * 获取分享海报数据
  */
-export function getSharePoster(tipId: number, projectId: number) {
+export function getSharePoster(tipId: number) {
     return request<SharePosterData>({
-        url: `/api/tips/${tipId}/projects/${projectId}/poster`,
+        url: `/api/tips/${tipId}/poster`,
         method: 'get'
     })
 } 

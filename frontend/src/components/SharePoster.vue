@@ -278,7 +278,7 @@ const generatePoster = async () => {
 
   try {
     // 获取海报数据
-    const response = await getSharePoster(props.tipId, props.projectId)
+    const response = await getSharePoster(props.tipId)
     if (!response.data) {
       throw new Error('获取海报数据失败')
     }
