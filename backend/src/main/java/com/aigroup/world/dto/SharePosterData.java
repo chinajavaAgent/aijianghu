@@ -9,12 +9,12 @@ import java.util.List;
 @Data
 public class SharePosterData {
     /**
-     * 海报标题
+     * 项目名称
      */
     private String title;
 
     /**
-     * 海报描述
+     * 项目介绍
      */
     private String description;
 
@@ -24,9 +24,9 @@ public class SharePosterData {
     private String brandName;
 
     /**
-     * 成功案例列表
+     * 项目福利列表
      */
-    private List<String> cases;
+    private List<String> benefits;
 
     /**
      * 二维码提示文字

@@ -113,9 +113,7 @@ import { getSharePoster } from '@/api/tips'
 
 const props = defineProps<{
   tipId: number
-  title?: string
-  price?: string | number
-  introduction?: string
+  projectId: number
   shareUrl: string
 }>()
 
@@ -280,7 +278,7 @@ const generatePoster = async () => {
 
   try {
     // 获取海报数据
-    const response = await getSharePoster(props.tipId)
+    const response = await getSharePoster(props.tipId, props.projectId)
     if (!response.data) {
       throw new Error('获取海报数据失败')
     }
@@ -344,7 +342,8 @@ const generatePoster = async () => {
     // 3. 绘制标题
     ctx.fillStyle = '#333333'
     ctx.font = 'bold 48px sans-serif'
-    ctx.fillText(posterData.title || props.title || '', cardMargin + 40, currentY)
+    ctx.textAlign = 'left'
+    ctx.fillText(posterData.title, cardMargin + 40, currentY)
 
     currentY += 80
 
@@ -352,6 +351,7 @@ const generatePoster = async () => {
     if (posterData.description) {
       ctx.font = '32px sans-serif'
       ctx.fillStyle = '#666666'
+      ctx.textAlign = 'left'
       const maxWidth = cardWidth - 80
       const lineHeight = 50
       
@@ -388,21 +388,21 @@ const generatePoster = async () => {
       currentY += lines.length * lineHeight + 60
     }
 
-    // 5. 绘制成功案例
-    if (posterData.cases?.length) {
+    // 5. 绘制项目福利
+    if (posterData.benefits?.length) {
       ctx.fillStyle = '#333333'
       ctx.font = 'bold 32px sans-serif'
-      ctx.fillText('成功案例：', cardMargin + 40, currentY)
+      ctx.fillText('项目福利：', cardMargin + 40, currentY)
       
       currentY += 40
 
       ctx.font = '28px sans-serif'
       ctx.fillStyle = '#666666'
-      posterData.cases.forEach((item: string, index: number) => {
-        ctx.fillText(item, cardMargin + 40, currentY + index * 40)
+      posterData.benefits.forEach((benefit: string, index: number) => {
+        ctx.fillText(`· ${benefit}`, cardMargin + 40, currentY + index * 40)
       })
 
-      currentY += posterData.cases.length * 40 + 60
+      currentY += posterData.benefits.length * 40 + 60
     }
 
     // 6. 绘制底部信息
@@ -412,7 +412,7 @@ const generatePoster = async () => {
     ctx.fillStyle = '#333333'
     ctx.font = 'bold 28px sans-serif'
     ctx.textAlign = 'left'
-    ctx.fillText(posterData.brandName || 'AI锦囊', cardMargin + 40, bottomY)
+    ctx.fillText(posterData.brandName, cardMargin + 40, bottomY)
 
     // 右侧二维码
     try {
@@ -449,7 +449,7 @@ const generatePoster = async () => {
       ctx.fillStyle = '#666666'
       ctx.font = '24px sans-serif'
       ctx.textAlign = 'center'
-      ctx.fillText(posterData.qrCodeTip || '扫描查看详情', qrX + qrSize/2, bottomY + 5)
+      ctx.fillText(posterData.qrCodeTip, qrX + qrSize/2, bottomY + 5)
 
     } catch (error) {
       console.error('Failed to generate QR code:', error)
@@ -467,7 +467,7 @@ const downloadPoster = () => {
   
   try {
     const link = document.createElement('a')
-    link.download = `${props.title}-海报.png`
+    link.download = '项目海报.png'
     link.href = posterCanvas.value.toDataURL('image/png')
     document.body.appendChild(link)
     link.click()

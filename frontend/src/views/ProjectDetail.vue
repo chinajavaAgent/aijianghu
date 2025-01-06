@@ -12,9 +12,7 @@
         </button>
         <SharePoster 
           :tipId="Number(route.params.id)"
-          :title="tipDetail?.title || ''"
-          :price="tipDetail?.price || 0"
-          :introduction="tipDetail?.description || ''"
+          :projectId="currentProject?.id"
           :share-url="shareUrl"
         />
       </div>
