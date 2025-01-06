@@ -10,14 +10,19 @@ export interface SharePosterData {
     description: string;
 
     /**
+     * 项目案例
+     */
+    cases?: string[];
+
+    /**
+     * 项目福利
+     */
+    benefits?: string[];
+
+    /**
      * 品牌名称
      */
     brandName: string;
-
-    /**
-     * 项目福利列表
-     */
-    benefits: string[];
 
     /**
      * 二维码提示文字

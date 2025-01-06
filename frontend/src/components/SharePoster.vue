@@ -339,15 +339,22 @@ const generatePoster = async () => {
 
     let currentY = cardMargin + 60
 
-    // 3. 绘制标题
+    // 3. 绘制固定标题
     ctx.fillStyle = '#333333'
     ctx.font = 'bold 48px sans-serif'
     ctx.textAlign = 'left'
-    ctx.fillText(posterData.title, cardMargin + 40, currentY)
+    ctx.fillText('AI江湖，你的赚钱江湖首选', cardMargin + 40, currentY)
 
     currentY += 80
 
-    // 4. 绘制项目介绍
+    // 4. 绘制项目名称
+    ctx.fillStyle = '#333333'
+    ctx.font = 'bold 36px sans-serif'
+    ctx.fillText(posterData.title, cardMargin + 40, currentY)
+
+    currentY += 60
+
+    // 5. 绘制项目介绍
     if (posterData.description) {
       ctx.font = '32px sans-serif'
       ctx.fillStyle = '#666666'
@@ -388,7 +395,24 @@ const generatePoster = async () => {
       currentY += lines.length * lineHeight + 60
     }
 
-    // 5. 绘制项目福利
+    // 6. 绘制项目案例
+    if (posterData.cases?.length) {
+      ctx.fillStyle = '#333333'
+      ctx.font = 'bold 32px sans-serif'
+      ctx.fillText('项目案例：', cardMargin + 40, currentY)
+      
+      currentY += 40
+
+      ctx.font = '28px sans-serif'
+      ctx.fillStyle = '#666666'
+      posterData.cases.forEach((case_: string, index: number) => {
+        ctx.fillText(`· ${case_}`, cardMargin + 40, currentY + index * 40)
+      })
+
+      currentY += posterData.cases.length * 40 + 60
+    }
+
+    // 7. 绘制项目福利
     if (posterData.benefits?.length) {
       ctx.fillStyle = '#333333'
       ctx.font = 'bold 32px sans-serif'
@@ -405,7 +429,7 @@ const generatePoster = async () => {
       currentY += posterData.benefits.length * 40 + 60
     }
 
-    // 6. 绘制底部信息
+    // 8. 绘制底部信息
     const bottomY = canvas.height - cardMargin - 60
     
     // 左侧品牌名
