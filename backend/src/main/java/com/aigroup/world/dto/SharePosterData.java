@@ -1,5 +1,6 @@
 package com.aigroup.world.dto;
 
+import com.aigroup.world.entity.ProjectCase;
 import lombok.Data;
 import java.util.List;
 
@@ -27,6 +28,11 @@ public class SharePosterData {
      * 项目福利列表
      */
     private List<String> benefits;
+
+    /**
+     * 项目案例列表
+     */
+    private List<ProjectCase> cases;
 
     /**
      * 二维码提示文字

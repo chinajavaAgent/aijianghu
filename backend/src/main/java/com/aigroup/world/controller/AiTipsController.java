@@ -2,6 +2,7 @@ package com.aigroup.world.controller;
 
 import com.aigroup.world.common.Result;
 import com.aigroup.world.entity.AiTips;
+import com.aigroup.world.entity.ProjectCase;
 import com.aigroup.world.service.AiTipsService;
 import com.aigroup.world.dto.SharePosterData;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -105,10 +106,9 @@ public class AiTipsController {
 
         // 如果有项目，添加项目案例
         if (aiTips.getProjects() != null && !aiTips.getProjects().isEmpty()) {
-            List<String> cases = aiTips.getProjects().stream()
+            List<ProjectCase> cases = aiTips.getProjects().stream()
                 .filter(project -> project.getCases() != null && !project.getCases().isEmpty())
                 .flatMap(project -> project.getCases().stream())
-                .map(projectCase -> projectCase.getDescription())
                 .collect(java.util.stream.Collectors.toList());
             posterData.setCases(cases);
         }
