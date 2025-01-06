@@ -2,10 +2,16 @@ package com.aigroup.world.controller;
 
 import com.aigroup.world.common.Result;
 import com.aigroup.world.entity.AiTips;
+import com.aigroup.world.entity.Project;
 import com.aigroup.world.service.AiTipsService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * AI锦囊Controller
@@ -82,5 +88,36 @@ public class AiTipsController {
     @DeleteMapping("/{id}/like")
     public Result<Boolean> unlikeAiTips(@PathVariable Long id) {
         return Result.success(aiTipsService.updateLikes(id, -1));
+    }
+
+    /**
+     * 获取分享海报数据
+     */
+    @GetMapping("/{id}/share-poster")
+    public Result<Map<String, Object>> getSharePoster(@PathVariable Long id) {
+        AiTips aiTips = aiTipsService.getAiTipsDetail(id);
+        if (aiTips == null) {
+            return Result.error("锦囊不存在");
+        }
+
+        Map<String, Object> posterData = new HashMap<>();
+        posterData.put("title", aiTips.getTitle());
+        posterData.put("description", aiTips.getDescription());
+        posterData.put("backgroundColor", "#FFFFFF");
+        posterData.put("brandName", "AI锦囊");
+        
+        // 获取成功案例
+        List<String> cases = new ArrayList<>();
+        if (aiTips.getProjects() != null && !aiTips.getProjects().isEmpty()) {
+            for (Project project : aiTips.getProjects()) {
+                if (project.getCases() != null && !project.getCases().isEmpty()) {
+                    cases.add(project.getCases().get(0).getDescription());
+                }
+            }
+        }
+        posterData.put("cases", cases);
+        posterData.put("qrCodeTip", "扫码查看详情");
+
+        return Result.success(posterData);
     }
 } 
