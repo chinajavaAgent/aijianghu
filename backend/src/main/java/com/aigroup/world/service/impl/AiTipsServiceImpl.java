@@ -39,7 +39,9 @@ public class AiTipsServiceImpl extends ServiceImpl<AiTipsMapper, AiTips> impleme
         for (AiTips tip : pageResult.getRecords()) {
             // 获取该锦囊关联的项目列表
             Page<Project> projectPage = projectService.getProjects(1, 100, tip.getId());
-            tip.setProjects(projectPage.getRecords());
+            if (projectPage != null && projectPage.getRecords() != null) {
+                tip.setProjects(projectPage.getRecords());
+            }
         }
         
         return pageResult;
@@ -47,7 +49,15 @@ public class AiTipsServiceImpl extends ServiceImpl<AiTipsMapper, AiTips> impleme
 
     @Override
     public AiTips getAiTipsDetail(Long id) {
-        return getById(id);
+        AiTips aiTips = getById(id);
+        if (aiTips != null) {
+            // 加载项目信息
+            Page<Project> projectPage = projectService.getProjects(1, 100, aiTips.getId());
+            if (projectPage != null && projectPage.getRecords() != null) {
+                aiTips.setProjects(projectPage.getRecords());
+            }
+        }
+        return aiTips;
     }
 
     @Override

@@ -18,6 +18,22 @@
         />
       </div>
 
+      <!-- 项目标签页 -->
+      <div class="bg-white rounded-xl p-4 mb-6 shadow-lg">
+        <div class="flex items-center space-x-4 overflow-x-auto">
+          <button v-for="(project, index) in projects" :key="project.id"
+            class="px-4 py-2 rounded-lg whitespace-nowrap transition-colors"
+            :class="[
+              currentProjectIndex === index
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            ]"
+            @click="selectProject(index)">
+            {{ project.name }}
+          </button>
+        </div>
+      </div>
+
       <!-- 项目标题 -->
       <div class="bg-white rounded-xl p-6 mb-6 shadow-lg">
         <div class="flex items-center justify-between">
@@ -268,6 +284,11 @@ const fetchTipDetail = async () => {
     if (currentProject.value?.tipId) {
       const response = await getAiTipsDetail(currentProject.value.tipId)
       tipDetail.value = response.data
+      
+      // 如果锦囊中有项目列表，更新projects
+      if (response.data.projects && response.data.projects.length > 0) {
+        projects.value = response.data.projects
+      }
     }
   } catch (error) {
     console.error('获取提示详情失败:', error)
@@ -278,7 +299,11 @@ const fetchTipDetail = async () => {
 // 切换项目
 const selectProject = (index: number) => {
   currentProjectIndex.value = index
-  fetchTipDetail() // 切换项目时重新获取提示详情
+  // 更新URL，但不重新加载页面
+  const newProjectId = projects.value[index].id
+  if (newProjectId) {
+    router.replace(`/project/${newProjectId}`)
+  }
 }
 
 // 播放视频
@@ -318,28 +343,21 @@ onMounted(async () => {
   }
 
   try {
-    // 这里应该从后端获取项目数据
-    // 暂时使用示例数据
-    projects.value = [
-      {
-        id: projectId,
-        tipId: projectId, // 假设tipId与projectId相同
-        name: '示例项目1',
-        description: '这是一个示例项目的描述',
-        videoUrl: 'https://example.com/video1.mp4',
-        coverImage: 'https://example.com/cover1.jpg',
-        cases: [
-          { imageUrl: 'https://example.com/case1.jpg', description: '案例1描述' }
-        ],
-        benefits: [
-          { content: '福利1' },
-          { content: '福利2' }
-        ]
+    // 获取项目详情
+    const response = await getProjectById(projectId)
+    if (response.data) {
+      const { projects: projectList, tipId } = response.data
+      if (projectList && projectList.length > 0) {
+        projects.value = projectList
+        // 找到当前项目的索引
+        const index = projectList.findIndex(p => p.id === projectId)
+        if (index !== -1) {
+          currentProjectIndex.value = index
+        }
       }
-    ]
-    
-    // 立即获取tips详情
-    await fetchTipDetail()
+      // 获取锦囊详情
+      await fetchTipDetail()
+    }
   } catch (error) {
     console.error('获取项目数据失败:', error)
     ElMessage.error('获取项目数据失败')
@@ -349,7 +367,30 @@ onMounted(async () => {
 
 <style scoped>
 .container {
-  max-width: 768px;
+  max-width: 1024px;
+}
+
+/* 添加水平滚动条样式 */
+.overflow-x-auto {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+.overflow-x-auto::-webkit-scrollbar {
+  height: 6px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+  border-radius: 3px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(156, 163, 175, 0.7);
 }
 
 .aspect-w-16 {

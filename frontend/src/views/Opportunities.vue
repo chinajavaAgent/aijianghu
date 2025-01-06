@@ -53,7 +53,8 @@
               </h4>
               <div class="space-y-2">
                 <div v-for="project in tip.projects" :key="project.id"
-                  class="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors">
+                  class="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors cursor-pointer"
+                  @click="handleProjectSelect(project)">
                   <div class="flex items-center justify-between mb-1">
                     <span class="text-sm font-medium text-gray-700">{{ project.name }}</span>
                     <div class="flex items-center space-x-2">
@@ -73,7 +74,7 @@
             <button class="w-full py-2.5 sm:py-3 rounded-lg text-white font-semibold text-sm sm:text-base transition-colors"
               :class="getButtonClass(tip)"
               @click="handlePurchase(tip)">
-              获取项目
+              {{ tip.projects && tip.projects.length > 0 ? '查看详情' : '暂无项目' }}
             </button>
           </div>
         </div>
@@ -104,7 +105,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getAiTipsList } from '@/api/tips'
+import { getAiTipsList, getAiTipsDetail } from '@/api/tips'
 import type { AiTips } from '@/types/tips'
 import { showToast } from 'vant'
 
@@ -199,16 +200,30 @@ const getButtonClass = (tip: AiTips) => {
 }
 
 // 添加购买处理函数
-const handlePurchase = (tip: AiTips) => {
-  // 如果有多个项目，显示项目选择对话框
-  if (tip.projects && tip.projects.length > 1) {
-    selectedTipProjects.value = tip.projects
-    showProjectDialog.value = true
-  } else if (tip.projects && tip.projects.length === 1) {
-    // 如果只有一个项目，直接跳转
-    router.push(`/project/${tip.projects[0].id}`)
-  } else {
-    showToast('该锦囊暂无可用项目')
+const handlePurchase = async (tip: AiTips) => {
+  try {
+    if (!tip.id) {
+      showToast('锦囊ID无效')
+      return
+    }
+    
+    // 获取锦囊详情，包含完整的项目信息
+    const response = await getAiTipsDetail(tip.id)
+    const projects = response.data.projects || []
+    
+    // 如果有多个项目，显示项目选择对话框
+    if (projects.length > 1) {
+      selectedTipProjects.value = projects
+      showProjectDialog.value = true
+    } else if (projects.length === 1) {
+      // 如果只有一个项目，直接跳转
+      router.push(`/project/${projects[0].id}`)
+    } else {
+      showToast('该锦囊暂无可用项目')
+    }
+  } catch (error) {
+    console.error('获取项目信息失败:', error)
+    showToast('获取项目信息失败，请重试')
   }
 }
 
