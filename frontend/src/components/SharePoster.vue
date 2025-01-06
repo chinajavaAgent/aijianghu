@@ -10,8 +10,8 @@
     </button>
 
     <!-- 海报弹窗 -->
-    <div v-if="visible" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-      <div class="bg-white rounded-xl p-8 w-full max-w-2xl">
+    <div v-if="visible" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[9999] p-4 overflow-hidden" style="min-height: 100vh;">
+      <div class="bg-white rounded-xl p-8 w-full max-w-2xl max-h-[80vh] overflow-y-auto relative transform transition-all my-auto" style="margin-bottom: 80px;">
         <div class="flex justify-between items-center mb-6">
           <h3 class="text-2xl font-bold">分享项目海报</h3>
           <button @click="visible = false" 

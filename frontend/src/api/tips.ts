@@ -84,7 +84,7 @@ export function unlikeAiTips(id: number) {
  */
 export function getSharePoster(tipId: number) {
     return request<SharePosterData>({
-        url: `/api/tips/${tipId}/share-poster`,
+        url: `/api/tips/${tipId}/poster`,
         method: 'get'
     })
 } 
