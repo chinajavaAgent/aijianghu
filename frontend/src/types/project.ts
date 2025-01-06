@@ -14,6 +14,7 @@ export interface ProjectBenefit {
 // 项目信息
 export interface Project {
   id: number
+  tipId: number
   name: string
   description: string
   videoUrl?: string

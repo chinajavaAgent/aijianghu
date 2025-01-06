@@ -11,6 +11,7 @@
           返回列表
         </button>
         <SharePoster 
+          :tipId="Number(route.params.id)"
           :title="tipDetail?.title || ''"
           :price="tipDetail?.price || 0"
           :introduction="tipDetail?.description || ''"

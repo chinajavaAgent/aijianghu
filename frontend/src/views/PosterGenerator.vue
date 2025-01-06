@@ -72,6 +72,7 @@
           <h2 class="text-lg font-semibold mb-4">预览</h2>
           <div class="poster-preview">
             <SharePoster
+              :tipId="posterData.tipId"
               :title="posterData.title"
               :introduction="posterData.introduction"
               :cover-image="posterData.coverImage"
@@ -100,6 +101,7 @@ import SharePoster from '@/components/SharePoster.vue'
 const router = useRouter()
 
 const posterData = ref({
+  tipId: 0,
   title: '',
   introduction: '',
   coverImage: '',

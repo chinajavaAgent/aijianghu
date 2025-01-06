@@ -25,6 +25,7 @@
               <h1 class="text-xl sm:text-2xl font-bold text-gray-800 truncate">{{ tipDetail?.title }}</h1>
             </div>
             <SharePoster 
+              :tipId="Number(route.params.id)"
               :title="tipDetail?.title || ''"
               :price="tipDetail?.price || 0"
               :introduction="tipDetail?.description || ''"
