@@ -62,6 +62,7 @@ import QRCode from 'qrcode'
 import { getSharePoster } from '@/api/tips'
 
 const props = defineProps<{
+  tipId: number
   title?: string
   price?: string | number
   introduction?: string
@@ -100,7 +101,7 @@ const generatePoster = async () => {
 
   try {
     // 获取海报数据
-    const response = await getSharePoster()
+    const response = await getSharePoster(props.tipId)
     if (!response.data) {
       throw new Error('获取海报数据失败')
     }
@@ -179,7 +180,7 @@ const generatePoster = async () => {
 
       ctx.font = '28px sans-serif'
       ctx.fillStyle = '#666666'
-      posterData.cases.forEach((item, index) => {
+      posterData.cases.forEach((item: string, index: number) => {
         ctx.fillText(item, cardMargin + 40, currentY + index * 40)
       })
 

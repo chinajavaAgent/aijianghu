@@ -25,4 +25,12 @@ export interface AiTipsListParams {
 export interface AiTipsListResponse {
   total: number
   list: AiTips[]
+}
+
+export interface AiTipsPage {
+  records: AiTips[]
+  total: number
+  size: number
+  current: number
+  pages: number
 } 

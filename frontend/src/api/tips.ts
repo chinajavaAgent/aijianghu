@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 import type { AiTips, AiTipsPage } from '@/types/tips'
+import type { SharePosterData } from '@/types/poster'
 
 /**
  * 获取AI锦囊列表
@@ -75,5 +76,15 @@ export function unlikeAiTips(id: number) {
     return request<boolean>({
         url: `/api/tips/${id}/like`,
         method: 'delete'
+    })
+}
+
+/**
+ * 获取分享海报数据
+ */
+export function getSharePoster(tipId: number) {
+    return request<SharePosterData>({
+        url: `/api/tips/${tipId}/poster`,
+        method: 'get'
     })
 } 
