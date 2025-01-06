@@ -61,7 +61,7 @@
         <!-- 左侧：项目介绍和案例 -->
         <div class="lg:col-span-2 space-y-6">
           <!-- 项目介绍 -->
-          <div class="bg-white rounded-xl p-6 shadow-lg">
+          <div v-if="currentProject.description" class="bg-white rounded-xl p-6 shadow-lg">
             <h2 class="text-xl font-bold mb-4 flex items-center">
               <svg class="w-6 h-6 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -75,7 +75,7 @@
           </div>
 
           <!-- 视频教程 -->
-          <div class="bg-white rounded-xl p-6 shadow-lg">
+          <div v-if="currentProject.videoUrl" class="bg-white rounded-xl p-6 shadow-lg">
             <h2 class="text-xl font-bold mb-4 flex items-center">
               <svg class="w-6 h-6 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -84,8 +84,7 @@
               视频教程
             </h2>
             <div class="space-y-4">
-              <div v-if="currentProject.videoUrl"
-                class="border border-gray-200 rounded-lg overflow-hidden cursor-pointer"
+              <div class="border border-gray-200 rounded-lg overflow-hidden cursor-pointer"
                 @click="playVideo({
                   title: currentProject.name,
                   cover: '',
@@ -107,7 +106,7 @@
           </div>
 
           <!-- 成功案例 -->
-          <div class="bg-white rounded-xl p-6 shadow-lg">
+          <div v-if="currentProject.cases?.length" class="bg-white rounded-xl p-6 shadow-lg">
             <h2 class="text-xl font-bold mb-4 flex items-center">
               <svg class="w-6 h-6 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -128,16 +127,19 @@
         <!-- 右侧：购买信息 -->
         <div class="lg:col-span-1">
           <div class="bg-white rounded-xl p-6 shadow-lg sticky top-6">
-            <h2 class="text-xl font-bold mb-4">项目福利</h2>
-            <ul class="space-y-3 mb-6">
-              <li v-for="(benefit, index) in currentProject.benefits" :key="index"
-                class="flex items-start">
-                <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <span class="text-gray-600">{{ benefit.content }}</span>
-              </li>
-            </ul>
+            <!-- 项目福利 -->
+            <div v-if="currentProject.benefits?.length">
+              <h2 class="text-xl font-bold mb-4">项目福利</h2>
+              <ul class="space-y-3 mb-6">
+                <li v-for="(benefit, index) in currentProject.benefits" :key="index"
+                  class="flex items-start">
+                  <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span class="text-gray-600">{{ benefit.content }}</span>
+                </li>
+              </ul>
+            </div>
 
             <div class="border-t pt-6">
               <div class="flex items-center justify-between mb-4">
