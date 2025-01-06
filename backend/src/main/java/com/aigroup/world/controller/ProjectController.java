@@ -37,6 +37,11 @@ public class ProjectController {
     @GetMapping("/{id}")
     public Result<Project> getProject(@PathVariable Long id) {
         Project project = projectService.getProjectById(id);
+        if (project != null) {
+            // 获取同一锦囊下的所有项目
+            Page<Project> relatedProjects = projectService.getProjects(1, 100, project.getTipId());
+            project.setRelatedProjects(relatedProjects.getRecords());
+        }
         return Result.success(project);
     }
 

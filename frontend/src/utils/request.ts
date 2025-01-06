@@ -3,7 +3,6 @@ import toast from './toast'
 
 // 创建axios实例
 const request = axios.create({
-    baseURL: 'http://localhost:8080', // 移除重复的/api
     timeout: 15000 // 请求超时时间
 })
 

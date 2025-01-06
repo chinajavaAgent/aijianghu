@@ -364,7 +364,7 @@ const generatePoster = async () => {
     const lineHeight = 50
     
     // 将项目介绍文字按行分割
-    const words = props.introduction.split('')
+    const words = (props.introduction || '').split('')
     let line = ''
     let lines = []
     

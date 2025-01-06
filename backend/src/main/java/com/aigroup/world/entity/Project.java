@@ -53,4 +53,7 @@ public class Project {
     
     @TableField(exist = false)
     private List<ProjectBenefit> benefits;
+    
+    @TableField(exist = false)
+    private List<Project> relatedProjects;
 } 

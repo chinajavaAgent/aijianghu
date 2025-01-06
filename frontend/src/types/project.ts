@@ -1,36 +1,26 @@
 // 项目案例
 export interface ProjectCase {
-  id?: number
-  description: string
+  id: number
   imageUrl: string
-  createTime?: string
-  updateTime?: string
+  description: string
 }
 
 // 项目福利
 export interface ProjectBenefit {
-  id?: number
+  id: number
   content: string
-  createTime?: string
-  updateTime?: string
 }
 
 // 项目信息
 export interface Project {
-  id?: number
-  tipId: number
+  id: number
   name: string
   description: string
-  videoUrl: string
-  coverImage: string
+  videoUrl?: string
   cases: ProjectCase[]
   benefits: ProjectBenefit[]
-  createTime?: string
-  updateTime?: string
-  isExpanded?: boolean
-  currentStep?: number
-  views?: number
-  likes?: number
+  createdAt: string
+  updatedAt: string
 }
 
 // 项目表单数据

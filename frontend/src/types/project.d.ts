@@ -13,6 +13,8 @@ export interface Project {
   // 前端使用的临时属性
   isExpanded?: boolean;
   currentStep?: number;
+  // 相关项目列表
+  relatedProjects?: Project[];
 }
 
 // 项目案例类型定义

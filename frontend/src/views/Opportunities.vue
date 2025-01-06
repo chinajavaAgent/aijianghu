@@ -207,20 +207,8 @@ const handlePurchase = async (tip: AiTips) => {
       return
     }
     
-    // 获取锦囊详情，包含完整的项目信息
-    const response = await getAiTipsDetail(tip.id)
-    const projects = response.data.projects || []
-    
-    // 如果有多个项目，显示项目选择对话框
-    if (projects.length > 1) {
-      selectedTipProjects.value = projects
-      showProjectDialog.value = true
-    } else if (projects.length === 1) {
-      // 如果只有一个项目，直接跳转
-      router.push(`/project/${projects[0].id}`)
-    } else {
-      showToast('该锦囊暂无可用项目')
-    }
+    // 跳转到锦囊详情页面
+    router.push(`/tips/${tip.id}`)
   } catch (error) {
     console.error('获取项目信息失败:', error)
     showToast('获取项目信息失败，请重试')
@@ -229,8 +217,11 @@ const handlePurchase = async (tip: AiTips) => {
 
 // 处理项目选择
 const handleProjectSelect = (project: any) => {
-  router.push(`/project/${project.id}`)
-  showProjectDialog.value = false
+  if (!project.tipId) {
+    showToast('项目信息不完整')
+    return
+  }
+  router.push(`/tips/${project.tipId}`)
 }
 
 // 页面加载时获取数据
