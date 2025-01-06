@@ -111,11 +111,14 @@ import { ElMessage } from 'element-plus'
 import QRCode from 'qrcode'
 import { getSharePoster } from '@/api/tips'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   tipId: number
   projectId: number
   shareUrl: string
-}>()
+  userId: number
+}>(), {
+  userId: 0
+})
 
 interface ColorScheme {
   startColor: string
@@ -438,7 +441,14 @@ const generatePoster = async () => {
     // 右侧二维码
     try {
       const qrSize = 100
-      const qrCodeUrl = await QRCode.toDataURL(props.shareUrl, {
+      // 构建带有userId参数的URL
+      const qrUrl = new URL(props.shareUrl)
+      // 只有当userId存在且不为0时才添加到URL中
+      if (props.userId && props.userId !== 0) {
+        qrUrl.searchParams.append('userId', props.userId.toString())
+      }
+      
+      const qrCodeUrl = await QRCode.toDataURL(qrUrl.toString(), {
         width: qrSize,
         margin: 0,
         color: {

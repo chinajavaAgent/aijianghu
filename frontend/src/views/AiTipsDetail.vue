@@ -26,10 +26,9 @@
             </div>
             <SharePoster 
               :tipId="Number(route.params.id)"
-              :title="tipDetail?.title || ''"
-              :price="tipDetail?.price || 0"
-              :introduction="tipDetail?.description || ''"
+              :projectId="currentProject?.id || 0"
               :share-url="shareUrl"
+              :userId="userStore.id"
               class="flex-shrink-0"
             />
           </div>
@@ -276,9 +275,11 @@ import SharePoster from '@/components/SharePoster.vue'
 import type { Project } from '@/types/project'
 import type { AiTips } from '@/types/tips'
 import { getAiTipsDetail } from '@/api/tips'
+import { useUserStore } from '@/store/user'
 
 const router = useRouter()
 const route = useRoute()
+const userStore = useUserStore()
 const tipDetail = ref<AiTips | null>(null)
 const showVideoModal = ref(false)
 const showContactModal = ref(false)
