@@ -347,14 +347,7 @@ const generatePoster = async () => {
 
     currentY += 80
 
-    // 4. 绘制锦囊标题
-    ctx.fillStyle = '#333333'
-    ctx.font = 'bold 40px sans-serif'
-    ctx.fillText(posterData.title, cardMargin + 40, currentY)
-
-    currentY += 60
-
-    // 5. 遍历绘制项目信息
+    // 4. 遍历绘制项目信息
     for (let i = 0; i < Math.min(posterData.projects.length, 3); i++) { // 最多显示3个项目
       const project = posterData.projects[i]
       
@@ -439,15 +432,9 @@ const generatePoster = async () => {
       currentY += 30 // 项目之间的间距
     }
 
-    // 6. 绘制底部信息
+    // 5. 绘制底部信息
     const bottomY = canvas.height - cardMargin - 60
     
-    // 左侧品牌名
-    ctx.fillStyle = '#333333'
-    ctx.font = 'bold 28px sans-serif'
-    ctx.textAlign = 'left'
-    ctx.fillText(posterData.brandName, cardMargin + 40, bottomY)
-
     // 右侧二维码
     try {
       const qrSize = 100
