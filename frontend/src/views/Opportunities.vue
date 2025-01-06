@@ -79,6 +79,25 @@
         </div>
       </div>
     </div>
+
+    <!-- 项目选择对话框 -->
+    <van-dialog
+      v-model:show="showProjectDialog"
+      title="选择项目"
+      :show-cancel-button="true"
+      cancel-button-text="关闭"
+      confirm-button-text=""
+      class="project-select-dialog"
+    >
+      <div class="space-y-4 p-4">
+        <div v-for="project in selectedTipProjects" :key="project.id"
+          class="p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100"
+          @click="handleProjectSelect(project)">
+          <div class="font-medium text-gray-800 mb-1">{{ project.name }}</div>
+          <div class="text-sm text-gray-600">{{ project.description }}</div>
+        </div>
+      </div>
+    </van-dialog>
   </div>
 </template>
 
@@ -91,6 +110,8 @@ import { showToast } from 'vant'
 
 const router = useRouter()
 const tipsList = ref<AiTips[]>([])
+const showProjectDialog = ref(false)
+const selectedTipProjects = ref<any[]>([])
 
 // 加载锦囊列表
 const loadTipsList = async () => {
@@ -179,12 +200,22 @@ const getButtonClass = (tip: AiTips) => {
 
 // 添加购买处理函数
 const handlePurchase = (tip: AiTips) => {
-  // 如果有项目，跳转到第一个项目的详情页
-  if (tip.projects && tip.projects.length > 0) {
+  // 如果有多个项目，显示项目选择对话框
+  if (tip.projects && tip.projects.length > 1) {
+    selectedTipProjects.value = tip.projects
+    showProjectDialog.value = true
+  } else if (tip.projects && tip.projects.length === 1) {
+    // 如果只有一个项目，直接跳转
     router.push(`/project/${tip.projects[0].id}`)
   } else {
     showToast('该锦囊暂无可用项目')
   }
+}
+
+// 处理项目选择
+const handleProjectSelect = (project: any) => {
+  router.push(`/project/${project.id}`)
+  showProjectDialog.value = false
 }
 
 // 页面加载时获取数据
