@@ -1,6 +1,6 @@
 <!-- AI锦囊详情页面 -->
 <template>
-  <div class="min-h-screen bg-[#FFF8E1] pb-20">
+  <div class="min-h-screen bg-gradient-to-br from-cyan-50 via-fuchsia-50 to-yellow-50 py-6 sm:py-12">
     <!-- 加载状态 -->
     <div v-if="loading" class="fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50">
       <div class="flex flex-col items-center">
@@ -9,7 +9,7 @@
       </div>
     </div>
 
-    <div v-else class="container mx-auto px-4 py-6 sm:py-12">
+    <div v-else class="container mx-auto px-4">
       <!-- 返回按钮和分享按钮 -->
       <div class="flex justify-between items-center mb-6">
         <button @click="router.back()" 
