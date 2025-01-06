@@ -10,48 +10,36 @@
     </div>
 
     <div v-else class="container mx-auto px-4 animate-fade-in">
-      <!-- 返回按钮和分享按钮 -->
-      <div class="flex justify-between items-center mb-8">
-        <button @click="router.back()" 
-          class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800 transition-all duration-300 rounded-lg hover:bg-white/50 backdrop-blur-sm">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-          </svg>
-          返回列表
-        </button>
-        <SharePoster 
-          :title="tipDetail?.title || ''"
-          :price="tipDetail?.price || 0"
-          :introduction="tipDetail?.description || ''"
-          :share-url="shareUrl"
-        />
-      </div>
-
-      <!-- 锦囊标题和价格 -->
-      <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-8 mb-8 shadow-lg hover:shadow-xl transition-all duration-300">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <h1 class="text-2xl sm:text-4xl font-bold text-gray-800 leading-tight">
-            {{ tipDetail?.title }}
-          </h1>
-          <div class="flex items-center">
-            <span class="text-sm text-gray-500 mr-2">价格</span>
-            <div class="text-3xl font-bold text-red-500">
-              ￥{{ tipDetail?.price }}
-            </div>
+      <!-- 顶部导航和操作区 -->
+      <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg mb-8">
+        <!-- 返回按钮和标题区 -->
+        <div class="p-6 flex items-center justify-between border-b border-gray-100">
+          <div class="flex items-center gap-4">
+            <button @click="router.back()" 
+              class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800 transition-all duration-300 rounded-lg hover:bg-gray-100">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+              </svg>
+              返回列表
+            </button>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">{{ tipDetail?.title }}</h1>
           </div>
+          <SharePoster 
+            :title="tipDetail?.title || ''"
+            :price="tipDetail?.price || 0"
+            :introduction="tipDetail?.description || ''"
+            :share-url="shareUrl"
+          />
         </div>
-        <p class="mt-6 text-gray-600 text-lg leading-relaxed">{{ tipDetail?.description }}</p>
-      </div>
 
-      <!-- 项目标签页 -->
-      <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-6 mb-8 shadow-lg">
-        <div class="flex items-center space-x-4 overflow-x-auto pb-2">
+        <!-- 项目切换标签页 -->
+        <div class="px-6 flex items-center space-x-2 overflow-x-auto">
           <button v-for="(project, index) in tipDetail?.projects" :key="project.id"
-            class="px-6 py-3 rounded-xl whitespace-nowrap transition-all duration-300 transform hover:scale-105"
+            class="px-6 py-4 text-lg whitespace-nowrap transition-all duration-300 border-b-2 hover:text-blue-600"
             :class="[
               currentProjectIndex === index
-                ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                ? 'border-blue-500 text-blue-600 font-medium'
+                : 'border-transparent text-gray-600 hover:border-gray-200'
             ]"
             @click="selectProject(index)">
             {{ project.name }}
