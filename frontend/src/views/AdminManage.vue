@@ -31,13 +31,28 @@
                   <h3 class="font-medium text-lg">{{ admin.realName }}</h3>
                   <p class="text-gray-600 text-sm mt-1">手机：{{ admin.phone }}</p>
                   <p class="text-gray-600 text-sm">微信号：{{ admin.wechatId }}</p>
+                  <!-- 添加关联的锦囊信息 -->
+                  <div class="mt-2">
+                    <p class="text-gray-600 text-sm font-medium">管理的锦囊：</p>
+                    <div class="flex flex-wrap gap-2 mt-1">
+                      <span v-for="tip in admin.tips" :key="tip.id"
+                        class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded">
+                        {{ tip.title }}
+                      </span>
+                      <span v-if="!admin.tips?.length" class="text-gray-400 text-sm">
+                        暂无关联锦囊
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="flex space-x-2">
-                <button class="px-3 py-1 text-sm text-blue-600 border border-blue-600 rounded hover:bg-blue-50" @click="openEditDialog(admin)">
+                <button class="px-3 py-1 text-sm text-blue-600 border border-blue-600 rounded hover:bg-blue-50" 
+                  @click="openEditDialog(admin)">
                   编辑
                 </button>
-                <button class="px-3 py-1 text-sm text-red-600 border border-red-600 rounded hover:bg-red-50" @click="handleDelete(admin)">
+                <button class="px-3 py-1 text-sm text-red-600 border border-red-600 rounded hover:bg-red-50" 
+                  @click="handleDelete(admin)">
                   删除
                 </button>
               </div>
@@ -47,7 +62,7 @@
       </div>
     </div>
 
-    <!-- 添加管理员弹窗 -->
+    <!-- 添加/编辑管理员弹窗 -->
     <div v-if="showAddDialog" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-white rounded-xl p-6 w-full max-w-md">
         <h2 class="text-xl font-bold mb-4">{{ isEditing ? '编辑管理员' : '添加管理员' }}</h2>
@@ -90,6 +105,23 @@
               class="mt-2 w-32 h-32 object-cover rounded-lg">
           </div>
 
+          <!-- 添加锦囊选择 -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">关联锦囊</label>
+            <div class="border rounded-lg p-2 max-h-40 overflow-y-auto">
+              <div v-for="tip in availableTips" :key="tip.id" class="flex items-center p-2 hover:bg-gray-50">
+                <input type="checkbox" 
+                  :id="'tip-' + tip.id"
+                  :value="tip.id"
+                  v-model="formData.tipsIds"
+                  class="mr-2">
+                <label :for="'tip-' + tip.id" class="text-sm cursor-pointer">
+                  {{ tip.title }}
+                </label>
+              </div>
+            </div>
+          </div>
+
           <div class="flex justify-end space-x-2 mt-6">
             <button type="button" @click="showAddDialog = false"
               class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">
@@ -97,7 +129,7 @@
             </button>
             <button type="submit"
               class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-              确认添加
+              {{ isEditing ? '确认更新' : '确认添加' }}
             </button>
           </div>
         </form>
@@ -111,7 +143,9 @@ import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import 'element-plus/dist/index.css'
 import type { Admin, AdminFormData } from '@/types/admin'
+import type { AiTips, AiTipsPage } from '@/types/tips'
 import { getAdminList, addAdmin, updateAdmin, deleteAdmin } from '@/api/admin'
+import { getAiTipsList } from '@/api/tips'
 
 // 弹窗显示控制
 const showAddDialog = ref(false)
@@ -123,12 +157,40 @@ const formData = ref<AdminFormData>({
   phone: '',
   wechatId: '',
   realName: '',
-  wechatQrCode: null
+  wechatQrCode: null,
+  tipsIds: []
 })
 
 // 图片预览
 const previewUrl = ref('')
 const fileInput = ref<HTMLInputElement | null>(null)
+
+// 可选的锦囊列表
+const availableTips = ref<AiTips[]>([])
+
+// 加载锦囊列表
+const loadTipsList = async () => {
+  try {
+    const response = await getAiTipsList({ page: 1, size: 100 })
+    availableTips.value = response.data.records
+  } catch (error) {
+    console.error('获取锦囊列表失败:', error)
+    ElMessage.error('获取锦囊列表失败')
+  }
+}
+
+// 加载管理员列表
+const admins = ref<Admin[]>([])
+
+const loadAdminList = async () => {
+  try {
+    const response = await getAdminList()
+    admins.value = response.data
+  } catch (error) {
+    console.error('获取管理员列表失败:', error)
+    ElMessage.error('获取管理员失败，请确认是否有权限访问')
+  }
+}
 
 // 处理文件选择
 const handleFileChange = (event: Event) => {
@@ -147,7 +209,8 @@ const openEditDialog = (admin: Admin) => {
     phone: admin.phone,
     wechatId: admin.wechatId,
     realName: admin.realName,
-    wechatQrCode: null
+    wechatQrCode: null,
+    tipsIds: admin.tips.map(tip => tip.id)
   }
   if (admin.wechatQrCode) {
     previewUrl.value = admin.wechatQrCode
@@ -163,7 +226,8 @@ const openAddDialog = () => {
     phone: '',
     wechatId: '',
     realName: '',
-    wechatQrCode: null
+    wechatQrCode: null,
+    tipsIds: []
   }
   previewUrl.value = ''
   showAddDialog.value = true
@@ -173,11 +237,15 @@ const openAddDialog = () => {
 const handleSubmit = async () => {
   try {
     if (isEditing.value && editingId.value) {
-      await updateAdmin(editingId.value, formData.value)
-      ElMessage.success('更新管理员成功')
+      const response = await updateAdmin(editingId.value, formData.value)
+      if (response.data) {
+        ElMessage.success('更新管理员成功')
+      }
     } else {
-      await addAdmin(formData.value)
-      ElMessage.success('添加管理员成功')
+      const response = await addAdmin(formData.value)
+      if (response.data) {
+        ElMessage.success('添加管理员成功')
+      }
     }
     showAddDialog.value = false
     // 重置表单
@@ -185,7 +253,8 @@ const handleSubmit = async () => {
       phone: '',
       wechatId: '',
       realName: '',
-      wechatQrCode: null
+      wechatQrCode: null,
+      tipsIds: []
     }
     previewUrl.value = ''
     
@@ -221,21 +290,10 @@ const handleDelete = async (admin: Admin) => {
   }
 }
 
-// 加载管理员列表
-const admins = ref<Admin[]>([])
-
-const loadAdminList = async () => {
-  try {
-    admins.value = await getAdminList()
-  } catch (error) {
-    console.error('获取管理员列表失败:', error)
-    ElMessage.error('获取管理员失败，请确认是否有权限访问')
-  }
-}
-
 // 初始化
 onMounted(() => {
   loadAdminList()
+  loadTipsList()
 })
 </script>
 

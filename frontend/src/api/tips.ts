@@ -1,6 +1,7 @@
 import request from '@/utils/request'
 import type { AiTips, AiTipsPage } from '@/types/tips'
 import type { SharePosterData } from '@/types/poster'
+import type { ApiResponse } from '@/utils/request'
 
 /**
  * 获取AI锦囊列表
@@ -10,81 +11,54 @@ export function getAiTipsList(params: {
     size: number;
     category?: string;
 }) {
-    return request<AiTipsPage>({
-        url: '/api/tips/list',
-        method: 'get',
-        params
-    })
+    return request.get<AiTipsPage>('/api/tips/list', { params })
 }
 
 /**
  * 获取AI锦囊详情
  */
 export function getAiTipsDetail(id: number) {
-    return request<AiTips>({
-        url: `/api/tips/${id}`,
-        method: 'get'
-    })
+    return request.get<AiTips>(`/api/tips/${id}`)
 }
 
 /**
  * 创建AI锦囊
  */
 export function createAiTips(data: Partial<AiTips>) {
-    return request<boolean>({
-        url: '/api/tips',
-        method: 'post',
-        data
-    })
+    return request.post<boolean>('/api/tips', data)
 }
 
 /**
  * 更新AI锦囊
  */
 export function updateAiTips(id: number, data: Partial<AiTips>) {
-    return request<boolean>({
-        url: `/api/tips/${id}`,
-        method: 'put',
-        data
-    })
+    return request.put<boolean>(`/api/tips/${id}`, data)
 }
 
 /**
  * 删除AI锦囊
  */
 export function deleteAiTips(id: number) {
-    return request<boolean>({
-        url: `/api/tips/${id}`,
-        method: 'delete'
-    })
+    return request.delete<boolean>(`/api/tips/${id}`)
 }
 
 /**
  * 点赞AI锦囊
  */
 export function likeAiTips(id: number) {
-    return request<boolean>({
-        url: `/api/tips/${id}/like`,
-        method: 'post'
-    })
+    return request.post<boolean>(`/api/tips/${id}/like`)
 }
 
 /**
  * 取消点赞AI锦囊
  */
 export function unlikeAiTips(id: number) {
-    return request<boolean>({
-        url: `/api/tips/${id}/like`,
-        method: 'delete'
-    })
+    return request.delete<boolean>(`/api/tips/${id}/like`)
 }
 
 /**
  * 获取分享海报数据
  */
 export function getSharePoster(tipId: number) {
-    return request<SharePosterData>({
-        url: `/api/tips/${tipId}/poster`,
-        method: 'get'
-    })
+    return request.get<SharePosterData>(`/api/tips/${tipId}/poster`)
 } 

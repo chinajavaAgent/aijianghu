@@ -1,5 +1,6 @@
 package com.aigroup.world.controller;
 
+import com.aigroup.world.common.Result;
 import com.aigroup.world.entity.Admin;
 import com.aigroup.world.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -15,33 +16,34 @@ public class AdminController {
     private final AdminService adminService;
 
     @GetMapping("/list")
-    public List<Admin> list() {
-        return adminService.list();
+    public Result<List<Admin>> list() {
+        return Result.success(adminService.list());
     }
 
     @PostMapping
-    public Admin add(
+    public Result<Admin> add(
             @RequestParam String phone,
             @RequestParam String wechatId,
             @RequestParam String realName,
             @RequestParam(required = false) MultipartFile wechatQrCode
     ) {
-        return adminService.add(phone, wechatId, realName, wechatQrCode);
+        return Result.success(adminService.add(phone, wechatId, realName, wechatQrCode));
     }
 
     @PutMapping("/{id}")
-    public Admin update(
+    public Result<Admin> update(
             @PathVariable Long id,
             @RequestParam(required = false) String phone,
             @RequestParam(required = false) String wechatId,
             @RequestParam(required = false) String realName,
             @RequestParam(required = false) MultipartFile wechatQrCode
     ) {
-        return adminService.update(id, phone, wechatId, realName, wechatQrCode);
+        return Result.success(adminService.update(id, phone, wechatId, realName, wechatQrCode));
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public Result<Void> delete(@PathVariable Long id) {
         adminService.delete(id);
+        return Result.success();
     }
 } 
