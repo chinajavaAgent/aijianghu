@@ -1,4 +1,5 @@
 com/aigroup/world/service/UserService.class
+com/aigroup/world/controller/AdminController.class
 com/aigroup/world/model/UserResource.class
 com/aigroup/world/controller/UserController.class
 com/aigroup/world/entity/User.class
@@ -8,13 +9,15 @@ com/aigroup/world/model/Category.class
 com/aigroup/world/exception/GlobalExceptionHandler.class
 com/aigroup/world/controller/TestController.class
 com/aigroup/world/exception/BusinessException.class
+com/aigroup/world/entity/Admin.class
 com/aigroup/world/config/CorsConfig.class
 com/aigroup/world/config/MybatisPlusConfig.class
+com/aigroup/world/service/AdminService.class
 com/aigroup/world/model/Resource.class
 com/aigroup/world/config/MyMetaObjectHandler.class
+com/aigroup/world/mapper/AdminMapper.class
 com/aigroup/world/model/User.class
-com/aigroup/world/WorldApplication.class
+com/aigroup/world/service/FileService.class
 com/aigroup/world/config/SwaggerConfig.class
 com/aigroup/world/mapper/UserMapper.class
 com/aigroup/world/common/Result.class
-com/aigroup/world/config/SecurityConfig.class

@@ -42,7 +42,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(
                 "/api/users/register",
                 "/api/users/login",
-                "/api/users/check-phone"
+                "/api/users/check-phone",
+                "/api/admin/**"
             ).permitAll()
             // 允许未登录用户访问锦囊列表和详情
             .antMatchers(HttpMethod.GET, "/api/tips/**").permitAll()

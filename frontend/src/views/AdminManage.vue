@@ -12,7 +12,7 @@
       <div class="bg-white rounded-xl shadow-md p-6 mb-6">
         <div class="flex justify-between items-center mb-6">
           <h2 class="text-lg font-semibold">管理员列表</h2>
-          <button @click="showAddDialog = true" 
+          <button @click="openAddDialog" 
             class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
             添加管理员
           </button>
@@ -34,10 +34,10 @@
                 </div>
               </div>
               <div class="flex space-x-2">
-                <button class="px-3 py-1 text-sm text-blue-600 border border-blue-600 rounded hover:bg-blue-50">
+                <button class="px-3 py-1 text-sm text-blue-600 border border-blue-600 rounded hover:bg-blue-50" @click="openEditDialog(admin)">
                   编辑
                 </button>
-                <button class="px-3 py-1 text-sm text-red-600 border border-red-600 rounded hover:bg-red-50">
+                <button class="px-3 py-1 text-sm text-red-600 border border-red-600 rounded hover:bg-red-50" @click="handleDelete(admin)">
                   删除
                 </button>
               </div>
@@ -50,7 +50,7 @@
     <!-- 添加管理员弹窗 -->
     <div v-if="showAddDialog" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-white rounded-xl p-6 w-full max-w-md">
-        <h2 class="text-xl font-bold mb-4">添加管理员</h2>
+        <h2 class="text-xl font-bold mb-4">{{ isEditing ? '编辑管理员' : '添加管理员' }}</h2>
         <form @submit.prevent="handleSubmit" class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">手机号码</label>
@@ -108,13 +108,15 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import 'element-plus/dist/index.css'
 import type { Admin, AdminFormData } from '@/types/admin'
+import { getAdminList, addAdmin, updateAdmin, deleteAdmin } from '@/api/admin'
 
 // 弹窗显示控制
 const showAddDialog = ref(false)
+const isEditing = ref(false)
+const editingId = ref<number | null>(null)
 
 // 表单数据
 const formData = ref<AdminFormData>({
@@ -137,24 +139,46 @@ const handleFileChange = (event: Event) => {
   }
 }
 
+// 打开编辑弹窗
+const openEditDialog = (admin: Admin) => {
+  isEditing.value = true
+  editingId.value = admin.id
+  formData.value = {
+    phone: admin.phone,
+    wechatId: admin.wechatId,
+    realName: admin.realName,
+    wechatQrCode: null
+  }
+  if (admin.wechatQrCode) {
+    previewUrl.value = admin.wechatQrCode
+  }
+  showAddDialog.value = true
+}
+
+// 打开添加弹窗
+const openAddDialog = () => {
+  isEditing.value = false
+  editingId.value = null
+  formData.value = {
+    phone: '',
+    wechatId: '',
+    realName: '',
+    wechatQrCode: null
+  }
+  previewUrl.value = ''
+  showAddDialog.value = true
+}
+
 // 提交表单
 const handleSubmit = async () => {
   try {
-    const formDataToSend = new FormData()
-    formDataToSend.append('phone', formData.value.phone)
-    formDataToSend.append('wechatId', formData.value.wechatId)
-    formDataToSend.append('realName', formData.value.realName)
-    if (formData.value.wechatQrCode) {
-      formDataToSend.append('wechatQrCode', formData.value.wechatQrCode)
+    if (isEditing.value && editingId.value) {
+      await updateAdmin(editingId.value, formData.value)
+      ElMessage.success('更新管理员成功')
+    } else {
+      await addAdmin(formData.value)
+      ElMessage.success('添加管理员成功')
     }
-
-    await axios.post('/api/admin/add', formDataToSend, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-
-    ElMessage.success('添加管理员成功')
     showAddDialog.value = false
     // 重置表单
     formData.value = {
@@ -168,20 +192,44 @@ const handleSubmit = async () => {
     // 刷新管理员列表
     loadAdminList()
   } catch (error) {
-    ElMessage.error('添加管理员失败')
-    console.error('添加管理员失败:', error)
+    ElMessage.error(isEditing.value ? '更新管理员失败' : '添加管理员失败')
+    console.error(isEditing.value ? '更新管理员失败:' : '添加管理员失败:', error)
+  }
+}
+
+// 删除管理员
+const handleDelete = async (admin: Admin) => {
+  try {
+    await ElMessageBox.confirm(
+      `确定要删除管理员 ${admin.realName} 吗？`,
+      '删除确认',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    )
+    
+    await deleteAdmin(admin.id)
+    ElMessage.success('删除管理员成功')
+    loadAdminList()
+  } catch (error) {
+    if (error !== 'cancel') {
+      ElMessage.error('删除管理员失败')
+      console.error('删除管理员失败:', error)
+    }
   }
 }
 
 // 加载管理员列表
 const admins = ref<Admin[]>([])
+
 const loadAdminList = async () => {
   try {
-    const response = await axios.get('/api/admin/list')
-    admins.value = response.data
+    admins.value = await getAdminList()
   } catch (error) {
     console.error('获取管理员列表失败:', error)
-    ElMessage.error('获取管理员列表失败')
+    ElMessage.error('获取管理员失败，请确认是否有权限访问')
   }
 }
 
