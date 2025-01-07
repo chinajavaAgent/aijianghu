@@ -3,6 +3,7 @@ package com.aigroup.world.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @TableName("admin")
@@ -26,4 +27,7 @@ public class Admin {
     
     @TableField("updated_at")
     private LocalDateTime updatedAt;
+
+    @TableField(exist = false)
+    private List<AiTips> tips;
 } 

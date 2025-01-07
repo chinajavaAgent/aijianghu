@@ -8,9 +8,13 @@ import java.util.List;
 public interface AdminService extends IService<Admin> {
     List<Admin> list();
     
-    Admin add(String phone, String wechatId, String realName, MultipartFile wechatQrCode);
+    Admin add(String phone, String wechatId, String realName, MultipartFile wechatQrCode, List<Long> tipsIds);
     
-    Admin update(Long id, String phone, String wechatId, String realName, MultipartFile wechatQrCode);
+    Admin update(Long id, String phone, String wechatId, String realName, MultipartFile wechatQrCode, List<Long> tipsIds);
     
     void delete(Long id);
+
+    List<Long> getAdminTipsIds(Long adminId);
+
+    void updateAdminTips(Long adminId, List<Long> tipsIds);
 } 

@@ -25,9 +25,10 @@ public class AdminController {
             @RequestParam String phone,
             @RequestParam String wechatId,
             @RequestParam String realName,
-            @RequestParam(required = false) MultipartFile wechatQrCode
+            @RequestParam(required = false) MultipartFile wechatQrCode,
+            @RequestParam(required = false) List<Long> tipsIds
     ) {
-        return Result.success(adminService.add(phone, wechatId, realName, wechatQrCode));
+        return Result.success(adminService.add(phone, wechatId, realName, wechatQrCode, tipsIds));
     }
 
     @PutMapping("/{id}")
@@ -36,14 +37,29 @@ public class AdminController {
             @RequestParam(required = false) String phone,
             @RequestParam(required = false) String wechatId,
             @RequestParam(required = false) String realName,
-            @RequestParam(required = false) MultipartFile wechatQrCode
+            @RequestParam(required = false) MultipartFile wechatQrCode,
+            @RequestParam(required = false) List<Long> tipsIds
     ) {
-        return Result.success(adminService.update(id, phone, wechatId, realName, wechatQrCode));
+        return Result.success(adminService.update(id, phone, wechatId, realName, wechatQrCode, tipsIds));
     }
 
     @DeleteMapping("/{id}")
     public Result<Void> delete(@PathVariable Long id) {
         adminService.delete(id);
+        return Result.success();
+    }
+
+    @GetMapping("/{id}/tips")
+    public Result<List<Long>> getAdminTips(@PathVariable Long id) {
+        return Result.success(adminService.getAdminTipsIds(id));
+    }
+
+    @PutMapping("/{id}/tips")
+    public Result<Void> updateAdminTips(
+            @PathVariable Long id,
+            @RequestBody List<Long> tipsIds
+    ) {
+        adminService.updateAdminTips(id, tipsIds);
         return Result.success();
     }
 } 

@@ -17,7 +17,7 @@ spring:
   # SQL初始化配置
   sql:
     init:
-      mode: always
+      mode: never
       schema-locations: 
         - classpath:db/init.sql
         - classpath:db/update.sql
