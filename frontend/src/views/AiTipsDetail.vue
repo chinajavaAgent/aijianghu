@@ -133,11 +133,16 @@
             <div class="bg-white rounded-xl p-6 shadow-sm lg:sticky lg:top-[120px]">
               <!-- 项目福利 -->
               <div v-if="currentProject.benefits?.length" class="mb-6">
-                <h2 class="text-lg sm:text-xl font-bold mb-4 text-gray-800">项目福利</h2>
+                <h2 class="text-lg sm:text-xl font-bold mb-4 text-gray-800 flex items-center">
+                  <svg class="w-6 h-6 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                  </svg>
+                  江湖机缘
+                </h2>
                 <ul class="space-y-3">
                   <li v-for="(benefit, index) in currentProject.benefits" :key="index"
                     class="flex items-start p-3 bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
                     <span class="text-gray-600">{{ benefit.content }}</span>
@@ -147,18 +152,51 @@
 
               <div class="border-t pt-6">
                 <div class="flex items-center justify-between mb-4">
-                  <span class="text-gray-600">锦囊价格</span>
+                  <span class="text-gray-600">入门银两</span>
                   <div class="flex items-baseline">
                     <span class="text-sm text-gray-500 mr-1">￥</span>
                     <span class="text-2xl font-bold text-red-500">{{ tipDetail?.price }}</span>
                   </div>
                 </div>
-                <button @click="handlePurchase"
-                  class="w-full py-3 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors">
-                 收入囊中
+                
+                <!-- 未解锁状态 -->
+                <button v-if="!isUnlocked" @click="handlePurchase"
+                  class="w-full py-3 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors flex items-center justify-center">
+                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  纳入囊中
                 </button>
+
+                <!-- 已解锁状态 -->
+                <div v-else class="space-y-4">
+                  <!-- 群二维码 -->
+                  <div class="bg-gray-50 rounded-lg p-4">
+                    <h3 class="text-center font-medium text-gray-800 mb-3">江湖同好群</h3>
+                    <div class="flex justify-center">
+                      <img :src="groupQrCode" alt="群二维码" class="w-48 h-48 object-cover rounded-lg">
+                    </div>
+                    <p class="text-center text-sm text-gray-500 mt-2">扫码加入江湖同好</p>
+                  </div>
+                  
+                  <!-- 赚取盘缠提示 -->
+                  <div class="bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg p-4">
+                    <h3 class="font-medium text-gray-800 mb-2 flex items-center">
+                      <svg class="w-5 h-5 mr-2 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      赚取盘缠
+                    </h3>
+                    <p class="text-gray-600 text-sm">
+                      少侠可通过分享此锦囊，每邀请一位同道中人入门，即可获得 
+                      <span class="text-amber-500 font-medium">20%</span> 
+                      的盘缠分成。
+                    </p>
+                  </div>
+                </div>
+
                 <p class="text-gray-500 text-sm text-center mt-3">
-                  购买后可获得终身学习权限
+                  {{ isUnlocked ? '江湖路远，让我们一起行侠仗义' : '入门后可获得终身学习权限' }}
                 </p>
               </div>
             </div>
@@ -354,6 +392,16 @@ const submitForReview = () => {
   ElMessage.success('提交成功，我们将尽快处理您的申请')
   showContactModal.value = false
 }
+
+// 是否已解锁
+const isUnlocked = computed(() => {
+  // 这里需要根据实际业务逻辑判断是否已解锁
+  // 临时使用用户等级判断，实际应该通过后端API判断
+  return userStore.level >= (tipDetail.value?.requiredLevel || 1)
+})
+
+// 群二维码（实际项目中应该从配置或API中获取）
+const groupQrCode = ref('https://example.com/qrcode.jpg')
 
 // 组件挂载时获取数据
 onMounted(() => {
