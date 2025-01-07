@@ -222,7 +222,7 @@
                 </div>
 
                 <p class="text-gray-500 text-sm text-center mt-3">
-                  {{ isUnlocked ? '江湖路远，让我们一起行侠仗义' : '入门后可获得终身学习权限' }}
+                  {{ isUnlocked ? '江湖路远，让我们一起行侠仗义' : '入得此门，终身受用，受益无穷' }}
                 </p>
               </div>
             </div>
