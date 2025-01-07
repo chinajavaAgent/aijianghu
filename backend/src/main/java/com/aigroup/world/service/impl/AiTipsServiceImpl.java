@@ -30,7 +30,7 @@ public class AiTipsServiceImpl extends ServiceImpl<AiTipsMapper, AiTips> impleme
         if (category != null && !category.isEmpty()) {
             wrapper.eq(AiTips::getCategory, category);
         }
-        wrapper.orderByDesc(AiTips::getCreateTime);
+        wrapper.orderByAsc(AiTips::getRequiredLevel);
         
         // 获取分页数据
         IPage<AiTips> pageResult = page(new Page<>(page, size), wrapper);
