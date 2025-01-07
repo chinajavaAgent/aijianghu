@@ -65,7 +65,7 @@ import { reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { login } from '../api/user'
 import toast from '../utils/toast'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/store/user'
 
 const router = useRouter()
 const route = useRoute()
@@ -93,9 +93,11 @@ const handleLogin = async () => {
     // 调用登录API
     const response = await login(form)
     
-    // 保存token和用户信息
-    userStore.setToken(response.data.token)
-    userStore.setUserInfo(response.data.user)
+    // 保存用户信息
+    userStore.setUser({
+      ...response.data.user,
+      token: response.data.token
+    })
     
     // 登录成功后跳转
     toast.success('登录成功')

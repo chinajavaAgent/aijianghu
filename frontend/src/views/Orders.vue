@@ -169,7 +169,7 @@
 import { ref, onMounted } from 'vue'
 import { showToast } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/store/user'
 
 // 标签页配置
 const tabs = [
@@ -186,13 +186,7 @@ const activeTab = ref('pending')
 
 // 检查登录状态
 const checkLogin = () => {
-  const token = localStorage.getItem('token')
-  const user = userStore.userInfo
-  if (!token || !user) {
-    // 如果发现token存在但user不存在，清除token
-    if (token && !user) {
-      localStorage.removeItem('token')
-    }
+  if (!userStore.isLoggedIn) {
     router.push({
       path: '/login',
       query: { redirect: route.fullPath }

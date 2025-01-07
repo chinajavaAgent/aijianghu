@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useUserStore } from '@/stores/user'
+import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
+import { useUserStore } from '@/store/user'
 import OperationMaterials from '../views/OperationMaterials.vue'
 import Tutorials from '../views/Tutorials.vue'
 
@@ -119,27 +120,24 @@ const router = createRouter({
 })
 
 // 全局前置守卫
-router.beforeEach((to, from, next) => {
-  // 获取本地存储的token
-  const token = localStorage.getItem('token')
+router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+  // 使用 userStore 检查登录状态
+  const userStore = useUserStore()
   
   // 检查该路由是否需要登录权限
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // 如果需要登录权限且未登录，则跳转到登录页
-    if (!token) {
+    if (!userStore.isLoggedIn) {
       next({
         path: '/login',
         query: { redirect: to.fullPath }
       })
     } else {
-      // 已登录，初始化用户状态并继续
-      const userStore = useUserStore()
-      userStore.initUserState()
       next()
     }
   } else {
     // 不需要登录权限的路由
-    if (to.path === '/login' && token) {
+    if (to.path === '/login' && userStore.isLoggedIn) {
       // 如果已登录且要访问登录页，重定向到首页
       next('/')
     } else {

@@ -10,8 +10,8 @@
             </svg>
           </div>
           <div class="ml-4">
-            <h2 class="text-xl font-bold text-gray-800">{{ userStore.userInfo?.nickname || '未设置昵称' }}</h2>
-            <p class="text-gray-600 mt-1">手机号：{{ userStore.userInfo?.phone || '未绑定' }}</p>
+            <h2 class="text-xl font-bold text-gray-800">{{ nickname }}</h2>
+            <p class="text-gray-600 mt-1">手机号：{{ phone }}</p>
           </div>
         </div>
       </div>
@@ -155,22 +155,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { Dialog, showToast } from 'vant'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/store/user'
 
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
+
+// 用户信息的计算属性
+const nickname = computed(() => userStore.nickname || '未设置昵称')
+const phone = computed(() => userStore.phone || '未绑定')
 
 // 客服弹窗控制
 const showServiceDialog = ref(false)
 
 // 检查登录状态
 const checkLogin = (callback: () => void) => {
-  const token = localStorage.getItem('token')
-  if (!token) {
+  if (!userStore.isLoggedIn) {
     router.push({
       path: '/login',
       query: { redirect: route.fullPath }

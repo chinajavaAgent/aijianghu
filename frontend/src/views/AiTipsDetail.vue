@@ -421,9 +421,18 @@ const submitForReview = () => {
 
 // 是否已解锁
 const isUnlocked = computed(() => {
-  // 这里需要根据实际业务逻辑判断是否已解锁
-  // 临时使用用户等级判断，实际应该通过后端API判断
-  return userStore.level >= (tipDetail.value?.requiredLevel || 1)
+  // 添加详细的日志来帮助调试
+  console.info('当前用户信息:', {
+    userLevel: userStore.level,
+    requiredLevel: tipDetail.value?.requiredLevel,
+    tipDetail: tipDetail.value
+  })
+  
+  // 使用空值合并运算符设置默认值
+  const currentLevel = userStore.level ?? 0
+  const requiredLevel = tipDetail.value?.requiredLevel ?? 1
+  
+  return currentLevel >= requiredLevel
 })
 
 // 群二维码（实际项目中应该从配置或API中获取）
@@ -431,6 +440,14 @@ const groupQrCode = ref('https://example.com/qrcode.jpg')
 
 // 组件挂载时获取数据
 onMounted(() => {
+  // 初始化用户状态并打印日志
+  userStore.initUserState()
+  console.info('用户状态初始化完成:', {
+    isLoggedIn: userStore.isLoggedIn,
+    userId: userStore.id,
+    userLevel: userStore.level,
+    userInfo: userStore.$state
+  })
   fetchTipDetail()
 })
 </script>
