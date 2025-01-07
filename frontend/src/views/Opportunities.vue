@@ -74,7 +74,7 @@
             <button class="w-full py-2.5 sm:py-3 rounded-lg text-white font-semibold text-sm sm:text-base transition-colors"
               :class="getButtonClass(tip)"
               @click="handlePurchase(tip)">
-              {{ tip.projects && tip.projects.length > 0 ? '查看详情' : '暂无项目' }}
+              {{ getButtonText(tip) }}
             </button>
           </div>
         </div>
@@ -108,11 +108,13 @@ import { useRouter } from 'vue-router'
 import { getAiTipsList, getAiTipsDetail } from '@/api/tips'
 import type { AiTips } from '@/types/tips'
 import { showToast } from 'vant'
+import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
 const tipsList = ref<AiTips[]>([])
 const showProjectDialog = ref(false)
 const selectedTipProjects = ref<any[]>([])
+const userStore = useUserStore()
 
 // 加载锦囊列表
 const loadTipsList = async () => {
@@ -199,11 +201,45 @@ const getButtonClass = (tip: AiTips) => {
   return buttons[index]
 }
 
+// 获取按钮文本
+const getButtonText = (tip: AiTips) => {
+  if (!tip.projects || tip.projects.length === 0) {
+    return '暂无项目'
+  }
+  
+  // 检查用户是否登录
+  if (!userStore.userInfo) {
+    return '请先登录'
+  }
+  
+  // 检查用户等级是否满足要求
+  const userLevel = userStore.userInfo.level || 1
+  if (userLevel < tip.requiredLevel) {
+    return '去升级'
+  }
+  
+  return '查看详情'
+}
+
 // 添加购买处理函数
 const handlePurchase = async (tip: AiTips) => {
   try {
     if (!tip.id) {
       showToast('锦囊ID无效')
+      return
+    }
+    
+    // 检查用户是否登录
+    if (!userStore.userInfo) {
+      router.push('/login')
+      return
+    }
+    
+    // 检查用户等级
+    const userLevel = userStore.userInfo.level || 1
+    if (userLevel < tip.requiredLevel) {
+      // 跳转到会员升级页面
+      router.push('/membership')
       return
     }
     

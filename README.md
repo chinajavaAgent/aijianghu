@@ -141,4 +141,38 @@ ai-group-world/
    - 接口测试
 
 ## 部署说明
-待补充... 
+### 后端启动
+1. 确保已安装以下环境：
+   - JDK 8或以上版本
+   - Maven 3.6或以上版本
+   - MySQL 5.7或以上版本
+
+2. 配置数据库
+   - 创建数据库：ai_group_world
+   - 执行`backend/src/main/resources/db`目录下的SQL脚本
+
+3. 启动后端服务
+   ```bash
+   cd backend
+   mvn clean install
+   mvn spring-boot:run
+   ```
+   或直接运行`WorldApplication.java`的main方法
+
+4. 服务启动成功后：
+   - 接口文档地址：http://localhost:8080/swagger-ui.html
+   - 后端服务地址：http://localhost:8080
+
+### 前端启动
+1. 确保已安装：
+   - Node.js 14或以上版本
+   - npm 6或以上版本
+
+2. 安装依赖并启动
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+
+3. 访问地址：http://localhost:5173 
