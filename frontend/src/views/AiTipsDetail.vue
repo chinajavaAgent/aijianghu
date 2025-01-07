@@ -60,14 +60,32 @@
             <div v-if="currentProject.description" 
               class="bg-white rounded-xl p-6 shadow-sm">
               <h2 class="text-lg sm:text-xl font-bold mb-4 flex items-center text-gray-800">
-                <svg class="w-6 h-6 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-6 h-6 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                  </path>
                 </svg>
-                项目介绍
+                武功秘籍
               </h2>
-              <div class="text-gray-600 text-base sm:text-lg leading-relaxed">
-                <p>{{ currentProject.description }}</p>
+              <div class="bg-gradient-to-br from-purple-50 via-fuchsia-50 to-pink-50 rounded-lg p-5 border border-purple-100">
+                <div class="flex items-start">
+                  <svg class="w-5 h-5 text-purple-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M13 10V3L4 14h7v7l9-11h-7z">
+                    </path>
+                  </svg>
+                  <div class="text-gray-700 text-base sm:text-lg leading-relaxed prose prose-purple">
+                    <p class="whitespace-pre-line">{{ currentProject.description }}</p>
+                  </div>
+                </div>
+                <div class="mt-4 flex items-center justify-end text-sm text-gray-500">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z">
+                    </path>
+                  </svg>
+                  <span>研习时长：{{ currentProject.videoUrl ? '约30分钟' : '速成' }}</span>
+                </div>
               </div>
             </div>
 
@@ -77,9 +95,10 @@
               <h2 class="text-lg sm:text-xl font-bold mb-4 flex items-center text-gray-800">
                 <svg class="w-6 h-6 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                    d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                    d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z">
+                  </path>
                 </svg>
-                视频教程
+                口诀心法
               </h2>
               <div class="group border border-gray-200 rounded-lg overflow-hidden cursor-pointer hover:shadow-md transition-all duration-300"
                 @click="playVideo({
@@ -89,18 +108,18 @@
                   videoUrl: currentProject.videoUrl
                 })">
                 <div class="aspect-w-16 aspect-h-9">
-                  <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center group-hover:bg-opacity-40 transition-all duration-300">
+                  <div class="absolute inset-0 bg-gradient-to-br from-gray-900/60 to-gray-900/40 flex items-center justify-center group-hover:from-gray-900/50 group-hover:to-gray-900/30 transition-all duration-300">
                     <svg class="w-16 h-16 text-white opacity-90 group-hover:opacity-100 transform group-hover:scale-110 transition-all duration-300" 
                       fill="currentColor" viewBox="0 0 20 20">
                       <path d="M10 0a10 10 0 100 20 10 10 0 000-20zm4 10.75l-6 3.5A.75.75 0 016.5 13V7a.75.75 0 011.125-.65l6 3.5a.75.75 0 010 1.3z"></path>
                     </svg>
                   </div>
                 </div>
-                <div class="p-4 bg-gray-50">
+                <div class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50">
                   <h3 class="font-bold text-gray-800 group-hover:text-blue-600 transition-colors duration-300">
                     {{ currentProject.name }}
                   </h3>
-                  <p class="mt-1 text-sm text-gray-600">点击观看完整视频教程</p>
+                  <p class="mt-1 text-sm text-gray-600">点击观看完整心法演示</p>
                 </div>
               </div>
             </div>
