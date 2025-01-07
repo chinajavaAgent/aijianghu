@@ -103,18 +103,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { getAiTipsList, getAiTipsDetail } from '@/api/tips'
 import type { AiTips } from '@/types/tips'
 import { showToast } from 'vant'
 import { useUserStore } from '@/store/user'
+import type { User } from '@/types/user'
 
 const router = useRouter()
 const tipsList = ref<AiTips[]>([])
 const showProjectDialog = ref(false)
 const selectedTipProjects = ref<any[]>([])
 const userStore = useUserStore()
+
+// 计算用户是否登录
+const isLoggedIn = computed(() => {
+  return !!userStore.$state.token && userStore.$state.id > 0
+})
 
 // 加载锦囊列表
 const loadTipsList = async () => {
@@ -208,12 +214,12 @@ const getButtonText = (tip: AiTips) => {
   }
   
   // 检查用户是否登录
-  if (!userStore.isLoggedIn) {
+  if (!isLoggedIn.value) {
     return '请先登录'
   }
   
   // 检查用户等级是否满足要求
-  if (userStore.level < tip.requiredLevel) {
+  if (userStore.$state.level < tip.requiredLevel) {
     return '去升级'
   }
   
@@ -229,15 +235,15 @@ const handlePurchase = async (tip: AiTips) => {
     }
     
     // 检查用户是否登录
-    if (!userStore.isLoggedIn) {
+    if (!isLoggedIn.value) {
       router.push('/login')
       return
     }
     
     // 检查用户等级
-    if (userStore.level < tip.requiredLevel) {
-      // 跳转到会员升级页面
-      router.push('/membership')
+    if (userStore.$state.level < tip.requiredLevel) {
+      // 跳转到锦囊详情页面
+      router.push(`/tips/${tip.id}`)
       return
     }
     
