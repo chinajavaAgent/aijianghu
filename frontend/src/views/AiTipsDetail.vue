@@ -147,7 +147,7 @@
 
               <div class="border-t pt-6">
                 <div class="flex items-center justify-between mb-4">
-                  <span class="text-gray-600">项目价格</span>
+                  <span class="text-gray-600">锦囊价格</span>
                   <div class="flex items-baseline">
                     <span class="text-sm text-gray-500 mr-1">￥</span>
                     <span class="text-2xl font-bold text-red-500">{{ tipDetail?.price }}</span>
@@ -155,7 +155,7 @@
                 </div>
                 <button @click="handlePurchase"
                   class="w-full py-3 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors">
-                  立即购买
+                 收入囊中
                 </button>
                 <p class="text-gray-500 text-sm text-center mt-3">
                   购买后可获得终身学习权限
