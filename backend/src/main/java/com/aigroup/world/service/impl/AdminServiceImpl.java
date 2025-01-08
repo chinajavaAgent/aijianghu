@@ -180,6 +180,9 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
             return null;
         }
         Long adminId = adminTips.getAdminId();
-        return adminMapper.selectById(adminId);
+        Admin admin = adminMapper.selectById(adminId);
+        // 查询当前用户的上级
+
+        return admin;
     }
 } 

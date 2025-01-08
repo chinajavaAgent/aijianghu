@@ -306,10 +306,10 @@
                   </div>
                   <div>
                     <span class="font-medium text-gray-800">微信号</span>
-                    <p class="text-gray-600 text-sm mt-0.5">{{ adminInfo?.wechat || '暂无微信' }}</p>
+                    <p class="text-gray-600 text-sm mt-0.5">{{ adminInfo?.wechatId || '暂无微信' }}</p>
                   </div>
                 </div>
-                <button @click="copyText(adminInfo?.wechat)" v-if="adminInfo?.wechat"
+                <button @click="copyText(adminInfo?.wechatId)" v-if="adminInfo?.wechatId"
                   class="px-3 py-1.5 bg-green-50 text-green-600 rounded text-sm font-medium hover:bg-green-100 transition-colors">
                   联系高人
                 </button>
