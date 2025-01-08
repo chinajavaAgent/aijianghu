@@ -106,7 +106,9 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { getAiTipsList, getAiTipsDetail } from '@/api/tips'
+import { getUserOrders } from '@/api/order'
 import type { AiTips } from '@/types/tips'
+import type { Order } from '@/types/order'
 import { showToast } from 'vant'
 import { useUserStore } from '@/store/user'
 import type { User } from '@/types/user'
@@ -116,6 +118,7 @@ const tipsList = ref<AiTips[]>([])
 const showProjectDialog = ref(false)
 const selectedTipProjects = ref<any[]>([])
 const userStore = useUserStore()
+const pendingOrders = ref<Order[]>([])
 
 // 计算用户是否登录
 const isLoggedIn = computed(() => {
@@ -130,9 +133,28 @@ const loadTipsList = async () => {
       size: 100
     })
     tipsList.value = response.data.records || []
+    
+    // 如果用户已登录，加载待审核订单
+    if (isLoggedIn.value) {
+      await loadPendingOrders()
+    }
   } catch (error) {
     console.error('加载锦囊列表失败:', error)
     showToast('加载失败，请重试')
+  }
+}
+
+// 加载待审核订单
+const loadPendingOrders = async () => {
+  try {
+    const response = await getUserOrders(userStore.$state.id, {
+      page: 1,
+      size: 100,
+      status: 0 // 待审核状态
+    })
+    pendingOrders.value = response.data.records || []
+  } catch (error) {
+    console.error('加载待审核订单失败:', error)
   }
 }
 
@@ -218,6 +240,12 @@ const getButtonText = (tip: AiTips) => {
     return '请先登录'
   }
   
+  // 检查是否有待审核订单
+  const hasPendingOrder = pendingOrders.value.some(order => order.tipsId === tip.id)
+  if (hasPendingOrder) {
+    return '待审核'
+  }
+  
   // 检查用户等级是否满足要求
   if (userStore.$state.level < tip.requiredLevel) {
     return '去升级'
@@ -237,6 +265,13 @@ const handlePurchase = async (tip: AiTips) => {
     // 检查用户是否登录
     if (!isLoggedIn.value) {
       router.push('/login')
+      return
+    }
+    
+    // 检查是否有待审核订单
+    const hasPendingOrder = pendingOrders.value.some(order => order.tipsId === tip.id)
+    if (hasPendingOrder) {
+      router.push('/orders')
       return
     }
     
