@@ -1,8 +1,13 @@
 package com.aigroup.world.service.impl;
 
 import com.aigroup.world.entity.Order;
+import com.aigroup.world.entity.AiTips;
+import com.aigroup.world.mapper.UserMapper;
+import com.aigroup.world.model.User;
 import com.aigroup.world.mapper.OrderMapper;
 import com.aigroup.world.service.OrderService;
+import com.aigroup.world.service.AiTipsService;
+import com.aigroup.world.service.UserService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -18,6 +23,14 @@ import java.time.format.DateTimeFormatter;
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
     @Autowired
     private OrderMapper orderMapper;
+    
+    @Autowired
+    private AiTipsService aiTipsService;
+    
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private UserMapper userMapper;
     @Override
     @Transactional
     public Order createOrder(Long userId, Long tipsId, Long adminId, String title, String price) {
@@ -62,6 +75,21 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         
         order.setStatus(status);
         order.setApproveTime(LocalDateTime.now());
+        
+        // 如果订单审核通过，设置用户等级
+        if (status == 1) { // 假设status=1表示审核通过
+            // 获取锦囊信息
+            AiTips aiTips = aiTipsService.getById(order.getTipsId());
+            if (aiTips != null) {
+                // 获取用户信息
+                User user = userMapper.selectById(order.getUserId());
+                if (user != null) {
+                    // 设置用户等级为锦囊要求的等级
+                    user.setLevel(aiTips.getRequiredLevel());
+                    userMapper.updateById(user);
+                }
+            }
+        }
         
         return updateById(order);
     }
