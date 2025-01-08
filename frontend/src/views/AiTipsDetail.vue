@@ -214,9 +214,8 @@
                       赚取盘缠
                     </h3>
                     <p class="text-gray-600 text-sm">
-                      少侠可通过分享此锦囊，每邀请一位同道中人入门，即可获得 
-                      <span class="text-amber-500 font-medium">20%</span> 
-                      的盘缠分成。
+                      少侠可通过分享此锦囊，即可获得 
+                      <span class="text-amber-500 font-medium">无上大机缘</span> 
                     </p>
                   </div>
                 </div>
