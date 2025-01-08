@@ -90,12 +90,21 @@
               注册
             </button>
 
-            <p class="text-small text-center">
-              注册即表示同意
-              <a href="#" class="text-accent-color">服务条款</a>
-              和
-              <a href="#" class="text-accent-color">隐私政策</a>
-            </p>
+            <div class="text-center space-y-4">
+              <p class="text-small">
+                注册即表示同意
+                <a href="#" class="text-accent-color">服务条款</a>
+                和
+                <a href="#" class="text-accent-color">隐私政策</a>
+              </p>
+
+              <p class="text-sm text-gray-600">
+                已有账号？
+                <router-link to="/login" class="text-accent-color hover:underline">
+                  立即登录
+                </router-link>
+              </p>
+            </div>
           </form>
         </div>
       </div>
