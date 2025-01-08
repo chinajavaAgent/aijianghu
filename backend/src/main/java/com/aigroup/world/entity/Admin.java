@@ -1,5 +1,6 @@
 package com.aigroup.world.entity;
 
+import com.aigroup.world.model.User;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -30,4 +31,7 @@ public class Admin {
 
     @TableField(exist = false)
     private List<AiTips> tips;
+
+    @TableField(exist = false)
+    private User referrerUser;
 } 

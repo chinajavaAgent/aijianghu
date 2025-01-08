@@ -5,12 +5,19 @@ import com.aigroup.world.entity.AdminTips;
 import com.aigroup.world.entity.AiTips;
 import com.aigroup.world.mapper.AdminMapper;
 import com.aigroup.world.mapper.AdminTipsMapper;
+import com.aigroup.world.mapper.UserMapper;
+import com.aigroup.world.mapper.secondary.TUserMapper;
+import com.aigroup.world.model.User;
+import com.aigroup.world.entity.TUser;
 import com.aigroup.world.service.AdminService;
 import com.aigroup.world.service.AiTipsService;
 import com.aigroup.world.service.FileService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +35,8 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     private final AdminTipsMapper adminTipsMapper;
     private final AiTipsService aiTipsService;
     private final AdminMapper adminMapper;
+    private final UserMapper userMapper;
+    private final TUserMapper tUserMapper;
 
     @Override
     public List<Admin> list() {
@@ -181,7 +190,32 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         }
         Long adminId = adminTips.getAdminId();
         Admin admin = adminMapper.selectById(adminId);
-        // 查询当前用户的上级
+        
+        // 获取当前用户
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            String currentUserPhone = ((UserDetails) authentication.getPrincipal()).getUsername();
+            
+            // 在第二数据源中查询推荐人ID
+            TUser tUser = tUserMapper.selectOne(new LambdaQueryWrapper<TUser>()
+                    .eq(TUser::getPhoneNumber, currentUserPhone));
+            
+            if (tUser != null && tUser.getRecommendId() != null) {
+                // 通过推荐人ID查询推荐人的手机号
+                TUser recommender = tUserMapper.selectById(tUser.getRecommendId());
+                
+                if (recommender != null) {
+                    // 在第一数据源中查询推荐人用户信息
+                    User recommenderUser = userMapper.selectOne(new LambdaQueryWrapper<User>()
+                            .eq(User::getPhone, recommender.getPhoneNumber()));
+                    
+                    if (recommenderUser != null) {
+                        // 设置上级用户信息到admin对象中
+                        admin.setReferrerUser(recommenderUser);
+                    }
+                }
+            }
+        }
 
         return admin;
     }

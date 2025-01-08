@@ -45,16 +45,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 4. 创建用户
         User user = new User();
         BeanUtils.copyProperties(request, user);
-        TUser tUser = tUserMapper.selectOne(new LambdaQueryWrapper<TUser>(new TUser())
-                .eq(TUser::getPhoneNumber, request.getPhone()));
-
-        if (tUser != null) {
-            Integer proxyUser = tUser.getProxyUser();
-            if(proxyUser == 1) {
-                user.setLevel(1);
-            }
-            user.setPlatform("加ai群");
-        }
         // 设置密码（加密）
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         // 设置初始等级和积分

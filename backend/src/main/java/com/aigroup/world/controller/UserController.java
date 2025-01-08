@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @Api(tags = "用户管理")
 @RestController
@@ -60,6 +61,13 @@ public class UserController {
     @GetMapping("/{id}")
     public Result<User> getUserInfo(@PathVariable Long id) {
         User user = userService.getUserById(id);
+        return Result.success(user);
+    }
+
+    @ApiOperation("获取当前登录用户信息")
+    @GetMapping("/current")
+    public Result<User> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+        User user = userService.findByPhone(userDetails.getUsername());
         return Result.success(user);
     }
 } 
