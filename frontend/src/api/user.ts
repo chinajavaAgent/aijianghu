@@ -22,4 +22,11 @@ export function checkPhone(phone: string) {
     return request.get<boolean>('/api/users/check-phone', {
         params: { phone }
     })
+}
+
+/**
+ * 获取用户信息
+ */
+export function getUserInfo(id: number) {
+    return request.get<User>(`/api/users/${id}`)
 } 

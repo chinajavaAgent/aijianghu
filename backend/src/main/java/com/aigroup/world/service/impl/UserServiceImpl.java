@@ -21,7 +21,7 @@ import java.util.Objects;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     private final PasswordEncoder passwordEncoder;
-
+    private final UserMapper userMapper;
     @Override
     @Transactional(rollbackFor = Exception.class)
     public User register(RegisterRequest request) {
@@ -97,5 +97,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User findByPhone(String phone) {
         return getOne(new LambdaQueryWrapper<User>()
                 .eq(User::getPhone, phone));
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return userMapper.selectById(id);
     }
 } 

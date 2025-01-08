@@ -51,4 +51,11 @@ public class UserController {
     public Result<Boolean> checkPhone(@RequestParam String phone) {
         return Result.success(userService.checkPhoneExists(phone));
     }
+
+    @ApiOperation("获取用户信息")
+    @GetMapping("/{id}")
+    public Result<User> getUserInfo(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        return Result.success(user);
+    }
 } 

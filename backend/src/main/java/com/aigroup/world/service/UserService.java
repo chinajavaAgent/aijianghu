@@ -36,4 +36,6 @@ public interface UserService {
      * @return 用户信息
      */
     User findByPhone(String phone);
+
+    User getUserById(Long id);
 } 

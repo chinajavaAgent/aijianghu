@@ -107,6 +107,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { getAiTipsList, getAiTipsDetail } from '@/api/tips'
 import { getUserOrders } from '@/api/order'
+import { getUserInfo } from '@/api/user'
 import type { AiTips } from '@/types/tips'
 import type { Order } from '@/types/order'
 import { showToast } from 'vant'
@@ -119,6 +120,7 @@ const showProjectDialog = ref(false)
 const selectedTipProjects = ref<any[]>([])
 const userStore = useUserStore()
 const pendingOrders = ref<Order[]>([])
+const userLevel = ref(0)
 
 // 计算用户是否登录
 const isLoggedIn = computed(() => {
@@ -246,12 +248,12 @@ const getButtonText = (tip: AiTips) => {
     return '待审核'
   }
   
-  // 检查用户等级是否满足要求
-  if (userStore.$state.level < tip.requiredLevel) {
-    return '去升级'
+  // 使用实时获取的用户等级
+  if (userLevel.value < tip.requiredLevel) {
+    return `需要 ${tip.requiredLevel} 级`
   }
   
-  return '查看详情'
+  return tip.projects.length > 1 ? '选择项目' : '立即购买'
 }
 
 // 添加购买处理函数
@@ -299,9 +301,23 @@ const handleProjectSelect = (project: any) => {
   router.push(`/tips/${project.tipId}`)
 }
 
+// 获取最新的用户信息
+const fetchUserInfo = async () => {
+  if (!isLoggedIn.value) return
+  try {
+    const response = await getUserInfo(userStore.$state.id)
+    userLevel.value = response.data.level
+  } catch (error) {
+    console.error('获取用户信息失败:', error)
+  }
+}
+
 // 页面加载时获取数据
-onMounted(() => {
-  loadTipsList()
+onMounted(async () => {
+  await loadTipsList()
+  if (isLoggedIn.value) {
+    await fetchUserInfo()
+  }
 })
 </script>
 
