@@ -1,5 +1,10 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import toast from './toast'
+import router from '@/router'
+import { useUserStore } from '@/store/user'
+import type { Store } from 'pinia'
+
+type UserStore = ReturnType<typeof useUserStore>
 
 export interface ApiResponse<T> {
   code: number
@@ -47,11 +52,21 @@ request.interceptors.response.use(
   error => {
     // 如果是401错误，说明token过期或无效，需要重新登录
     if (error.response?.status === 401) {
-      localStorage.removeItem('token')
-      window.location.href = '/login'
+      const userStore: any = useUserStore()
+      userStore.clearUser()
+      router.push({
+        path: '/login',
+        query: { redirect: router.currentRoute.value.fullPath }
+      })
       toast.error('登录已过期，请重新登录')
     } else if (error.response?.status === 403) {
-      toast.error('没有权限访问')
+      const userStore: any = useUserStore()
+      userStore.clearUser()
+      router.push({
+        path: '/login',
+        query: { redirect: router.currentRoute.value.fullPath }
+      })
+      toast.error('权限不足，请重新登录')
     } else {
       console.error('响应错误:', error)
       const message = error.response?.data?.message || error.message || '请求失败'

@@ -5,8 +5,7 @@ interface UserState extends User {
   token: string;
 }
 
-export const useUserStore = defineStore({
-  id: 'user',
+export const useUserStore = defineStore('user', {
   state: (): UserState => ({
     id: 0,
     username: '',
@@ -32,6 +31,9 @@ export const useUserStore = defineStore({
         user.level = 1
       }
       Object.assign(this, user)
+      if (user.token) {
+        localStorage.setItem('token', user.token)
+      }
       localStorage.setItem('userInfo', JSON.stringify(this.$state))
     },
     
@@ -46,11 +48,13 @@ export const useUserStore = defineStore({
       this.createTime = ''
       this.updateTime = ''
       this.token = ''
+      localStorage.removeItem('token')
       localStorage.removeItem('userInfo')
     },
 
     initUserState() {
       const userInfo = localStorage.getItem('userInfo')
+      const token = localStorage.getItem('token')
       if (userInfo) {
         try {
           const savedState = JSON.parse(userInfo)
@@ -58,17 +62,11 @@ export const useUserStore = defineStore({
         } catch (e) {
           this.clearUser()
         }
+      } else if (token) {
+        this.token = token
       }
     }
   },
 
-  persist: {
-    enabled: true,
-    strategies: [
-      {
-        key: 'userInfo',
-        storage: localStorage
-      }
-    ]
-  }
+  persist: true
 }) 
