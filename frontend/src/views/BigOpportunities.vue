@@ -334,64 +334,62 @@ const formatTime = (timeStr: string | undefined) => {
   return `${year}年${month}月${day}日 ${hour}:${minute}`
 }
 
-// 审核通过
-const handleApprove = async (orderId: number) => {
-  try {
-    const result = await showDialog({
-      title: '准许入门',
-      message: '确定要准许该求道者入门吗？',
-      confirmButtonText: '确定',
-      confirmButtonColor: '#10B981',
-      cancelButtonText: '取消',
-    })
-
-    if (result === 'confirm') {
-      const response = await approveOrder(orderId, 1)
-      if (response.data) {
+// 处理审核通过
+const handleApprove = (orderId: number) => {
+  showDialog({
+    title: '确认准许',
+    message: '确定要准许该大机缘吗？',
+    showCancelButton: true,
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    confirmButtonColor: '#10B981',
+    cancelButtonColor: '#6B7280',
+  }).then(async (action) => {
+    if (action === 'confirm') {
+      try {
+        await approveOrder(orderId, 1)
         showToast({
-          message: '已准许入门',
-          position: 'bottom',
+          type: 'success',
+          message: '已准许入门'
         })
         loadOrders()
+      } catch (error) {
+        showToast({
+          type: 'fail',
+          message: '操作失败'
+        })
       }
     }
-  } catch (error) {
-    console.error('审核失败:', error)
-    showToast({
-      message: '审核失败，请重试',
-      position: 'bottom',
-    })
-  }
+  })
 }
 
-// 审核拒绝
-const handleReject = async (orderId: number) => {
-  try {
-    const result = await showDialog({
-      title: '婉拒入门',
-      message: '确定要婉拒该求道者吗？',
-      confirmButtonText: '确定',
-      confirmButtonColor: '#EF4444',
-      cancelButtonText: '取消',
-    })
-
-    if (result === 'confirm') {
-      const response = await approveOrder(orderId, 2)
-      if (response.data) {
+// 处理审核拒绝
+const handleReject = (orderId: number) => {
+  showDialog({
+    title: '确认婉拒',
+    message: '确定要婉拒该大机缘吗？',
+    showCancelButton: true,
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    confirmButtonColor: '#EF4444',
+    cancelButtonColor: '#6B7280',
+  }).then(async (action) => {
+    if (action === 'confirm') {
+      try {
+        await approveOrder(orderId, 2)
         showToast({
-          message: '已婉拒',
-          position: 'bottom',
+          type: 'success',
+          message: '已婉拒'
         })
         loadOrders()
+      } catch (error) {
+        showToast({
+          type: 'fail',
+          message: '操作失败'
+        })
       }
     }
-  } catch (error) {
-    console.error('审核失败:', error)
-    showToast({
-      message: '审核失败，请重试',
-      position: 'bottom',
-    })
-  }
+  })
 }
 </script>
 
