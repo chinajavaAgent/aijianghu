@@ -383,8 +383,18 @@ const isLocked = (tip: AiTips) => {
   return userLevel.value < tip.requiredLevel
 }
 
+// 从URL参数中获取初始tab
+const initTabFromUrl = () => {
+  const urlParams = new URLSearchParams(window.location.search)
+  const tabParam = urlParams.get('tab')
+  if (tabParam && tabs.some(tab => tab.value === tabParam)) {
+    currentTab.value = tabParam
+  }
+}
+
 // 页面加载时获取数据
 onMounted(async () => {
+  initTabFromUrl() // 初始化tab
   if (isLoggedIn.value) {
     // 先获取用户信息，确保等级是最新的
     await fetchUserInfo()

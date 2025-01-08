@@ -209,7 +209,7 @@ const handleLogout = () => {
 
 // 处理升级点击
 const handleUpgrade = () => {
-  router.push('/opportunities')
+  router.push('/opportunities?tab=locked')
 }
 </script>
 
