@@ -5,10 +5,15 @@ export interface Order {
   tipsId: number
   adminId: number
   title: string
-  price: number
+  price: string
   status: number
   applyTime: string
   approveTime?: string
   createdAt: string
   updatedAt: string
+  // 关联字段
+  reviewer?: string
+  phone?: string
+  wechat?: string
+  credit?: number
 } 

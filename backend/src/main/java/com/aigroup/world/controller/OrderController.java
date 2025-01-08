@@ -4,6 +4,7 @@ import com.aigroup.world.common.Result;
 import com.aigroup.world.entity.Order;
 import com.aigroup.world.service.OrderService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,18 +15,27 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    @Data
+    public static class CreateOrderRequest {
+        private Long userId;
+        private Long tipsId;
+        private Long adminId;
+        private String title;
+        private String price;
+    }
+
     /**
      * 创建订单
      */
     @PostMapping
-    public Result<Order> createOrder(
-            @RequestParam Long userId,
-            @RequestParam Long tipsId,
-            @RequestParam Long adminId,
-            @RequestParam String title,
-            @RequestParam String price
-    ) {
-        Order order = orderService.createOrder(userId, tipsId, adminId, title, price);
+    public Result<Order> createOrder(@RequestBody CreateOrderRequest request) {
+        Order order = orderService.createOrder(
+            request.getUserId(),
+            request.getTipsId(),
+            request.getAdminId(),
+            request.getTitle(),
+            request.getPrice()
+        );
         return Result.success(order);
     }
 

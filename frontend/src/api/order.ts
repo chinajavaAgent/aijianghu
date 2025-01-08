@@ -11,11 +11,7 @@ export function createOrder(data: {
   title: string
   price: string
 }) {
-  return request({
-    url: '/api/orders',
-    method: 'post',
-    params: data
-  })
+  return request.post<Order>('/api/orders', data)
 }
 
 /**
@@ -26,20 +22,12 @@ export function getUserOrders(userId: number, params: {
   size?: number
   status?: number
 }) {
-  return request({
-    url: `/api/orders/user/${userId}`,
-    method: 'get',
-    params
-  })
+  return request.get<Order>(`/api/orders/user/${userId}`, { params })
 }
 
 /**
  * 审核订单
  */
 export function approveOrder(orderId: number, status: number) {
-  return request({
-    url: `/api/orders/${orderId}/approve`,
-    method: 'put',
-    params: { status }
-  })
+  return request.put<boolean>(`/api/orders/${orderId}/approve`, null, { params: { status } })
 } 
