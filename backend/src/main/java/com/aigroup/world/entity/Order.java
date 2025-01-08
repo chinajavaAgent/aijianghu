@@ -67,4 +67,14 @@ public class Order {
 
     @TableField(exist = false)
     private String introduction;
+
+    // 审核人信息（非数据库字段）
+    @TableField(exist = false)
+    private String reviewer;
+
+    @TableField(exist = false)
+    private String reviewerPhone;
+
+    @TableField(exist = false)
+    private String reviewerWechat;
 } 

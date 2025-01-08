@@ -52,19 +52,71 @@
                     <span class="px-3 py-1 bg-yellow-50 text-yellow-600 rounded-full text-sm font-medium">等待掌门审核</span>
                   </div>
                   <div class="mt-3">
+                    <!-- 审核人信息 -->
                     <div class="flex items-center text-sm text-gray-500 mb-1">
                       <span class="font-medium text-gray-700">掌门大人：</span>
-                      <span>{{ order.reviewer }}</span>
+                      <span class="ml-2">{{ order.reviewer || '待分配' }}</span>
                     </div>
+                    <div v-if="order.reviewer" class="flex items-center text-sm text-gray-500 mb-1">
+                      <span class="font-medium text-gray-700">掌门电话：</span>
+                      <span class="ml-2">{{ order.reviewerPhone }}</span>
+                      <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click.stop="copyText(order.reviewerPhone)">一键传信</button>
+                    </div>
+                    <div v-if="order.reviewer" class="flex items-center text-sm text-gray-500 mb-1">
+                      <span class="font-medium text-gray-700">掌门微信：</span>
+                      <span>{{ order.reviewerWechat }}</span>
+                      <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click.stop="copyText(order.reviewerWechat)">点击复制</button>
+                    </div>
+                    <!-- 申请人信息 -->
+                    <div class="bg-gray-50 rounded-lg p-3 mb-3">
+                      <h4 class="text-sm font-medium text-gray-700 mb-2">申请人信息</h4>
+                      <div class="grid grid-cols-2 gap-2">
+                        <div class="flex items-center text-sm text-gray-500">
+                          <span class="font-medium text-gray-700 mr-1">姓名：</span>
+                          <span>{{ order.userName }}</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                          <span class="font-medium text-gray-700 mr-1">性别：</span>
+                          <span>{{ order.gender === 1 ? '男' : '女' }}</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                          <span class="font-medium text-gray-700 mr-1">年龄：</span>
+                          <span>{{ order.age }}岁</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                          <span class="font-medium text-gray-700 mr-1">城市：</span>
+                          <span>{{ order.city || '未填写' }}</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                          <span class="font-medium text-gray-700 mr-1">职业：</span>
+                          <span>{{ order.profession || '未填写' }}</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                          <span class="font-medium text-gray-700 mr-1">经验：</span>
+                          <span>{{ order.experience || 0 }}年</span>
+                        </div>
+                      </div>
+                      <div class="mt-2">
+                        <div class="text-sm text-gray-500">
+                          <span class="font-medium text-gray-700">个人介绍：</span>
+                          <p class="mt-1">{{ order.introduction || '暂无介绍' }}</p>
+                        </div>
+                        <div class="text-sm text-gray-500 mt-2">
+                          <span class="font-medium text-gray-700">申请理由：</span>
+                          <p class="mt-1">{{ order.reason || '暂无理由' }}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- 原有信息 -->
                     <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">传信飞鸽：</span>
-                      <span>{{ order.phone }}</span>
-                      <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click.stop="copyText(order.phone)">一键传信</button>
+                      <span class="font-medium text-gray-700">联系方式：</span>
+                      <span class="ml-2">{{ order.userPhone }}</span>
+                      <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click.stop="copyText(order.userPhone)">一键传信</button>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
                       <span class="font-medium text-gray-700">江湖微信：</span>
-                      <span>{{ order.wechat }}</span>
-                      <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click.stop="copyText(order.wechat)">点击复制</button>
+                      <span>{{ order.userWechat }}</span>
+                      <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click.stop="copyText(order.userWechat)">点击复制</button>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
                       <span class="font-medium text-gray-700">江湖声望：</span>
@@ -126,12 +178,12 @@
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
                       <span class="font-medium text-gray-700">传信飞鸽：</span>
-                      <span>{{ order.phone }}</span>
+                      <span>{{ order.reviewerPhone }}</span>
                       <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click.stop="copyText(order.phone)">一键传信</button>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">江湖通号：</span>
-                      <span>{{ order.wechat }}</span>
+                      <span class="font-medium text-gray-700">江湖微信：</span>
+                      <span>{{ order.reviewerWechat }}</span>
                       <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click.stop="copyText(order.wechat)">点击复制</button>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
@@ -246,13 +298,24 @@ interface OrderItem {
   tipsId: number
   title: string
   reviewer: string
-  phone: string
-  wechat: string
+  reviewerPhone: string
+  reviewerWechat: string
   credit: number
   price: number
   applyTime: string
   approveTime?: string
   status: number
+  // 申请人信息
+  userName: string
+  gender: number
+  age: number
+  city: string
+  userPhone: string
+  userWechat: string
+  profession: string
+  experience: number
+  reason: string
+  introduction: string
 }
 
 const pendingOrders = ref<OrderItem[]>([])

@@ -146,11 +146,6 @@
                   <span class="text-gray-500">求道者：</span>
                   <span class="text-gray-800 ml-1">{{ order.userName }}</span>
                 </div>
-                <div class="flex items-center text-sm basis-1/2">
-                  <span class="text-gray-500">江湖阅历：</span>
-                  <span class="text-yellow-500 ml-1">★</span>
-                  <span class="text-gray-800 ml-0.5">{{ order.experience }}年</span>
-                </div>
               </div>
 
               <!-- 联系方式 -->
@@ -179,12 +174,6 @@
                     点击复制
                   </button>
                 </div>
-              </div>
-
-              <!-- 求道理由 -->
-              <div class="text-sm mb-3">
-                <span class="text-gray-500">求道理由：</span>
-                <span class="text-gray-800 ml-1">{{ order.reason }}</span>
               </div>
 
               <!-- 底部信息 -->
