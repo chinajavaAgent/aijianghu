@@ -3,7 +3,15 @@
     <!-- 顶部导航栏 -->
     <div class="bg-white shadow-sm sticky top-0 z-10">
       <div class="container mx-auto px-4">
-        <h1 class="text-xl font-bold text-gray-800 py-4">修炼进阶</h1>
+        <div class="flex items-center justify-between">
+          <h1 class="text-xl font-bold text-gray-800 py-4">修炼进阶</h1>
+          <button
+            @click="handleUpgrade"
+            class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg"
+          >
+            <span class="block text-sm">去升级</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -295,6 +303,11 @@ const formatTime = (timeStr: string | undefined) => {
   const hour = String(date.getHours()).padStart(2, '0')
   const minute = String(date.getMinutes()).padStart(2, '0')
   return `${year}年${month}月${day}日 ${hour}:${minute}`
+}
+
+// 处理升级点击
+const handleUpgrade = () => {
+  router.push('/opportunities?tab=locked')
 }
 </script>
 
