@@ -2,8 +2,10 @@ package com.aigroup.world.service.impl;
 
 import com.aigroup.world.dto.LoginRequest;
 import com.aigroup.world.dto.RegisterRequest;
+import com.aigroup.world.entity.TUser;
 import com.aigroup.world.exception.BusinessException;
 import com.aigroup.world.mapper.UserMapper;
+import com.aigroup.world.mapper.secondary.TUserMapper;
 import com.aigroup.world.model.User;
 import com.aigroup.world.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -22,6 +24,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final TUserMapper tUserMapper;
     @Override
     @Transactional(rollbackFor = Exception.class)
     public User register(RegisterRequest request) {
@@ -39,11 +42,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (checkWechatExists(request.getWechat())) {
             throw new BusinessException("微信号已被注册");
         }
-
         // 4. 创建用户
         User user = new User();
         BeanUtils.copyProperties(request, user);
-        
+        TUser tUser = tUserMapper.selectOne(new LambdaQueryWrapper<TUser>(new TUser())
+                .eq(TUser::getPhoneNumber, request.getPhone()));
+
+        if (tUser != null) {
+            Integer proxyUser = tUser.getProxyUser();
+            if(proxyUser == 1) {
+                user.setLevel(1);
+            }
+            user.setPlatform("加ai群");
+        }
         // 设置密码（加密）
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         // 设置初始等级和积分
@@ -88,7 +99,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .eq(User::getPhone, phone));
     }
 
-    private boolean checkWechatExists(String wechat) {
+    public boolean checkWechatExists(String wechat) {
         return baseMapper.exists(new LambdaQueryWrapper<User>()
                 .eq(User::getWechat, wechat));
     }
@@ -101,6 +112,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public User getUserById(Long id) {
-        return userMapper.selectById(id);
+        User user = userMapper.selectById(id);
+
+        if(user.getLevel()==0) {
+            TUser tUser = tUserMapper.selectOne(new LambdaQueryWrapper<TUser>(new TUser())
+                    .eq(TUser::getPhoneNumber, user.getPhone()));
+            if (tUser != null) {
+                Integer proxyUser = tUser.getProxyUser();
+                if(proxyUser == 1) {
+                    user.setLevel(1);
+                    userMapper.updateById(user);
+                }
+            }
+        }
+        return user;
     }
 } 

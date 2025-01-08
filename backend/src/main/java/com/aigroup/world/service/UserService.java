@@ -29,6 +29,8 @@ public interface UserService {
      */
     boolean checkPhoneExists(String phone);
 
+    boolean checkWechatExists(String wechat);
+
     /**
      * 根据手机号查找用户
      *

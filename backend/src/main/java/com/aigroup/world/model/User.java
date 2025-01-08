@@ -30,6 +30,7 @@ public class User {
      * 微信号
      */
     private String wechat;
+    private String platform;
 
     /**
      * 真实姓名

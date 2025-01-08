@@ -4,9 +4,12 @@ import com.aigroup.world.common.Result;
 import com.aigroup.world.dto.LoginRequest;
 import com.aigroup.world.dto.LoginResponse;
 import com.aigroup.world.dto.RegisterRequest;
+import com.aigroup.world.entity.TUser;
+import com.aigroup.world.mapper.secondary.TUserMapper;
 import com.aigroup.world.model.User;
 import com.aigroup.world.service.UserService;
 import com.aigroup.world.utils.JwtUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +27,7 @@ public class UserController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
+    private final TUserMapper tUserMapper;
 
     @ApiOperation("用户注册")
     @PostMapping("/register")

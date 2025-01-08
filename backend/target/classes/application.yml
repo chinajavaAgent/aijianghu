@@ -4,37 +4,33 @@ server:
 spring:
   application:
     name: ai-group-world
-  # 主数据源
   datasource:
-    primary:
-      jdbc-url: jdbc:mysql://rm-bp18or2tye31a67112o.mysql.rds.aliyuncs.com:3306/aijianghu?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-      username: root
-      password: chaojigeti@666
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      # 连接池配置
-      minimum-idle: 5
-      maximum-pool-size: 15
-      auto-commit: true
-      idle-timeout: 30000
-      pool-name: PrimaryHikariCP
-      max-lifetime: 1800000
-      connection-timeout: 30000
-      connection-test-query: SELECT 1
-    # 第二数据源
-    secondary:
-      jdbc-url: jdbc:mysql://rm-bp18or2tye31a67112o.mysql.rds.aliyuncs.com:3306/weichat_group?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-      username: root
-      password: chaojigeti@666
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      # 连接池配置
-      minimum-idle: 5
-      maximum-pool-size: 15
-      auto-commit: true
-      idle-timeout: 30000
-      pool-name: SecondaryHikariCP
-      max-lifetime: 1800000
-      connection-timeout: 30000
-      connection-test-query: SELECT 1
+    dynamic:
+      primary: primary
+      strict: true
+      datasource:
+        primary:
+          url: jdbc:mysql://rm-bp18or2tye31a67112o.mysql.rds.aliyuncs.com:3306/aijianghu?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+          username: root
+          password: chaojigeti@666
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          hikari:
+            maximum-pool-size: 10
+            minimum-idle: 5
+            idle-timeout: 300000
+            connection-timeout: 20000
+            pool-name: PrimaryHikariPool
+        secondary:
+          url: jdbc:mysql://rm-bp18or2tye31a67112o.mysql.rds.aliyuncs.com:3306/wechat_group?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+          username: root
+          password: chaojigeti@666
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          hikari:
+            maximum-pool-size: 5
+            minimum-idle: 2
+            idle-timeout: 300000
+            connection-timeout: 20000
+            pool-name: SecondaryHikariPool
   
   mvc:
     pathmatch:
