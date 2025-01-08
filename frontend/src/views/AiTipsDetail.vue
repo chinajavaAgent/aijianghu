@@ -422,7 +422,18 @@ const handlePurchase = async () => {
         })
         return
       }
-      adminInfo.value = response.data
+      
+      // 如果存在推荐人信息，使用推荐人的联系方式
+      if (response.data.referrerUser) {
+        adminInfo.value = {
+          ...response.data,
+          phone: response.data.referrerUser.phone,
+          wechatId: response.data.referrerUser.wechat
+        }
+      } else {
+        // 否则使用原始管理员信息
+        adminInfo.value = response.data
+      }
       showContactModal.value = true
     } else {
       showToast({

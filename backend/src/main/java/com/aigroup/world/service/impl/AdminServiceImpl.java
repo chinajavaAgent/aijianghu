@@ -5,6 +5,7 @@ import com.aigroup.world.entity.AdminTips;
 import com.aigroup.world.entity.AiTips;
 import com.aigroup.world.mapper.AdminMapper;
 import com.aigroup.world.mapper.AdminTipsMapper;
+import com.aigroup.world.mapper.AiTipsMapper;
 import com.aigroup.world.mapper.UserMapper;
 import com.aigroup.world.mapper.secondary.TUserMapper;
 import com.aigroup.world.model.User;
@@ -34,6 +35,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     private final FileService fileService;
     private final AdminTipsMapper adminTipsMapper;
     private final AiTipsService aiTipsService;
+    private final AiTipsMapper aiTipsMapper;
     private final AdminMapper adminMapper;
     private final UserMapper userMapper;
     private final TUserMapper tUserMapper;
@@ -190,12 +192,12 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         }
         Long adminId = adminTips.getAdminId();
         Admin admin = adminMapper.selectById(adminId);
-        
+        AiTips aiTips = aiTipsMapper.selectById(tipId);
         // 获取当前用户
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             String currentUserPhone = ((UserDetails) authentication.getPrincipal()).getUsername();
-            
+            User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getPhone, currentUserPhone));
             // 在第二数据源中查询推荐人ID
             TUser tUser = tUserMapper.selectOne(new LambdaQueryWrapper<TUser>()
                     .eq(TUser::getPhoneNumber, currentUserPhone));
@@ -207,6 +209,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
                 if (recommender != null) {
                     // 在第一数据源中查询推荐人用户信息
                     User recommenderUser = userMapper.selectOne(new LambdaQueryWrapper<User>()
+                            .ge(User::getLevel, user.getLevel()+1)
                             .eq(User::getPhone, recommender.getPhoneNumber()));
                     
                     if (recommenderUser != null) {

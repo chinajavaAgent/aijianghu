@@ -10,7 +10,13 @@
       <div class="container mx-auto px-4 text-center relative z-10">
         <h1 class="text-4xl font-bold mb-4 drop-shadow-lg">AI群江湖 - 你的AI资源与机遇平台</h1>
         <p class="text-xl opacity-90">汇聚海量AI资源，副业，创造无限商业可能</p>
+        <router-link to="/opportunities" class="inline-block">
+        <button class="mt-4 bg-white text-gray-800 px-8 py-3 rounded-full text-lg font-semibold hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl">
+          立即加入
+        </button>
+      </router-link>
       </div>
+      
     </div>
 
     <!-- 三大核心价值主张 -->
@@ -31,13 +37,13 @@
               专业的资源分类与推荐
             </p>
           </div>
-          <div class="text-center">
+          <!-- <div class="text-center">
             <router-link to="/opportunities" class="inline-block">
               <button class="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white px-6 py-2 rounded-full hover:shadow-lg hover:from-cyan-600 hover:to-cyan-700 transition-all duration-300">
                 探索资源
               </button>
             </router-link>
-          </div>
+          </div> -->
         </div>
 
         <!-- AI副业机会 -->
@@ -55,11 +61,11 @@
               完整的变现指导
             </p>
           </div>
-          <div class="text-center">
+          <!-- <div class="text-center">
             <button class="bg-gradient-to-r from-fuchsia-500 to-fuchsia-600 text-white px-6 py-2 rounded-full hover:shadow-lg hover:from-fuchsia-600 hover:to-fuchsia-700 transition-all duration-300">
               发现机会
             </button>
-          </div>
+          </div> -->
         </div>
 
         <!-- AI流量池 -->
@@ -77,11 +83,11 @@
               持续稳定的流量来源
             </p>
           </div>
-          <div class="text-center">
+          <!-- <div class="text-center">
             <button class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-6 py-2 rounded-full hover:shadow-lg hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300">
               了解更多
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -91,16 +97,12 @@
       <div class="container mx-auto px-4">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           <div class="bg-gradient-to-br from-white to-cyan-50 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
-            <div class="text-3xl font-bold text-cyan-600 mb-2">1000+</div>
+            <div class="text-3xl font-bold text-cyan-600 mb-2">2522+</div>
             <div class="text-gray-600">AI工具资源</div>
           </div>
           <div class="bg-gradient-to-br from-white to-fuchsia-50 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
-            <div class="text-3xl font-bold text-fuchsia-600 mb-2">500+</div>
+            <div class="text-3xl font-bold text-fuchsia-600 mb-2">823+</div>
             <div class="text-gray-600">副业项目</div>
-          </div>
-          <div class="bg-gradient-to-br from-white to-yellow-50 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
-            <div class="text-3xl font-bold text-yellow-600 mb-2">50000+</div>
-            <div class="text-gray-600">用户数量</div>
           </div>
           <div class="bg-gradient-to-br from-white to-orange-50 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
             <div class="text-3xl font-bold text-orange-600 mb-2">100+</div>
@@ -120,9 +122,11 @@
       <div class="container mx-auto px-4 text-center relative z-10">
         <h2 class="text-3xl font-bold mb-4">加入AI江湖，开启你的AI之旅</h2>
         <p class="text-xl mb-8 opacity-90">与数万用户一起，探索AI带来的无限可能</p>
+        <router-link to="/opportunities" class="inline-block">
         <button class="bg-white text-gray-800 px-8 py-3 rounded-full text-lg font-semibold hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl">
           立即加入
         </button>
+      </router-link>
       </div>
     </div>
   </div>
