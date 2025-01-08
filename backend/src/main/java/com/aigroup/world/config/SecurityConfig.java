@@ -40,13 +40,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // 设置允许访问的路径
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .antMatchers(
-                "/api/users/register",
-                "/api/users/login",
-                "/api/users/check-phone",
-                "/api/admin/**"
+                "/aiGroup/users/register",
+                "/aiGroup/users/login",
+                "/aiGroup/users/check-phone",
+                "/aiGroup/admin/**"
             ).permitAll()
             // 允许未登录用户访问锦囊列表和详情
-            .antMatchers(HttpMethod.GET, "/api/tips/**").permitAll()
+            .antMatchers(HttpMethod.GET, "/aiGroup/tips/**").permitAll()
             // swagger相关接口
             .antMatchers(
                 "/swagger-ui.html",

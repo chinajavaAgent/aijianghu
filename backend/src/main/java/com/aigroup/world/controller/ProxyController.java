@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/proxy")
+@RequestMapping("/aiGroup/proxy")
 public class ProxyController {
     private static final Logger logger = LoggerFactory.getLogger(ProxyController.class);
     private static final List<String> ALLOWED_CONTENT_TYPES = Arrays.asList(

@@ -11,7 +11,7 @@ export function createOrder(data: {
   title: string
   price: string
 }) {
-  return request.post<Order>('/api/orders', data)
+  return request.post<Order>('/orders', data)
 }
 
 interface GetOrdersParams {
@@ -25,12 +25,12 @@ interface GetOrdersParams {
  * 获取用户订单列表
  */
 export const getUserOrders = (userId: number, params: GetOrdersParams) => {
-  return request.get<Order>(`/api/orders/user/${userId}`, { params })
+  return request.get<Order>(`/orders/user/${userId}`, { params })
 }
 
 /**
  * 审核订单
  */
 export function approveOrder(orderId: number, status: number) {
-  return request.put<boolean>(`/api/orders/${orderId}/approve`, null, { params: { status } })
+  return request.put<boolean>(`/orders/${orderId}/approve`, null, { params: { status } })
 } 

@@ -14,6 +14,7 @@ export interface ApiResponse<T> {
 
 // 创建axios实例
 const request = axios.create({
+  baseURL: 'http://localhost:3000/aiGroup',
   timeout: 15000 // 请求超时时间
 })
 

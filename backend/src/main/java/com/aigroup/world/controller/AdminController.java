@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/aiGroup/admin")
 @RequiredArgsConstructor
 public class AdminController {
     private final AdminService adminService;

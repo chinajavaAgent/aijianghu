@@ -21,7 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @Api(tags = "用户管理")
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/aiGroup/users")
 @RequiredArgsConstructor
 public class UserController {
 

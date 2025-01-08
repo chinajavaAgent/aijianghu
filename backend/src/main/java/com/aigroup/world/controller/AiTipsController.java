@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * AI锦囊Controller
  */
 @RestController
-@RequestMapping("/api/tips")
+@RequestMapping("/aiGroup/tips")
 public class AiTipsController {
 
     @Autowired

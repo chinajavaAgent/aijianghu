@@ -4,7 +4,7 @@ import type { ApiResponse } from '@/utils/request'
 
 // 获取管理员列表
 export const getAdminList = () => {
-  return request.get<Admin[]>('/api/admin/list')
+  return request.get<Admin[]>('/admin/list')
 }
 
 // 添加管理员
@@ -17,7 +17,7 @@ export const addAdmin = (data: AdminFormData) => {
     formData.append('wechatQrCode', data.wechatQrCode)
   }
   data.tipsIds.forEach((id: number) => formData.append('tipsIds', id.toString()))
-  return request.post<Admin>('/api/admin', formData)
+  return request.post<Admin>('/admin', formData)
 }
 
 // 更新管理员
@@ -30,25 +30,25 @@ export const updateAdmin = (id: number, data: AdminFormData) => {
     formData.append('wechatQrCode', data.wechatQrCode)
   }
   data.tipsIds.forEach((id: number) => formData.append('tipsIds', id.toString()))
-  return request.put<Admin>(`/api/admin/${id}`, formData)
+  return request.put<Admin>(`/admin/${id}`, formData)
 }
 
 // 删除管理员
 export const deleteAdmin = (id: number) => {
-  return request.delete<void>(`/api/admin/${id}`)
+  return request.delete<void>(`/admin/${id}`)
 }
 
 // 获取管理员关联的锦囊列表
 export const getAdminTips = (adminId: number) => {
-  return request.get<Admin>(`/api/admin/${adminId}/tips`)
+  return request.get<Admin>(`/admin/${adminId}/tips`)
 }
 
 // 更新管理员关联的锦囊
 export const updateAdminTips = (adminId: number, tipsIds: number[]) => {
-  return request.put<void>(`/api/admin/${adminId}/tips`, { tipsIds })
+  return request.put<void>(`/admin/${adminId}/tips`, { tipsIds })
 }
 
 // 获取锦囊对应的管理员信息
 export function getAdminByTipId(tipId: number) {
-  return request.get<Admin>(`/api/admin/getAdminByTipId/${tipId}`)
+  return request.get<Admin>(`/admin/getAdminByTipId/${tipId}`)
 } 

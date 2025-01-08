@@ -11,54 +11,54 @@ export function getAiTipsList(params: {
     size: number;
     category?: string;
 }) {
-    return request.get<AiTipsPage>('/api/tips/list', { params })
+    return request.get<AiTipsPage>('/tips/list', { params })
 }
 
 /**
  * 获取AI锦囊详情
  */
 export function getAiTipsDetail(id: number) {
-    return request.get<AiTips>(`/api/tips/${id}`)
+    return request.get<AiTips>(`/tips/${id}`)
 }
 
 /**
  * 创建AI锦囊
  */
 export function createAiTips(data: Partial<AiTips>) {
-    return request.post<boolean>('/api/tips', data)
+    return request.post<boolean>('/tips', data)
 }
 
 /**
  * 更新AI锦囊
  */
 export function updateAiTips(id: number, data: Partial<AiTips>) {
-    return request.put<boolean>(`/api/tips/${id}`, data)
+    return request.put<boolean>(`/tips/${id}`, data)
 }
 
 /**
  * 删除AI锦囊
  */
 export function deleteAiTips(id: number) {
-    return request.delete<boolean>(`/api/tips/${id}`)
+    return request.delete<boolean>(`/tips/${id}`)
 }
 
 /**
  * 点赞AI锦囊
  */
 export function likeAiTips(id: number) {
-    return request.post<boolean>(`/api/tips/${id}/like`)
+    return request.post<boolean>(`/tips/${id}/like`)
 }
 
 /**
  * 取消点赞AI锦囊
  */
 export function unlikeAiTips(id: number) {
-    return request.delete<boolean>(`/api/tips/${id}/like`)
+    return request.delete<boolean>(`/tips/${id}/like`)
 }
 
 /**
  * 获取分享海报数据
  */
 export function getSharePoster(tipId: number) {
-    return request.get<SharePosterData>(`/api/tips/${tipId}/poster`)
+    return request.get<SharePosterData>(`/tips/${tipId}/poster`)
 } 

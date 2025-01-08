@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Api(tags = "外部用户管理")
 @RestController
-@RequestMapping("/api/external-users")
+@RequestMapping("/aiGroup/external-users")
 @RequiredArgsConstructor
 public class ExternalUserController {
 

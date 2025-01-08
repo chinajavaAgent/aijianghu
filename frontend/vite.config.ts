@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import path from 'path'
+import * as path from 'path'
 import Components from 'unplugin-vue-components/vite'
 import { VantResolver } from 'unplugin-vue-components/resolvers'
 
@@ -21,7 +21,7 @@ export default defineConfig({
         port: 3000,
         host: true,
         proxy: {
-            '/api': {
+            '/aiGroup': {
                 target: 'http://localhost:8080',
                 changeOrigin: true
             }
