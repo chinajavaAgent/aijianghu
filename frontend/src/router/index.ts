@@ -58,6 +58,12 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
+      path: '/big-opportunities',
+      name: 'big-opportunities',
+      component: () => import('@/views/BigOpportunities.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/operation-materials',
       name: 'OperationMaterials',
       component: OperationMaterials,

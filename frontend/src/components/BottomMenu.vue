@@ -35,13 +35,13 @@ const menuItems = [
   },
   {
     icon: 'order' as IconType,
-    text: '订单',
+    text: '升级',
     route: '/orders'
   },
   {
-    icon: 'operation' as IconType,
-    text: '运营物料',
-    route: '/operation-materials'
+    icon: 'opportunity' as IconType,
+    text: '大机缘',
+    route: '/big-opportunities'
   },
   {
     icon: 'profile' as IconType,
