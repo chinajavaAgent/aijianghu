@@ -38,6 +38,15 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
 
+  # 开发工具配置
+  devtools:
+    restart:
+      enabled: true  # 开启热重启
+      additional-paths: src/main/java  # 重启目录
+      exclude: static/**,public/**,WEB-INF/**  # 排除不需要重启的目录
+    livereload:
+      enabled: true  # 开启页面热加载
+
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.aigroup.world.model
