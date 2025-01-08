@@ -17,4 +17,6 @@ public interface AdminService extends IService<Admin> {
     List<Long> getAdminTipsIds(Long adminId);
 
     void updateAdminTips(Long adminId, List<Long> tipsIds);
+
+    Admin getAdminByTipId(Long tipId);
 } 

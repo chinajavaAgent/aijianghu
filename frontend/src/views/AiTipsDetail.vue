@@ -284,10 +284,10 @@
                   </div>
                   <div>
                     <span class="font-medium text-gray-800">手机号</span>
-                    <p class="text-gray-600 text-sm mt-0.5">13800138000</p>
+                    <p class="text-gray-600 text-sm mt-0.5">{{ adminInfo?.phone || '暂无' }}</p>
                   </div>
                 </div>
-                <a href="tel:13800138000" 
+                <a :href="'tel:' + adminInfo?.phone" v-if="adminInfo?.phone"
                   class="px-3 py-1.5 bg-blue-50 text-blue-600 rounded text-sm font-medium hover:bg-blue-100 transition-colors">
                   拨打电话
                 </a>
@@ -307,10 +307,10 @@
                   </div>
                   <div>
                     <span class="font-medium text-gray-800">微信号</span>
-                    <p class="text-gray-600 text-sm mt-0.5">ai_master888</p>
+                    <p class="text-gray-600 text-sm mt-0.5">{{ adminInfo?.wechat || '暂无' }}</p>
                   </div>
                 </div>
-                <button @click="copyText('ai_master888')" 
+                <button @click="copyText(adminInfo?.wechat)" v-if="adminInfo?.wechat"
                   class="px-3 py-1.5 bg-green-50 text-green-600 rounded text-sm font-medium hover:bg-green-100 transition-colors">
                   复制微信号
                 </button>
@@ -340,6 +340,7 @@ import type { Project } from '@/types/project'
 import type { AiTips } from '@/types/tips'
 import { getAiTipsDetail } from '@/api/tips'
 import { useUserStore } from '@/store/user'
+import { getAdminByTipId } from '@/api/admin'
 
 const router = useRouter()
 const route = useRoute()
@@ -350,6 +351,7 @@ const showContactModal = ref(false)
 const currentVideo = ref<any>(null)
 const currentProjectIndex = ref(0)
 const loading = ref(false)
+const adminInfo = ref<any>(null)
 
 const currentProject = computed(() => tipDetail.value?.projects?.[currentProjectIndex.value])
 const shareUrl = computed(() => window.location.href)
@@ -398,8 +400,20 @@ const playVideo = (videoInfo: any) => {
 }
 
 // 处理购买
-const handlePurchase = () => {
-  showContactModal.value = true
+const handlePurchase = async () => {
+  try {
+    const tipId = Number(route.params.id)
+    const response = await getAdminByTipId(tipId)
+    if (response.data) {
+      adminInfo.value = response.data
+      showContactModal.value = true
+    } else {
+      ElMessage.error('获取管理员信息失败')
+    }
+  } catch (error) {
+    console.error('获取管理员信息失败:', error)
+    ElMessage.error('获取管理员信息失败')
+  }
 }
 
 // 复制文本

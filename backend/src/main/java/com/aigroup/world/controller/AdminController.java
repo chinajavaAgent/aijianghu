@@ -4,6 +4,7 @@ import com.aigroup.world.common.Result;
 import com.aigroup.world.entity.Admin;
 import com.aigroup.world.service.AdminService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -61,5 +62,11 @@ public class AdminController {
     ) {
         adminService.updateAdminTips(id, tipsIds);
         return Result.success();
+    }
+
+    @GetMapping("/getAdminByTipId/{tipId}")
+    public ResponseEntity<Admin> getAdminByTipId(@PathVariable Long tipId) {
+        Admin admin = adminService.getAdminByTipId(tipId);
+        return ResponseEntity.ok(admin);
     }
 } 

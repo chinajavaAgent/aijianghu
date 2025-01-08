@@ -6,11 +6,13 @@ export interface Admin {
   wechatQrCode?: string;
   createdAt?: string;
   updatedAt?: string;
+  tips?: any[];
 }
 
 export interface AdminFormData {
   phone: string;
   wechatId: string;
   realName: string;
-  wechatQrCode: File | null;
+  wechatQrCode?: File | null;
+  tipsIds: number[];
 } 

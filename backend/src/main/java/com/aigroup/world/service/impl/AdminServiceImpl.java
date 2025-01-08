@@ -27,6 +27,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     private final FileService fileService;
     private final AdminTipsMapper adminTipsMapper;
     private final AiTipsService aiTipsService;
+    private final AdminMapper adminMapper;
 
     @Override
     public List<Admin> list() {
@@ -170,5 +171,12 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         LambdaQueryWrapper<AdminTips> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(AdminTips::getAdminId, adminId);
         adminTipsMapper.delete(wrapper);
+    }
+
+    @Override
+    public Admin getAdminByTipId(Long tipId) {
+        AdminTips adminTips = adminTipsMapper.selectOne(new LambdaQueryWrapper<AdminTips>().eq(AdminTips::getTipsId, tipId));
+        Long adminId = adminTips.getAdminId();
+        return adminMapper.selectById(adminId);
     }
 } 

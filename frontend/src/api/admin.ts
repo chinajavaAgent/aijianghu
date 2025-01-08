@@ -46,4 +46,9 @@ export const getAdminTips = (adminId: number) => {
 // 更新管理员关联的锦囊
 export const updateAdminTips = (adminId: number, tipsIds: number[]) => {
   return request.put<void>(`/api/admin/${adminId}/tips`, { tipsIds })
+}
+
+// 获取锦囊对应的管理员信息
+export function getAdminByTipId(tipId: number) {
+  return request.get<Admin>(`/api/admin/getAdminByTipId/${tipId}`)
 } 

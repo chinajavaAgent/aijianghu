@@ -3,7 +3,9 @@ package com.aigroup.world.mapper;
 import com.aigroup.world.entity.Admin;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface AdminMapper extends BaseMapper<Admin> {
+    Admin getAdminByTipId(@Param("tipId") Long tipId);
 } 
