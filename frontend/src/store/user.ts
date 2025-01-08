@@ -11,6 +11,7 @@ export const useUserStore = defineStore('user', {
     id: 0,
     username: '',
     nickname: '',
+    realName: '',
     phone: '',
     avatar: '',
     level: 1,
@@ -42,6 +43,7 @@ export const useUserStore = defineStore('user', {
       this.id = 0
       this.username = ''
       this.nickname = ''
+      this.realName = ''
       this.phone = ''
       this.avatar = ''
       this.level = 1

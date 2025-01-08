@@ -13,6 +13,7 @@ export interface User {
     id: number;
     username: string;
     nickname: string;
+    realName: string;
     phone: string;
     avatar: string;
     level: number;

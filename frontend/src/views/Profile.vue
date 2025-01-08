@@ -164,7 +164,7 @@ const route = useRoute()
 const userStore = useUserStore()
 
 // 用户信息的计算属性
-const nickname = computed(() => userStore.nickname || '未设置昵称')
+const nickname = computed(() => userStore.realName || '未设置姓名')
 const phone = computed(() => userStore.phone || '未绑定')
 const levelTitle = computed(() => getLevelTitle(userStore.level))
 const nextLevelTitle = computed(() => getNextLevelTitle(userStore.level))
