@@ -1,22 +1,22 @@
 <!-- 大机缘页面 -->
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-cyan-50 via-fuchsia-50 to-yellow-50 pb-20">
+  <div class="min-h-screen bg-gradient-to-br from-cyan-50 via-fuchsia-50 to-yellow-50 pb-6">
     <!-- 顶部导航栏 -->
     <div class="bg-white shadow-sm sticky top-0 z-10">
-      <div class="container mx-auto px-4">
-        <h1 class="text-xl font-bold text-gray-800 py-4">大机缘</h1>
+      <div class="max-w-screen-md mx-auto px-4">
+        <h1 class="text-lg font-bold text-gray-800 py-3">大机缘</h1>
       </div>
     </div>
 
-    <div class="container mx-auto px-4 py-6">
+    <div class="max-w-screen-md mx-auto px-4 py-4">
       <!-- 标签页导航 -->
-      <div class="bg-white rounded-xl shadow-sm mb-6 overflow-hidden">
+      <div class="bg-white rounded-lg shadow-sm mb-4 overflow-hidden">
         <div class="flex border-b">
           <button 
             v-for="tab in tabs" 
             :key="tab.value"
             @click="activeTab = tab.value"
-            class="flex-1 py-3 text-center font-medium transition-colors duration-200 relative"
+            class="flex-1 py-2.5 text-center text-sm font-medium transition-colors duration-200 relative"
             :class="[
               activeTab === tab.value 
                 ? 'text-blue-600' 
@@ -32,151 +32,185 @@
         </div>
 
         <!-- 订单列表内容 -->
-        <div class="p-4">
-          <div v-if="activeTab === 'pending'" class="space-y-4">
+        <div class="p-3">
+          <div v-if="activeTab === 'pending'" class="space-y-3">
             <!-- 待审核订单 -->
             <div 
               v-for="order in pendingOrders" 
               :key="order.id" 
-              class="bg-white rounded-xl p-4 shadow-sm transition-shadow duration-200 hover:shadow-md cursor-pointer"
+              class="bg-white rounded-lg p-4 shadow-sm transition-all duration-200 hover:shadow border border-gray-100"
               @click="goToTipDetail(order.tipsId)"
             >
-              <div class="flex items-start gap-3">
-                <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                  </svg>
+              <!-- 标题和状态 -->
+              <div class="flex justify-between items-center mb-3 gap-3">
+                <h3 class="font-medium text-gray-800 text-base truncate">{{ order.title }}</h3>
+                <span class="px-2 py-1 bg-yellow-50 text-yellow-600 rounded-full text-xs font-medium whitespace-nowrap">等待掌门审核</span>
+              </div>
+
+              <!-- 用户基本信息 -->
+              <div class="flex flex-wrap gap-y-2 mb-3">
+                <div class="flex items-center text-sm basis-1/2">
+                  <span class="text-gray-500">求道者：</span>
+                  <span class="text-gray-800 ml-1">{{ order.userName }}</span>
                 </div>
-                <div class="flex-1">
-                  <div class="flex justify-between items-start">
-                    <h3 class="font-medium text-gray-800 text-lg">{{ order.title }}</h3>
-                    <span class="px-3 py-1 bg-yellow-50 text-yellow-600 rounded-full text-sm font-medium">等待掌门审核</span>
+              </div>
+
+              <!-- 联系方式 -->
+              <div class="space-y-2 mb-3">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center text-sm">
+                    <span class="text-gray-500">传信飞鸽：</span>
+                    <span class="text-gray-800 ml-1">{{ order.userPhone }}</span>
                   </div>
-                  <div class="mt-3">
-                    <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">求道者：</span>
-                      <span>{{ order.userName }}</span>
-                    </div>
-                    <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">传信飞鸽：</span>
-                      <span>{{ order.userPhone }}</span>
-                      <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click.stop="copyText(order.userPhone)">一键传信</button>
-                    </div>
-                    <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">江湖微信：</span>
-                      <span>{{ order.userWechat }}</span>
-                      <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click.stop="copyText(order.userWechat)">点击复制</button>
-                    </div>
+                  <button 
+                    class="px-2.5 py-1 bg-blue-50 text-blue-600 rounded text-xs font-medium active:bg-blue-100"
+                    @click.stop="copyText(order.userPhone)"
+                  >
+                    一键传信
+                  </button>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center text-sm">
+                    <span class="text-gray-500">江湖微信：</span>
+                    <span class="text-gray-800 ml-1">{{ order.userWechat }}</span>
                   </div>
-                  <div class="mt-3 pt-3 border-t border-gray-100">
-                    <div class="flex justify-between items-center">
-                      <span class="text-gray-600">入门贡献：
-                        <span class="text-gray-800 font-medium text-lg">￥{{ order.price }}</span>
-                      </span>
-                      <div class="flex items-center gap-2">
-                        <span class="text-xs text-gray-400">{{ formatTime(order.applyTime) }}</span>
-                        <div class="flex space-x-2">
-                          <button 
-                            @click.stop="handleApprove(order.id)" 
-                            class="px-3 py-1 bg-green-50 text-green-600 rounded text-sm font-medium hover:bg-green-100 transition-colors duration-200"
-                          >
-                            准许入门
-                          </button>
-                          <button 
-                            @click.stop="handleReject(order.id)"
-                            class="px-3 py-1 bg-red-50 text-red-600 rounded text-sm font-medium hover:bg-red-100 transition-colors duration-200"
-                          >
-                            婉拒
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                  <button 
+                    class="px-2.5 py-1 bg-green-50 text-green-600 rounded text-xs font-medium active:bg-green-100"
+                    @click.stop="copyText(order.userWechat)"
+                  >
+                    点击复制
+                  </button>
+                </div>
+              </div>
+
+              <!-- 底部信息 -->
+              <div class="border-t border-gray-100 pt-3 mt-3">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="flex items-baseline gap-1">
+                    <span class="text-gray-500 text-xs">入门贡献</span>
+                    <span class="text-lg font-bold text-orange-600">￥{{ order.price }}</span>
                   </div>
+                  <div class="text-right">
+                    <div class="text-xs text-gray-400">申请时间</div>
+                    <div class="text-xs text-gray-600">{{ formatTime(order.applyTime) }}</div>
+                  </div>
+                </div>
+                
+                <!-- 操作按钮 -->
+                <div class="flex gap-2">
+                  <button 
+                    @click.stop="handleApprove(order.id)" 
+                    class="flex-1 py-2 bg-green-50 text-green-600 rounded text-sm font-medium active:bg-green-100"
+                  >
+                    准许入门
+                  </button>
+                  <button 
+                    @click.stop="handleReject(order.id)"
+                    class="flex-1 py-2 bg-red-50 text-red-600 rounded text-sm font-medium active:bg-red-100"
+                  >
+                    婉拒
+                  </button>
                 </div>
               </div>
             </div>
 
             <!-- 无订单提示 -->
-            <div v-if="pendingOrders.length === 0" class="text-center py-12">
-              <div class="w-20 h-20 mx-auto mb-4">
+            <div v-if="pendingOrders.length === 0" class="text-center py-10">
+              <div class="w-16 h-16 mx-auto mb-3">
                 <svg class="w-full h-full text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
               </div>
-              <p class="text-gray-500 mb-2">暂无大机缘</p>
-              <p class="text-sm text-gray-400">江湖平静，静待机缘</p>
+              <p class="text-gray-500 text-sm mb-1">暂无大机缘</p>
+              <p class="text-xs text-gray-400">江湖平静，静待机缘</p>
             </div>
           </div>
 
-          <div v-else class="space-y-4">
+          <div v-else class="space-y-3">
             <!-- 已审核订单 -->
             <div 
               v-for="order in approvedOrders" 
               :key="order.id" 
-              class="bg-white rounded-xl p-4 shadow-sm transition-shadow duration-200 hover:shadow-md cursor-pointer"
+              class="bg-white rounded-lg p-4 shadow-sm transition-all duration-200 hover:shadow border border-gray-100"
               @click="goToTipDetail(order.tipsId)"
             >
-              <div class="flex items-start gap-3">
-                <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
+              <!-- 标题和状态 -->
+              <div class="flex justify-between items-center mb-3 gap-3">
+                <h3 class="font-medium text-gray-800 text-base truncate">{{ order.title }}</h3>
+                <span class="px-2 py-1 bg-green-50 text-green-600 rounded-full text-xs font-medium whitespace-nowrap">掌门已准许</span>
+              </div>
+
+              <!-- 用户基本信息 -->
+              <div class="flex flex-wrap gap-y-2 mb-3">
+                <div class="flex items-center text-sm basis-1/2">
+                  <span class="text-gray-500">求道者：</span>
+                  <span class="text-gray-800 ml-1">{{ order.userName }}</span>
                 </div>
-                <div class="flex-1">
-                  <div class="flex justify-between items-start">
-                    <h3 class="font-medium text-gray-800 text-lg">{{ order.title }}</h3>
-                    <span class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-sm font-medium">掌门已准许</span>
+                <div class="flex items-center text-sm basis-1/2">
+                  <span class="text-gray-500">江湖阅历：</span>
+                  <span class="text-yellow-500 ml-1">★</span>
+                  <span class="text-gray-800 ml-0.5">{{ order.experience }}年</span>
+                </div>
+              </div>
+
+              <!-- 联系方式 -->
+              <div class="space-y-2 mb-3">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center text-sm">
+                    <span class="text-gray-500">传信飞鸽：</span>
+                    <span class="text-gray-800 ml-1">{{ order.userPhone }}</span>
                   </div>
-                  <div class="mt-3">
-                    <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">求道者：</span>
-                      <span>{{ order.userName }}</span>
-                    </div>
-                    <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">传信飞鸽：</span>
-                      <span>{{ order.userPhone }}</span>
-                      <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click.stop="copyText(order.userPhone)">一键传信</button>
-                    </div>
-                    <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">江湖通号：</span>
-                      <span>{{ order.userWechat }}</span>
-                      <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click.stop="copyText(order.userWechat)">点击复制</button>
-                    </div>
-                    <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">求道理由：</span>
-                      <span class="text-gray-600">{{ order.reason }}</span>
-                    </div>
-                    <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">江湖阅历：</span>
-                      <div class="flex items-center">
-                        <span class="text-yellow-500">★</span>
-                        <span>{{ order.experience }} 年</span>
-                      </div>
-                    </div>
+                  <button 
+                    class="px-2.5 py-1 bg-blue-50 text-blue-600 rounded text-xs font-medium active:bg-blue-100"
+                    @click.stop="copyText(order.userPhone)"
+                  >
+                    一键传信
+                  </button>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center text-sm">
+                    <span class="text-gray-500">江湖微信：</span>
+                    <span class="text-gray-800 ml-1">{{ order.userWechat }}</span>
                   </div>
-                  <div class="mt-3 pt-3 border-t border-gray-100">
-                    <div class="flex justify-between items-center">
-                      <span class="text-gray-600">入门贡献：
-                        <span class="text-gray-800 font-medium text-lg">￥{{ order.price }}</span>
-                      </span>
-                      <div class="flex items-center gap-2">
-                        <span class="text-xs text-gray-400">{{ formatTime(order.approveTime) }}</span>
-                      </div>
-                    </div>
+                  <button 
+                    class="px-2.5 py-1 bg-green-50 text-green-600 rounded text-xs font-medium active:bg-green-100"
+                    @click.stop="copyText(order.userWechat)"
+                  >
+                    点击复制
+                  </button>
+                </div>
+              </div>
+
+              <!-- 求道理由 -->
+              <div class="text-sm mb-3">
+                <span class="text-gray-500">求道理由：</span>
+                <span class="text-gray-800 ml-1">{{ order.reason }}</span>
+              </div>
+
+              <!-- 底部信息 -->
+              <div class="border-t border-gray-100 pt-3 mt-3">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-baseline gap-1">
+                    <span class="text-gray-500 text-xs">入门贡献</span>
+                    <span class="text-lg font-bold text-orange-600">￥{{ order.price }}</span>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-xs text-gray-400">准许时间</div>
+                    <div class="text-xs text-gray-600">{{ formatTime(order.approveTime) }}</div>
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- 无订单提示 -->
-            <div v-if="approvedOrders.length === 0" class="text-center py-12">
-              <div class="w-20 h-20 mx-auto mb-4">
+            <div v-if="approvedOrders.length === 0" class="text-center py-10">
+              <div class="w-16 h-16 mx-auto mb-3">
                 <svg class="w-full h-full text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
               </div>
-              <p class="text-gray-500 mb-2">暂无已通过的大机缘</p>
-              <p class="text-sm text-gray-400">江湖平静，静待机缘</p>
+              <p class="text-gray-500 text-sm mb-1">暂无已通过的大机缘</p>
+              <p class="text-xs text-gray-400">江湖平静，静待机缘</p>
             </div>
           </div>
         </div>
@@ -373,21 +407,7 @@ const handleReject = async (orderId: number) => {
 </script>
 
 <style scoped>
-.container {
-  max-width: 768px;
-}
-
-/* 添加漂浮动画 */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
+.max-w-screen-md {
+  max-width: 640px;
 }
 </style> 
