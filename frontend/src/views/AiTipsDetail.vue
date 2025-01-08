@@ -260,14 +260,14 @@
       <div class="bg-white rounded-xl w-full max-w-md">
         <div class="p-6 border-b">
           <div class="flex justify-between items-center">
-            <h3 class="font-bold text-xl text-gray-800">联系AI经纪人</h3>
+            <h3 class="font-bold text-xl text-gray-800">寻访高人</h3>
             <button @click="showContactModal = false" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
               <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
             </button>
           </div>
-          <p class="mt-2 text-gray-600">添加微信，立即解锁项目</p>
+          <p class="mt-2 text-gray-600">速速添加高人微信，共商武学大计</p>
         </div>
 
         <div class="p-6">
@@ -282,13 +282,13 @@
                     </svg>
                   </div>
                   <div>
-                    <span class="font-medium text-gray-800">手机号</span>
-                    <p class="text-gray-600 text-sm mt-0.5">{{ adminInfo?.phone || '暂无' }}</p>
+                    <span class="font-medium text-gray-800">传音电话</span>
+                    <p class="text-gray-600 text-sm mt-0.5">{{ adminInfo?.phone || '暂无留符' }}</p>
                   </div>
                 </div>
                 <a :href="'tel:' + adminInfo?.phone" v-if="adminInfo?.phone"
                   class="px-3 py-1.5 bg-blue-50 text-blue-600 rounded text-sm font-medium hover:bg-blue-100 transition-colors">
-                  拨打电话
+                  传音入密
                 </a>
               </div>
             </div>
@@ -306,12 +306,12 @@
                   </div>
                   <div>
                     <span class="font-medium text-gray-800">微信号</span>
-                    <p class="text-gray-600 text-sm mt-0.5">{{ adminInfo?.wechat || '暂无' }}</p>
+                    <p class="text-gray-600 text-sm mt-0.5">{{ adminInfo?.wechat || '暂无微信' }}</p>
                   </div>
                 </div>
                 <button @click="copyText(adminInfo?.wechat)" v-if="adminInfo?.wechat"
                   class="px-3 py-1.5 bg-green-50 text-green-600 rounded text-sm font-medium hover:bg-green-100 transition-colors">
-                  复制微信号
+                  联系高人
                 </button>
               </div>
             </div>
@@ -319,10 +319,10 @@
 
           <button @click="submitForReview" 
             class="w-full mt-6 py-3 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors">
-            提交审核
+            拜师求道
           </button>
           <p class="text-gray-500 text-xs text-center mt-3">
-            提交审核后，我们将尽快处理您的申请
+            拜师信已递出，高人必有回应
           </p>
         </div>
       </div>
@@ -362,26 +362,40 @@ const fetchTipDetail = async () => {
   try {
     const tipId = Number(route.params.id)
     if (!tipId) {
-      ElMessage.error('锦囊ID不能为空')
+      ElMessage({
+        message: '此锦囊无名无姓，恐非正道之物。',
+        type: 'error',
+        duration: 3000,
+        customClass: 'text-base'
+      })
       router.back()
       return
     }
 
     const response = await getAiTipsDetail(tipId)
     if (!response.data) {
-      ElMessage.error('锦囊不存在')
+      ElMessage({
+        message: '江湖浩大，此锦囊已不知去向。',
+        type: 'error',
+        duration: 3000,
+        customClass: 'text-base'
+      })
       router.back()
       return
     }
 
     tipDetail.value = response.data
-    // 如果有项目，默认选中第一个
     if (response.data.projects && response.data.projects.length > 0) {
       currentProjectIndex.value = 0
     }
   } catch (error) {
     console.error('获取锦囊详情失败:', error)
-    ElMessage.error('获取锦囊详情失败')
+    ElMessage({
+      message: '天机难测，此锦囊暂时无法查看，请稍后再试。',
+      type: 'error',
+      duration: 3000,
+      customClass: 'text-base'
+    })
     router.back()
   } finally {
     loading.value = false
@@ -408,11 +422,21 @@ const handlePurchase = async () => {
       adminInfo.value = response.data
       showContactModal.value = true
     } else {
-      ElMessage.error('获取管理员信息失败')
+      ElMessage({
+        message: '此锦囊尚待高人指点，暂无教导者。待有缘人出山，必当相告。',
+        type: 'warning',
+        duration: 3000,
+        customClass: 'text-base'
+      })
     }
   } catch (error) {
     console.error('获取管理员信息失败:', error)
-    ElMessage.error('获取管理员信息失败')
+    ElMessage({
+      message: '江湖风云莫测，暂时无法联系到教导者，还请稍后再试。',
+      type: 'error',
+      duration: 3000,
+      customClass: 'text-base'
+    })
   }
 }
 
@@ -420,10 +444,20 @@ const handlePurchase = async () => {
 const copyText = async (text: string) => {
   try {
     await navigator.clipboard.writeText(text)
-    ElMessage.success('复制成功')
+    ElMessage({
+      message: '妙法已记于心，可速速联系高人。',
+      type: 'success',
+      duration: 3000,
+      customClass: 'text-base'
+    })
   } catch (error) {
     console.error('复制失败:', error)
-    ElMessage.error('复制失败')
+    ElMessage({
+      message: '天机未泄，请重新尝试。',
+      type: 'error',
+      duration: 3000,
+      customClass: 'text-base'
+    })
   }
 }
 
@@ -431,7 +465,12 @@ const copyText = async (text: string) => {
 const submitForReview = async () => {
   try {
     if (!tipDetail.value?.id || !adminInfo.value?.id) {
-      ElMessage.error('锦囊或管理员信息不完整')
+      ElMessage({
+        message: '信息残缺不全，还请重新整理。',
+        type: 'error',
+        duration: 3000,
+        customClass: 'text-base'
+      })
       return
     }
 
@@ -444,14 +483,29 @@ const submitForReview = async () => {
     })
 
     if (response.data) {
-      ElMessage.success('提交成功，我们将尽快处理您的申请')
+      ElMessage({
+        message: '拜师请求已送达，高人将择日回复。',
+        type: 'success',
+        duration: 3000,
+        customClass: 'text-base'
+      })
       showContactModal.value = false
     } else {
-      ElMessage.error('提交失败，请重试')
+      ElMessage({
+        message: '此锦囊尚待高人指点，暂无教导者。待有缘人出山，必当相告。',
+        type: 'warning',
+        duration: 3000,
+        customClass: 'text-base'
+      })
     }
   } catch (error) {
     console.error('提交审核失败:', error)
-    ElMessage.error('提交失败，请重试')
+    ElMessage({
+      message: '天机紊乱，请稍后重试。',
+      type: 'error',
+      duration: 3000,
+      customClass: 'text-base'
+    })
   }
 }
 
