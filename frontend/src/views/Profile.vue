@@ -157,7 +157,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { Dialog, showToast } from 'vant'
+import { showDialog, showToast } from 'vant'
 import { useUserStore } from '@/store/user'
 
 const router = useRouter()
@@ -189,16 +189,19 @@ const showCustomerService = () => {
 }
 
 const handleLogout = () => {
-  Dialog.confirm({
+  showDialog({
     title: '提示',
     message: '确定要退出登录吗？',
+    showCancelButton: true,
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
   })
-    .then(() => {
-      userStore.clearUser()
-      router.push('/login')
-    })
-    .catch(() => {
-      // 取消退出
+    .then((action) => {
+      if (action === 'confirm') {
+        userStore.clearUser()
+        showToast('退出登录成功')
+        router.push('/login')
+      }
     })
 }
 </script>
