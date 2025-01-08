@@ -62,7 +62,7 @@
                       <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click.stop="copyText(order.phone)">一键传信</button>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">江湖通号：</span>
+                      <span class="font-medium text-gray-700">江湖微信：</span>
                       <span>{{ order.wechat }}</span>
                       <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click.stop="copyText(order.wechat)">点击复制</button>
                     </div>
@@ -80,7 +80,7 @@
                         <span class="text-gray-800 font-medium text-lg">￥{{ order.price }}</span>
                       </span>
                       <div class="flex items-center gap-2">
-                        <span class="text-sm text-gray-500">{{ order.applyTime }}</span>
+                        <span class="text-xs text-gray-400">{{ formatTime(order.applyTime) }}</span>
                       </div>
                     </div>
                   </div>
@@ -148,7 +148,7 @@
                         <span class="text-gray-800 font-medium text-lg">￥{{ order.price }}</span>
                       </span>
                       <div class="flex items-center gap-2">
-                        <span class="text-sm text-gray-500">{{ order.approveTime }}</span>
+                        <span class="text-xs text-gray-400">{{ formatTime(order.approveTime) }}</span>
                       </div>
                     </div>
                   </div>
@@ -278,6 +278,18 @@ const copyText = (text: string) => {
 // 跳转到锦囊详情
 const goToTipDetail = (tipsId: number) => {
   router.push(`/tips/${tipsId}`)
+}
+
+// 格式化时间
+const formatTime = (timeStr: string | undefined) => {
+  if (!timeStr) return ''
+  const date = new Date(timeStr)
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hour = String(date.getHours()).padStart(2, '0')
+  const minute = String(date.getMinutes()).padStart(2, '0')
+  return `${year}年${month}月${day}日 ${hour}:${minute}`
 }
 </script>
 
