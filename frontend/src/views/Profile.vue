@@ -3,16 +3,30 @@
     <div class="container mx-auto px-4 py-6">
       <!-- 用户信息卡片 -->
       <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-        <div class="flex items-center">
-          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-            </svg>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+              <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <h2 class="text-xl font-bold text-gray-800">{{ nickname }}</h2>
+              <p class="text-gray-600 mt-1">手机号：{{ phone }}</p>
+              <div class="flex items-center mt-2">
+                <span :class="['font-semibold', levelColor]">{{ levelTitle }}</span>
+                <div class="ml-2 px-2 py-0.5 bg-gray-100 rounded text-sm text-gray-600">
+                  Level {{ userStore.level }}
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="ml-4">
-            <h2 class="text-xl font-bold text-gray-800">{{ nickname }}</h2>
-            <p class="text-gray-600 mt-1">手机号：{{ phone }}</p>
-          </div>
+          <button
+            @click="handleUpgrade"
+            class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg"
+          >
+            <span class="block text-sm">去升级</span>
+          </button>
         </div>
       </div>
 
@@ -143,6 +157,7 @@ import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { showDialog, showToast } from 'vant'
 import { useUserStore } from '@/store/user'
+import { getLevelTitle, getNextLevelTitle, getLevelColor } from '@/utils/levelTitles'
 
 const router = useRouter()
 const route = useRoute()
@@ -151,6 +166,9 @@ const userStore = useUserStore()
 // 用户信息的计算属性
 const nickname = computed(() => userStore.nickname || '未设置昵称')
 const phone = computed(() => userStore.phone || '未绑定')
+const levelTitle = computed(() => getLevelTitle(userStore.level))
+const nextLevelTitle = computed(() => getNextLevelTitle(userStore.level))
+const levelColor = computed(() => getLevelColor(userStore.level))
 
 // 客服弹窗控制
 const showServiceDialog = ref(false)
@@ -187,6 +205,11 @@ const handleLogout = () => {
         router.push('/login')
       }
     })
+}
+
+// 处理升级点击
+const handleUpgrade = () => {
+  router.push('/opportunities')
 }
 </script>
 
