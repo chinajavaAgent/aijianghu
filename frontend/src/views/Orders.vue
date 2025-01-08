@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <div class="bg-white shadow-sm sticky top-0 z-10">
       <div class="container mx-auto px-4">
-        <h1 class="text-xl font-bold text-gray-800 py-4">我的订单</h1>
+        <h1 class="text-xl font-bold text-gray-800 py-4">修炼进阶</h1>
       </div>
     </div>
 
@@ -37,42 +37,46 @@
             <div 
               v-for="order in pendingOrders" 
               :key="order.id" 
-              class="bg-white rounded-xl p-4 shadow-sm transition-shadow duration-200 hover:shadow-md"
+              class="bg-white rounded-xl p-4 shadow-sm transition-shadow duration-200 hover:shadow-md cursor-pointer"
+              @click="goToTipDetail(order.tipsId)"
             >
               <div class="flex items-start gap-3">
-                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                  </svg>
+                <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <img src="https://canyin-app.oss-cn-guangzhou.aliyuncs.com/images/money.png" 
+                    alt="金元宝" 
+                    class="w-8 h-8 object-contain drop-shadow-xl filter brightness-110"/>
                 </div>
                 <div class="flex-1">
                   <div class="flex justify-between items-start">
                     <h3 class="font-medium text-gray-800 text-lg">{{ order.title }}</h3>
-                    <span class="px-3 py-1 bg-yellow-50 text-yellow-600 rounded-full text-sm font-medium">审核中</span>
+                    <span class="px-3 py-1 bg-yellow-50 text-yellow-600 rounded-full text-sm font-medium">等待掌门审核</span>
                   </div>
                   <div class="mt-3">
                     <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">申核商家：</span>
+                      <span class="font-medium text-gray-700">掌门大人：</span>
                       <span>{{ order.reviewer }}</span>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">商家电话：</span>
+                      <span class="font-medium text-gray-700">传信飞鸽：</span>
                       <span>{{ order.phone }}</span>
-                      <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click="copyText(order.phone)">一键拨号</button>
+                      <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click.stop="copyText(order.phone)">一键传信</button>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">商家微信：</span>
+                      <span class="font-medium text-gray-700">江湖通号：</span>
                       <span>{{ order.wechat }}</span>
-                      <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click="copyText(order.wechat)">点击复制</button>
+                      <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click.stop="copyText(order.wechat)">点击复制</button>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">商家信誉：</span>
-                      <span>{{ order.credit }} 分</span>
+                      <span class="font-medium text-gray-700">江湖声望：</span>
+                      <div class="flex items-center">
+                        <span class="text-yellow-500">★</span>
+                        <span>{{ order.credit }} 点</span>
+                      </div>
                     </div>
                   </div>
                   <div class="mt-3 pt-3 border-t border-gray-100">
                     <div class="flex justify-between items-center">
-                      <span class="text-gray-600">订单金额：
+                      <span class="text-gray-600">入门贡献：
                         <span class="text-gray-800 font-medium text-lg">￥{{ order.price }}</span>
                       </span>
                       <div class="flex items-center gap-2">
@@ -91,8 +95,8 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
               </div>
-              <p class="text-gray-500 mb-2">暂无待审核订单</p>
-              <p class="text-sm text-gray-400">快去选购你感兴趣的机缘吧</p>
+              <p class="text-gray-500 mb-2">暂无修炼申请</p>
+              <p class="text-sm text-gray-400">快去选择你心仪的修炼秘籍吧</p>
             </div>
           </div>
 
@@ -101,42 +105,46 @@
             <div 
               v-for="order in approvedOrders" 
               :key="order.id" 
-              class="bg-white rounded-xl p-4 shadow-sm transition-shadow duration-200 hover:shadow-md"
+              class="bg-white rounded-xl p-4 shadow-sm transition-shadow duration-200 hover:shadow-md cursor-pointer"
+              @click="goToTipDetail(order.tipsId)"
             >
               <div class="flex items-start gap-3">
-                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
                 </div>
                 <div class="flex-1">
                   <div class="flex justify-between items-start">
                     <h3 class="font-medium text-gray-800 text-lg">{{ order.title }}</h3>
-                    <span class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-sm font-medium">已通过</span>
+                    <span class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-sm font-medium">掌门已准许</span>
                   </div>
                   <div class="mt-3">
                     <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">申核商家：</span>
+                      <span class="font-medium text-gray-700">掌门大人：</span>
                       <span>{{ order.reviewer }}</span>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">商家电话：</span>
+                      <span class="font-medium text-gray-700">传信飞鸽：</span>
                       <span>{{ order.phone }}</span>
-                      <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click="copyText(order.phone)">一键拨号</button>
+                      <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click.stop="copyText(order.phone)">一键传信</button>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">商家微信：</span>
+                      <span class="font-medium text-gray-700">江湖通号：</span>
                       <span>{{ order.wechat }}</span>
-                      <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click="copyText(order.wechat)">点击复制</button>
+                      <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click.stop="copyText(order.wechat)">点击复制</button>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">商家信誉：</span>
-                      <span>{{ order.credit }} 分</span>
+                      <span class="font-medium text-gray-700">江湖声望：</span>
+                      <div class="flex items-center">
+                        <span class="text-yellow-500">★</span>
+                        <span>{{ order.credit }} 点</span>
+                      </div>
                     </div>
                   </div>
                   <div class="mt-3 pt-3 border-t border-gray-100">
                     <div class="flex justify-between items-center">
-                      <span class="text-gray-600">订单金额：
+                      <span class="text-gray-600">入门贡献：
                         <span class="text-gray-800 font-medium text-lg">￥{{ order.price }}</span>
                       </span>
                       <div class="flex items-center gap-2">
@@ -155,8 +163,8 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
               </div>
-              <p class="text-gray-500 mb-2">暂无已审核订单</p>
-              <p class="text-sm text-gray-400">快去选购你感兴趣的机缘吧</p>
+              <p class="text-gray-500 mb-2">暂无已通过的修炼</p>
+              <p class="text-sm text-gray-400">快去选择你心仪的修炼秘籍吧</p>
             </div>
           </div>
         </div>
@@ -174,8 +182,8 @@ import { getUserOrders } from '@/api/order'
 
 // 标签页配置
 const tabs = [
-  { label: '待审核', value: 'pending' },
-  { label: '已审核', value: 'approved' }
+  { label: '修炼中', value: 'pending' },
+  { label: '已通过', value: 'approved' }
 ]
 
 const router = useRouter()
@@ -232,32 +240,23 @@ onMounted(async () => {
   loadOrders()
 })
 
-// 模拟订单数据
-const pendingOrders = ref([
-  {
-    id: 'ORD20240120143',
-    title: '申请升级：二级会员',
-    price: 20,
-    reviewer: '悦悦',
-    phone: '15813545885',
-    wechat: 'djdj20012',
-    credit: 81,
-    applyTime: '2025-01-04 23:49:0'
-  }
-])
+// 订单数据
+interface OrderItem {
+  id: number
+  tipsId: number
+  title: string
+  reviewer: string
+  phone: string
+  wechat: string
+  credit: number
+  price: number
+  applyTime: string
+  approveTime?: string
+  status: number
+}
 
-const approvedOrders = ref([
-  {
-    id: 'ORD20240119152',
-    title: 'AI绘画变现',
-    price: 20,
-    reviewer: '悦悦',
-    phone: '15813545885',
-    wechat: 'djdj20012',
-    credit: 81,
-    approveTime: '2024-01-19 15:20'
-  }
-])
+const pendingOrders = ref<OrderItem[]>([])
+const approvedOrders = ref<OrderItem[]>([])
 
 // 复制文本
 const copyText = (text: string) => {
@@ -275,10 +274,29 @@ const copyText = (text: string) => {
     })
   }
 }
+
+// 跳转到锦囊详情
+const goToTipDetail = (tipsId: number) => {
+  router.push(`/tips/${tipsId}`)
+}
 </script>
 
 <style scoped>
 .container {
   max-width: 768px;
+}
+
+/* 添加漂浮动画 */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }
 </style> 
