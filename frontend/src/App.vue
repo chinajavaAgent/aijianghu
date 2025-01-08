@@ -54,7 +54,11 @@ const route = useRoute()
 
 const isActive = (name: string) => {
   if (name === 'home' && route.path === '/') return true
-  return route.path.includes(name)
+  if (name === 'opportunities' && route.path === '/opportunities') return true
+  if (name === 'orders' && route.path === '/orders') return true
+  if (name === 'big-opportunities' && route.path === '/big-opportunities') return true
+  if (name === 'profile' && route.path === '/profile') return true
+  return false
 }
 </script>
 
