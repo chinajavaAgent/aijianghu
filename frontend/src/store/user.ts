@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import type { User } from '../types/user'
+import { getUserInfo } from '@/api/user'
 
 interface UserState extends User {
   token: string;
@@ -64,6 +65,25 @@ export const useUserStore = defineStore('user', {
         }
       } else if (token) {
         this.token = token
+      }
+    },
+
+    async updateUserInfo() {
+      if (!this.isLoggedIn || !this.id) return
+
+      try {
+        const response = await getUserInfo(this.id)
+        if (response.data) {
+          const token = this.token
+          this.setUser({
+            ...response.data,
+            token
+          })
+          return true
+        }
+      } catch (error) {
+        console.error('更新用户信息失败:', error)
+        return false
       }
     }
   },

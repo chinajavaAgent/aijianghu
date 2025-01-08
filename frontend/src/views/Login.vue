@@ -98,6 +98,9 @@ const handleLogin = async () => {
       ...response.data.user,
       token: response.data.token
     })
+
+    // 立即获取最新的用户信息
+    await userStore.updateUserInfo()
     
     // 登录成功后跳转
     toast.success('登录成功')

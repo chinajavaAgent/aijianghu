@@ -1,5 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
+import { createRouter, createWebHistory, RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 import { useUserStore } from '@/store/user'
 import OperationMaterials from '../views/OperationMaterials.vue'
 import Tutorials from '../views/Tutorials.vue'
@@ -126,29 +125,22 @@ const router = createRouter({
 })
 
 // 全局前置守卫
-router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-  // 使用 userStore 检查登录状态
+router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
   const userStore = useUserStore()
   
+  // 如果用户已登录，则更新用户信息
+  if (userStore.isLoggedIn) {
+    await userStore.updateUserInfo()
+  }
+  
   // 检查该路由是否需要登录权限
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    // 如果需要登录权限且未登录，则跳转到登录页
-    if (!userStore.isLoggedIn) {
-      next({
-        path: '/login',
-        query: { redirect: to.fullPath }
-      })
-    } else {
-      next()
-    }
+  if (to.meta.requiresAuth && !userStore.isLoggedIn) {
+    next({
+      path: '/login',
+      query: { redirect: to.fullPath }
+    })
   } else {
-    // 不需要登录权限的路由
-    if (to.path === '/login' && userStore.isLoggedIn) {
-      // 如果已登录且要访问登录页，重定向到首页
-      next('/')
-    } else {
-      next()
-    }
+    next()
   }
 })
 
