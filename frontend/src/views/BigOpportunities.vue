@@ -75,6 +75,20 @@
                       </span>
                       <div class="flex items-center gap-2">
                         <span class="text-xs text-gray-400">{{ formatTime(order.applyTime) }}</span>
+                        <div class="flex space-x-2">
+                          <button 
+                            @click.stop="handleApprove(order.id)" 
+                            class="px-3 py-1 bg-green-50 text-green-600 rounded text-sm font-medium hover:bg-green-100 transition-colors duration-200"
+                          >
+                            准许入门
+                          </button>
+                          <button 
+                            @click.stop="handleReject(order.id)"
+                            class="px-3 py-1 bg-red-50 text-red-600 rounded text-sm font-medium hover:bg-red-100 transition-colors duration-200"
+                          >
+                            婉拒
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -173,10 +187,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
-import { showToast } from 'vant'
+import { showToast, showDialog } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/store/user'
-import { getUserOrders } from '@/api/order'
+import { getUserOrders, approveOrder } from '@/api/order'
 
 // 标签页配置
 const tabs = [
@@ -295,6 +309,66 @@ const formatTime = (timeStr: string | undefined) => {
   const hour = String(date.getHours()).padStart(2, '0')
   const minute = String(date.getMinutes()).padStart(2, '0')
   return `${year}年${month}月${day}日 ${hour}:${minute}`
+}
+
+// 审核通过
+const handleApprove = async (orderId: number) => {
+  try {
+    const result = await showDialog({
+      title: '准许入门',
+      message: '确定要准许该求道者入门吗？',
+      confirmButtonText: '确定',
+      confirmButtonColor: '#10B981',
+      cancelButtonText: '取消',
+    })
+
+    if (result === 'confirm') {
+      const response = await approveOrder(orderId, 1)
+      if (response.data) {
+        showToast({
+          message: '已准许入门',
+          position: 'bottom',
+        })
+        loadOrders()
+      }
+    }
+  } catch (error) {
+    console.error('审核失败:', error)
+    showToast({
+      message: '审核失败，请重试',
+      position: 'bottom',
+    })
+  }
+}
+
+// 审核拒绝
+const handleReject = async (orderId: number) => {
+  try {
+    const result = await showDialog({
+      title: '婉拒入门',
+      message: '确定要婉拒该求道者吗？',
+      confirmButtonText: '确定',
+      confirmButtonColor: '#EF4444',
+      cancelButtonText: '取消',
+    })
+
+    if (result === 'confirm') {
+      const response = await approveOrder(orderId, 2)
+      if (response.data) {
+        showToast({
+          message: '已婉拒',
+          position: 'bottom',
+        })
+        loadOrders()
+      }
+    }
+  } catch (error) {
+    console.error('审核失败:', error)
+    showToast({
+      message: '审核失败，请重试',
+      position: 'bottom',
+    })
+  }
 }
 </script>
 
