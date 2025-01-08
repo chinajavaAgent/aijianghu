@@ -65,8 +65,8 @@ public class AdminController {
     }
 
     @GetMapping("/getAdminByTipId/{tipId}")
-    public ResponseEntity<Admin> getAdminByTipId(@PathVariable Long tipId) {
+    public Result<Admin> getAdminByTipId(@PathVariable Long tipId) {
         Admin admin = adminService.getAdminByTipId(tipId);
-        return ResponseEntity.ok(admin);
+        return Result.success(admin);
     }
 } 

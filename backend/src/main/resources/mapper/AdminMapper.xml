@@ -1,0 +1,6 @@
+<select id="getAdminByTipId" resultType="com.aigroup.world.entity.Admin">
+    SELECT a.* FROM admin a
+    INNER JOIN admin_tips at ON a.id = at.admin_id
+    WHERE at.tips_id = #{tipId}
+    LIMIT 1
+</select> 
