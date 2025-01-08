@@ -341,6 +341,7 @@ import { getAiTipsDetail } from '@/api/tips'
 import { useUserStore } from '@/store/user'
 import { getAdminByTipId } from '@/api/admin'
 import { createOrder } from '@/api/order'
+import { showToast } from 'vant'
 
 const router = useRouter()
 const route = useRoute()
@@ -362,11 +363,9 @@ const fetchTipDetail = async () => {
   try {
     const tipId = Number(route.params.id)
     if (!tipId) {
-      ElMessage({
-        message: '此锦囊无名无姓，恐非正道之物。',
-        type: 'error',
-        duration: 3000,
-        customClass: 'text-base'
+      showToast({
+        message: '锦囊编号有误',
+        duration: 2000,
       })
       router.back()
       return
@@ -374,27 +373,22 @@ const fetchTipDetail = async () => {
 
     const response = await getAiTipsDetail(tipId)
     if (!response.data) {
-      ElMessage({
-        message: '江湖浩大，此锦囊已不知去向。',
-        type: 'error',
-        duration: 3000,
-        customClass: 'text-base'
+      showToast({
+        message: '锦囊已不知去向',
+        duration: 2000,
       })
       router.back()
       return
     }
-
     tipDetail.value = response.data
     if (response.data.projects && response.data.projects.length > 0) {
       currentProjectIndex.value = 0
     }
   } catch (error) {
     console.error('获取锦囊详情失败:', error)
-    ElMessage({
-      message: '天机难测，此锦囊暂时无法查看，请稍后再试。',
-      type: 'error',
-      duration: 3000,
-      customClass: 'text-base'
+    showToast({
+      message: '暂时无法查看，请重试',
+      duration: 2000,
     })
     router.back()
   } finally {
@@ -418,24 +412,29 @@ const handlePurchase = async () => {
   try {
     const tipId = Number(route.params.id)
     const response = await getAdminByTipId(tipId)
-    if (response.data) {
+    console.log('API Response:', response)
+    
+    if (response.code === 200) {
+      if (response.data === null) {
+        showToast({
+          message: '暂无教导者，待有缘人出山',
+          duration: 2000,
+        })
+        return
+      }
       adminInfo.value = response.data
       showContactModal.value = true
     } else {
-      ElMessage({
-        message: '此锦囊尚待高人指点，暂无教导者。待有缘人出山，必当相告。',
-        type: 'warning',
-        duration: 3000,
-        customClass: 'text-base'
+      showToast({
+        message: '获取信息失败，请重试',
+        duration: 2000,
       })
     }
   } catch (error) {
     console.error('获取管理员信息失败:', error)
-    ElMessage({
-      message: '江湖风云莫测，暂时无法联系到教导者，还请稍后再试。',
-      type: 'error',
-      duration: 3000,
-      customClass: 'text-base'
+    showToast({
+      message: '暂时无法联系教导者',
+      duration: 2000,
     })
   }
 }
@@ -444,19 +443,15 @@ const handlePurchase = async () => {
 const copyText = async (text: string) => {
   try {
     await navigator.clipboard.writeText(text)
-    ElMessage({
-      message: '妙法已记于心，可速速联系高人。',
-      type: 'success',
-      duration: 3000,
-      customClass: 'text-base'
+    showToast({
+      message: '微信号已复制',
+      duration: 2000,
     })
   } catch (error) {
     console.error('复制失败:', error)
-    ElMessage({
-      message: '天机未泄，请重新尝试。',
-      type: 'error',
-      duration: 3000,
-      customClass: 'text-base'
+    showToast({
+      message: '复制失败，请重试',
+      duration: 2000,
     })
   }
 }
@@ -465,11 +460,9 @@ const copyText = async (text: string) => {
 const submitForReview = async () => {
   try {
     if (!tipDetail.value?.id || !adminInfo.value?.id) {
-      ElMessage({
-        message: '信息残缺不全，还请重新整理。',
-        type: 'error',
-        duration: 3000,
-        customClass: 'text-base'
+      showToast({
+        message: '信息不完整，请重试',
+        duration: 2000,
       })
       return
     }
@@ -483,28 +476,22 @@ const submitForReview = async () => {
     })
 
     if (response.data) {
-      ElMessage({
-        message: '拜师请求已送达，高人将择日回复。',
-        type: 'success',
-        duration: 3000,
-        customClass: 'text-base'
+      showToast({
+        message: '拜师请求已送达',
+        duration: 2000,
       })
       showContactModal.value = false
     } else {
-      ElMessage({
-        message: '此锦囊尚待高人指点，暂无教导者。待有缘人出山，必当相告。',
-        type: 'warning',
-        duration: 3000,
-        customClass: 'text-base'
+      showToast({
+        message: '暂无教导者',
+        duration: 2000,
       })
     }
   } catch (error) {
     console.error('提交审核失败:', error)
-    ElMessage({
-      message: '天机紊乱，请稍后重试。',
-      type: 'error',
-      duration: 3000,
-      customClass: 'text-base'
+    showToast({
+      message: '提交失败，请重试',
+      duration: 2000,
     })
   }
 }
