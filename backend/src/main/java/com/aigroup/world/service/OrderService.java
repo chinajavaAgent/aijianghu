@@ -14,7 +14,7 @@ public interface OrderService extends IService<Order> {
     /**
      * 获取用户的订单列表
      */
-    IPage<Order> getUserOrders(Long userId, Integer page, Integer size, Integer status);
+    IPage<Order> getUserOrders(Long userId, Integer page, Integer size, Integer status, Boolean isBig);
 
     /**
      * 审核订单

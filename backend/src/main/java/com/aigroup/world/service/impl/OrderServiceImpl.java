@@ -6,6 +6,7 @@ import com.aigroup.world.service.OrderService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +16,8 @@ import java.time.format.DateTimeFormatter;
 
 @Service
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
-
+    @Autowired
+    private OrderMapper orderMapper;
     @Override
     @Transactional
     public Order createOrder(Long userId, Long tipsId, Long adminId, String title, String price) {
@@ -45,9 +47,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
-    public IPage<Order> getUserOrders(Long userId, Integer page, Integer size, Integer status) {
+    public IPage<Order> getUserOrders(Long userId, Integer page, Integer size, Integer status, Boolean isBig) {
         Page<Order> pageParam = new Page<>(page, size);
-        return baseMapper.selectUserOrdersWithAdmin(pageParam, userId, status);
+        return orderMapper.selectUserOrdersWithAdmin(pageParam, userId, status, isBig);
     }
 
     @Override

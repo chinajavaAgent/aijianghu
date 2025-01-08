@@ -14,14 +14,17 @@ export function createOrder(data: {
   return request.post<Order>('/api/orders', data)
 }
 
-/**
- * 获取用户订单列表
- */
-export function getUserOrders(userId: number, params: {
+interface GetOrdersParams {
   page?: number
   size?: number
   status?: number
-}) {
+  isBig?: boolean
+}
+
+/**
+ * 获取用户订单列表
+ */
+export const getUserOrders = (userId: number, params: GetOrdersParams) => {
   return request.get<Order>(`/api/orders/user/${userId}`, { params })
 }
 

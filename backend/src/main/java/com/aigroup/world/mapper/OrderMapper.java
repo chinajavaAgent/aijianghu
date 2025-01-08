@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface OrderMapper extends BaseMapper<Order> {
     /**
-     * 获取用户订单列表（包含管理员信息）
+     * 获取用户订单列表（包含用户信息）
      */
-    IPage<Order> selectUserOrdersWithAdmin(Page<Order> page, @Param("userId") Long userId, @Param("status") Integer status);
+    IPage<Order> selectUserOrdersWithAdmin(Page<Order> page, @Param("userId") Long userId, @Param("status") Integer status, @Param("isBig") Boolean isBig);
 } 

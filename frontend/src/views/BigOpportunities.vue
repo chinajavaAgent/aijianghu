@@ -56,7 +56,6 @@
                     <div class="flex items-center text-sm text-gray-500 mb-1">
                       <span class="font-medium text-gray-700">求道者：</span>
                       <span>{{ order.userName }}</span>
-                      <span class="ml-2 px-2 py-0.5 text-xs bg-purple-50 text-purple-600 rounded">{{ order.gender === 1 ? '道兄' : '道姐' }}</span>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
                       <span class="font-medium text-gray-700">传信飞鸽：</span>

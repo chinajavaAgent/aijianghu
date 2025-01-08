@@ -47,9 +47,10 @@ public class OrderController {
             @PathVariable Long userId,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam(required = false) Integer status
+            @RequestParam(required = false) Integer status,
+            @RequestParam(required = false) Boolean isBig
     ) {
-        IPage<Order> orders = orderService.getUserOrders(userId, page, size, status);
+        IPage<Order> orders = orderService.getUserOrders(userId, page, size, status, isBig);
         return Result.success(orders);
     }
 

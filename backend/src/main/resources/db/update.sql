@@ -8,6 +8,10 @@ ADD COLUMN `experience` int(11) DEFAULT 0 COMMENT '工作经验（年）' AFTER 
 ADD COLUMN `reason` text DEFAULT NULL COMMENT '求道理由' AFTER `experience`,
 ADD COLUMN `introduction` text DEFAULT NULL COMMENT '个人简介' AFTER `reason`;
 
+-- 添加ai_tips表的is_big字段
+ALTER TABLE `ai_tips`
+ADD COLUMN `is_big` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否为大机缘：0-否，1-是' AFTER `status`;
+
 -- 添加项目视频URL字段
 ALTER TABLE `project` 
 ADD COLUMN `video_url` varchar(255) DEFAULT NULL COMMENT '视频URL' 

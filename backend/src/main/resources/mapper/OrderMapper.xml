@@ -38,6 +38,7 @@
             u.introduction
         FROM `order` o
         LEFT JOIN user u ON o.user_id = u.id
+        LEFT JOIN ai_tips t ON o.tips_id = t.id
         WHERE o.user_id = #{userId}
         <if test="status != null">
             AND o.status = #{status}
