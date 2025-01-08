@@ -8,9 +8,31 @@
         <p class="text-lg sm:text-xl text-gray-600">精选AI副业项目，助你快速变现</p>
       </div>
 
+      <!-- 标签页切换 -->
+      <div class="flex justify-center mb-6">
+        <div class="bg-white rounded-full shadow-md p-1 inline-flex space-x-1">
+          <button 
+            v-for="tab in tabs" 
+            :key="tab.value"
+            @click="currentTab = tab.value"
+            class="px-6 py-2 rounded-full text-sm font-medium transition-colors duration-200"
+            :class="[
+              currentTab === tab.value 
+                ? 'bg-blue-500 text-white' 
+                : 'text-gray-600 hover:bg-gray-100'
+            ]"
+          >
+            {{ tab.label }}
+            <span class="ml-1 text-xs" :class="currentTab === tab.value ? 'text-white' : 'text-gray-400'">
+              ({{ getFilteredTips(tab.value).length }})
+            </span>
+          </button>
+        </div>
+      </div>
+
       <!-- 锦囊列表 -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
-        <div v-for="tip in tipsList" :key="tip.id"
+        <div v-for="tip in getFilteredTips(currentTab)" :key="tip.id"
           class="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
           <div class="relative">
             <!-- 金元宝背景 -->
@@ -38,6 +60,18 @@
             <!-- 价格标签 -->
             <div class="absolute top-3 right-3 sm:top-4 sm:right-4 bg-white px-3 sm:px-4 py-1 rounded-full shadow-md">
               <span class="text-base sm:text-lg font-bold" :class="getTitleColorClass(tip)">￥{{ tip.price }}</span>
+            </div>
+            
+            <!-- 解锁状态标签 -->
+            <div class="absolute bottom-3 left-3 px-3 py-1 rounded-full shadow-md"
+              :class="[
+                isLocked(tip) ? 'bg-gray-100' : 'bg-green-100',
+                'flex items-center space-x-1'
+              ]">
+              <i class="fas" :class="[isLocked(tip) ? 'fa-lock text-gray-500' : 'fa-lock-open text-green-500']"></i>
+              <span class="text-sm" :class="[isLocked(tip) ? 'text-gray-500' : 'text-green-500']">
+                {{ isLocked(tip) ? '未解锁' : '已解锁' }}
+              </span>
             </div>
           </div>
           
@@ -121,6 +155,13 @@ const selectedTipProjects = ref<any[]>([])
 const userStore = useUserStore()
 const pendingOrders = ref<Order[]>([])
 const userLevel = ref(0)
+const currentTab = ref('all')
+
+const tabs = [
+  { value: 'all', label: '全部' },
+  { value: 'unlocked', label: '已解锁' },
+  { value: 'locked', label: '未解锁' }
+]
 
 // 计算用户是否登录
 const isLoggedIn = computed(() => {
@@ -325,6 +366,23 @@ const fetchUserInfo = async () => {
   }
 }
 
+// 判断锦囊是否已解锁
+const isLocked = (tip: AiTips) => {
+  // 如果用户未登录，则锁定
+  if (!isLoggedIn.value) {
+    return true
+  }
+  
+  // 如果有待审核订单，则锁定
+  const hasPendingOrder = pendingOrders.value.some(order => order.tipsId === tip.id)
+  if (hasPendingOrder) {
+    return true
+  }
+  
+  // 如果用户等级不足，则锁定
+  return userLevel.value < tip.requiredLevel
+}
+
 // 页面加载时获取数据
 onMounted(async () => {
   if (isLoggedIn.value) {
@@ -333,6 +391,17 @@ onMounted(async () => {
   }
   await loadTipsList()
 })
+
+const getFilteredTips = (tab: string) => {
+  if (tab === 'all') {
+    return tipsList.value
+  } else if (tab === 'unlocked') {
+    return tipsList.value.filter(tip => !isLocked(tip))
+  } else if (tab === 'locked') {
+    return tipsList.value.filter(tip => isLocked(tip))
+  }
+  return []
+}
 </script>
 
 <style scoped>
