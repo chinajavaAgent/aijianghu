@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Accessors(chain = true)
@@ -34,6 +35,41 @@ public class User {
      * 真实姓名
      */
     private String realName;
+
+    /**
+     * 性别：1-男，2-女
+     */
+    private Integer gender;
+
+    /**
+     * 出生日期
+     */
+    private LocalDate birthDate;
+
+    /**
+     * 所在城市
+     */
+    private String city;
+
+    /**
+     * 职业
+     */
+    private String profession;
+
+    /**
+     * 工作经验（年）
+     */
+    private Integer experience;
+
+    /**
+     * 求道理由
+     */
+    private String reason;
+
+    /**
+     * 个人简介
+     */
+    private String introduction;
 
     /**
      * 推荐人ID

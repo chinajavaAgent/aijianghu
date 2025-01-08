@@ -1,3 +1,13 @@
+-- 添加用户表新字段
+ALTER TABLE `user`
+ADD COLUMN `gender` tinyint(4) DEFAULT NULL COMMENT '性别：1-男，2-女' AFTER `real_name`,
+ADD COLUMN `birth_date` date DEFAULT NULL COMMENT '出生日期' AFTER `gender`,
+ADD COLUMN `city` varchar(50) DEFAULT NULL COMMENT '所在城市' AFTER `birth_date`,
+ADD COLUMN `profession` varchar(50) DEFAULT NULL COMMENT '职业' AFTER `city`,
+ADD COLUMN `experience` int(11) DEFAULT 0 COMMENT '工作经验（年）' AFTER `profession`,
+ADD COLUMN `reason` text DEFAULT NULL COMMENT '求道理由' AFTER `experience`,
+ADD COLUMN `introduction` text DEFAULT NULL COMMENT '个人简介' AFTER `reason`;
+
 -- 添加项目视频URL字段
 ALTER TABLE `project` 
 ADD COLUMN `video_url` varchar(255) DEFAULT NULL COMMENT '视频URL' 

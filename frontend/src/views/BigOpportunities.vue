@@ -56,6 +56,7 @@
                     <div class="flex items-center text-sm text-gray-500 mb-1">
                       <span class="font-medium text-gray-700">求道者：</span>
                       <span>{{ order.userName }}</span>
+                      <span class="ml-2 px-2 py-0.5 text-xs bg-purple-50 text-purple-600 rounded">{{ order.gender === 1 ? '道兄' : '道姐' }}</span>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
                       <span class="font-medium text-gray-700">传信飞鸽：</span>
@@ -63,20 +64,9 @@
                       <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click.stop="copyText(order.userPhone)">一键传信</button>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">江湖通号：</span>
+                      <span class="font-medium text-gray-700">江湖微信：</span>
                       <span>{{ order.userWechat }}</span>
                       <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click.stop="copyText(order.userWechat)">点击复制</button>
-                    </div>
-                    <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">求道理由：</span>
-                      <span class="text-gray-600">{{ order.reason }}</span>
-                    </div>
-                    <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">江湖阅历：</span>
-                      <div class="flex items-center">
-                        <span class="text-yellow-500">★</span>
-                        <span>{{ order.experience }} 年</span>
-                      </div>
                     </div>
                   </div>
                   <div class="mt-3 pt-3 border-t border-gray-100">
@@ -256,10 +246,15 @@ interface OrderItem {
   tipsId: number
   title: string
   userName: string
+  gender: number // 1: 男, 2: 女
+  age: number
+  city: string
   userPhone: string
   userWechat: string
-  reason: string
+  profession: string
   experience: number
+  reason: string
+  introduction: string
   price: number
   applyTime: string
   approveTime?: string

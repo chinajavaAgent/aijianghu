@@ -22,16 +22,22 @@
         id, order_no, user_id, tips_id, admin_id, title, price, status, apply_time, approve_time, created_at, updated_at
     </sql>
 
-    <!-- 获取用户订单列表（包含管理员信息） -->
+    <!-- 获取用户订单列表（包含用户信息） -->
     <select id="selectUserOrdersWithAdmin" resultType="com.aigroup.world.entity.Order">
         SELECT 
             o.*,
-            a.real_name as reviewer,
-            a.phone,
-            a.wechat_id as wechat,
-            81 as credit
+            u.real_name as userName,
+            u.gender,
+            TIMESTAMPDIFF(YEAR, u.birth_date, CURDATE()) as age,
+            u.city,
+            u.phone as userPhone,
+            u.wechat as userWechat,
+            u.profession,
+            u.experience,
+            u.reason,
+            u.introduction
         FROM `order` o
-        LEFT JOIN admin a ON o.admin_id = a.id
+        LEFT JOIN user u ON o.user_id = u.id
         WHERE o.user_id = #{userId}
         <if test="status != null">
             AND o.status = #{status}

@@ -37,16 +37,34 @@ public class Order {
     
     private LocalDateTime updatedAt;
 
-    // 管理员信息（非数据库字段）
+    // 用户信息（非数据库字段）
     @TableField(exist = false)
-    private String reviewer;
+    private String userName;
 
     @TableField(exist = false)
-    private String phone;
+    private Integer gender;
 
     @TableField(exist = false)
-    private String wechat;
+    private Integer age;
 
     @TableField(exist = false)
-    private Integer credit;
+    private String city;
+
+    @TableField(exist = false)
+    private String userPhone;
+
+    @TableField(exist = false)
+    private String userWechat;
+
+    @TableField(exist = false)
+    private String profession;
+
+    @TableField(exist = false)
+    private Integer experience;
+
+    @TableField(exist = false)
+    private String reason;
+
+    @TableField(exist = false)
+    private String introduction;
 } 
