@@ -234,26 +234,34 @@ const getButtonClass = (tip: AiTips) => {
 // 获取按钮文本
 const getButtonText = (tip: AiTips) => {
   if (!tip.projects || tip.projects.length === 0) {
-    return '暂无项目'
+    return '此处空空如也'
   }
   
   // 检查用户是否登录
   if (!isLoggedIn.value) {
-    return '请先登录'
+    return '需先拜入门墙'
   }
   
   // 检查是否有待审核订单
   const hasPendingOrder = pendingOrders.value.some(order => order.tipsId === tip.id)
   if (hasPendingOrder) {
-    return '待审核'
+    return '掌门正在审核'
   }
   
   // 使用实时获取的用户等级
   if (userLevel.value < tip.requiredLevel) {
-    return `需要 ${tip.requiredLevel} 级`
+    const levelGap = tip.requiredLevel - userLevel.value
+    const texts = [
+      '需继续修炼',
+      `需提升${levelGap}重境界`,
+      `需达${tip.requiredLevel}重天`,
+      `需突破${levelGap}层瓶颈`
+    ]
+    return texts[Math.floor(Math.random() * texts.length)]
   }
   
-  return tip.projects.length > 1 ? '选择项目' : '立即购买'
+  // 用户等级已满足要求
+  return '已解锁'
 }
 
 // 添加购买处理函数
@@ -306,7 +314,12 @@ const fetchUserInfo = async () => {
   if (!isLoggedIn.value) return
   try {
     const response = await getUserInfo(userStore.$state.id)
+    // 更新本地用户等级
     userLevel.value = response.data.level
+    // 同步更新store中的用户等级
+    userStore.$patch({
+      level: response.data.level
+    })
   } catch (error) {
     console.error('获取用户信息失败:', error)
   }
@@ -314,10 +327,11 @@ const fetchUserInfo = async () => {
 
 // 页面加载时获取数据
 onMounted(async () => {
-  await loadTipsList()
   if (isLoggedIn.value) {
+    // 先获取用户信息，确保等级是最新的
     await fetchUserInfo()
   }
+  await loadTipsList()
 })
 </script>
 

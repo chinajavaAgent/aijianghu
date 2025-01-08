@@ -176,6 +176,9 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     @Override
     public Admin getAdminByTipId(Long tipId) {
         AdminTips adminTips = adminTipsMapper.selectOne(new LambdaQueryWrapper<AdminTips>().eq(AdminTips::getTipsId, tipId));
+        if(null == adminTips){
+            return null;
+        }
         Long adminId = adminTips.getAdminId();
         return adminMapper.selectById(adminId);
     }
