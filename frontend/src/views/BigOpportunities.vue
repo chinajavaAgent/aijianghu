@@ -54,24 +54,28 @@
                   </div>
                   <div class="mt-3">
                     <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">掌门大人：</span>
-                      <span>{{ order.reviewer }}</span>
+                      <span class="font-medium text-gray-700">求道者：</span>
+                      <span>{{ order.userName }}</span>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
                       <span class="font-medium text-gray-700">传信飞鸽：</span>
-                      <span>{{ order.phone }}</span>
-                      <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click.stop="copyText(order.phone)">一键传信</button>
+                      <span>{{ order.userPhone }}</span>
+                      <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click.stop="copyText(order.userPhone)">一键传信</button>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
                       <span class="font-medium text-gray-700">江湖通号：</span>
-                      <span>{{ order.wechat }}</span>
-                      <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click.stop="copyText(order.wechat)">点击复制</button>
+                      <span>{{ order.userWechat }}</span>
+                      <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click.stop="copyText(order.userWechat)">点击复制</button>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">江湖声望：</span>
+                      <span class="font-medium text-gray-700">求道理由：</span>
+                      <span class="text-gray-600">{{ order.reason }}</span>
+                    </div>
+                    <div class="flex items-center text-sm text-gray-500 mb-1">
+                      <span class="font-medium text-gray-700">江湖阅历：</span>
                       <div class="flex items-center">
                         <span class="text-yellow-500">★</span>
-                        <span>{{ order.credit }} 点</span>
+                        <span>{{ order.experience }} 年</span>
                       </div>
                     </div>
                   </div>
@@ -122,24 +126,28 @@
                   </div>
                   <div class="mt-3">
                     <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">掌门大人：</span>
-                      <span>{{ order.reviewer }}</span>
+                      <span class="font-medium text-gray-700">求道者：</span>
+                      <span>{{ order.userName }}</span>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
                       <span class="font-medium text-gray-700">传信飞鸽：</span>
-                      <span>{{ order.phone }}</span>
-                      <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click.stop="copyText(order.phone)">一键传信</button>
+                      <span>{{ order.userPhone }}</span>
+                      <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click.stop="copyText(order.userPhone)">一键传信</button>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
                       <span class="font-medium text-gray-700">江湖通号：</span>
-                      <span>{{ order.wechat }}</span>
-                      <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click.stop="copyText(order.wechat)">点击复制</button>
+                      <span>{{ order.userWechat }}</span>
+                      <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click.stop="copyText(order.userWechat)">点击复制</button>
                     </div>
                     <div class="flex items-center text-sm text-gray-500 mb-1">
-                      <span class="font-medium text-gray-700">江湖声望：</span>
+                      <span class="font-medium text-gray-700">求道理由：</span>
+                      <span class="text-gray-600">{{ order.reason }}</span>
+                    </div>
+                    <div class="flex items-center text-sm text-gray-500 mb-1">
+                      <span class="font-medium text-gray-700">江湖阅历：</span>
                       <div class="flex items-center">
                         <span class="text-yellow-500">★</span>
-                        <span>{{ order.credit }} 点</span>
+                        <span>{{ order.experience }} 年</span>
                       </div>
                     </div>
                   </div>
@@ -215,7 +223,7 @@ const loadOrders = async () => {
       page: 1,
       size: 100,
       status: activeTab.value === 'pending' ? 0 : 1,
-      type: 'big' // 只获取大机缘类型的订单
+      isBig: true // 只获取大机缘类型的订单
     })
 
     if (response.data) {
@@ -247,10 +255,11 @@ interface OrderItem {
   id: number
   tipsId: number
   title: string
-  reviewer: string
-  phone: string
-  wechat: string
-  credit: number
+  userName: string
+  userPhone: string
+  userWechat: string
+  reason: string
+  experience: number
   price: number
   applyTime: string
   approveTime?: string
