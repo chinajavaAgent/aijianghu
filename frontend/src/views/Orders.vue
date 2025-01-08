@@ -9,7 +9,7 @@
 
     <div class="container mx-auto px-4 py-6">
       <!-- 标签页导航 -->
-      <div class="bg-white rounded-xl shadow-sm mb-6 overflow-hidden">
+      <div class="rounded-xl shadow-sm mb-6 overflow-hidden">
         <div class="flex border-b">
           <button 
             v-for="tab in tabs" 
@@ -37,7 +37,7 @@
             <div 
               v-for="order in pendingOrders" 
               :key="order.id" 
-              class="bg-white rounded-xl p-4 shadow-sm transition-shadow duration-200 hover:shadow-md cursor-pointer"
+              class="bg-white rounded-xl p-4 mt-4 shadow-sm transition-shadow duration-200 hover:shadow-md cursor-pointer"
               @click="goToTipDetail(order.tipsId)"
             >
               <div class="flex items-start gap-3">
