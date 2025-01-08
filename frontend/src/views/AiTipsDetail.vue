@@ -341,6 +341,7 @@ import type { AiTips } from '@/types/tips'
 import { getAiTipsDetail } from '@/api/tips'
 import { useUserStore } from '@/store/user'
 import { getAdminByTipId } from '@/api/admin'
+import { createOrder } from '@/api/order'
 
 const router = useRouter()
 const route = useRoute()
@@ -428,9 +429,31 @@ const copyText = async (text: string) => {
 }
 
 // 提交审核
-const submitForReview = () => {
-  ElMessage.success('提交成功，我们将尽快处理您的申请')
-  showContactModal.value = false
+const submitForReview = async () => {
+  try {
+    if (!tipDetail.value?.id || !adminInfo.value?.id) {
+      ElMessage.error('锦囊或管理员信息不完整')
+      return
+    }
+
+    const response = await createOrder({
+      userId: userStore.id,
+      tipsId: tipDetail.value.id,
+      adminId: adminInfo.value.id,
+      title: tipDetail.value.title,
+      price: tipDetail.value.price.toString()
+    })
+
+    if (response.data) {
+      ElMessage.success('提交成功，我们将尽快处理您的申请')
+      showContactModal.value = false
+    } else {
+      ElMessage.error('提交失败，请重试')
+    }
+  } catch (error) {
+    console.error('提交审核失败:', error)
+    ElMessage.error('提交失败，请重试')
+  }
 }
 
 // 是否已解锁

@@ -166,10 +166,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { showToast } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/store/user'
+import { getUserOrders } from '@/api/order'
 
 // 标签页配置
 const tabs = [
@@ -196,10 +197,39 @@ const checkLogin = () => {
   return true
 }
 
+// 获取订单列表
+const loadOrders = async () => {
+  try {
+    if (!userStore.id) return
+
+    const response = await getUserOrders(userStore.id, {
+      page: 1,
+      size: 100,
+      status: activeTab.value === 'pending' ? 0 : 1
+    })
+
+    if (response.data) {
+      if (activeTab.value === 'pending') {
+        pendingOrders.value = response.data.records
+      } else {
+        approvedOrders.value = response.data.records
+      }
+    }
+  } catch (error) {
+    console.error('获取订单列表失败:', error)
+    showToast('获取订单列表失败')
+  }
+}
+
+// 监听标签页切换
+watch(activeTab, () => {
+  loadOrders()
+})
+
 // 在组件挂载时检查登录状态并获取用户信息
 onMounted(async () => {
   if (!checkLogin()) return
-  // 这里可以添加获取订单列表的逻辑
+  loadOrders()
 })
 
 // 模拟订单数据
