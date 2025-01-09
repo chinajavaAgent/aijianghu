@@ -218,6 +218,17 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
                     }
                 }
             }
+
+            // 查询本系统的推荐人
+            Long referrerId = user.getReferrerId();
+            if(null!=referrerId) {
+                User referrerUser = userMapper.selectById(referrerId);
+                if (referrerUser != null && referrerUser.getLevel() > user.getLevel()) {
+                    // 设置上级用户信息到admin对象中
+                    admin.setReferrerUser(referrerUser);
+                }
+            }
+
         }
 
         return admin;
