@@ -3,6 +3,7 @@ package com.aigroup.world.service.impl;
 import com.aigroup.world.entity.Admin;
 import com.aigroup.world.entity.AdminTips;
 import com.aigroup.world.entity.AiTips;
+import com.aigroup.world.exception.BusinessException;
 import com.aigroup.world.mapper.AdminMapper;
 import com.aigroup.world.mapper.AdminTipsMapper;
 import com.aigroup.world.mapper.AiTipsMapper;
@@ -186,18 +187,24 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
     @Override
     public Admin getAdminByTipId(Long tipId) {
-        AdminTips adminTips = adminTipsMapper.selectOne(new LambdaQueryWrapper<AdminTips>().eq(AdminTips::getTipsId, tipId));
-        if(null == adminTips){
-            return null;
-        }
-        Long adminId = adminTips.getAdminId();
-        Admin admin = adminMapper.selectById(adminId);
         AiTips aiTips = aiTipsMapper.selectById(tipId);
         // 获取当前用户
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Admin admin = null;
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             String currentUserPhone = ((UserDetails) authentication.getPrincipal()).getUsername();
             User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getPhone, currentUserPhone));
+            Integer level = user.getLevel();
+            Integer requiredLevel = aiTips.getRequiredLevel();
+            if(requiredLevel> level+1){
+                throw new BusinessException("少侠，练功需循序渐进，请先提升至"+(requiredLevel-1)+"重天再进行查看");
+            }
+            AdminTips adminTips = adminTipsMapper.selectOne(new LambdaQueryWrapper<AdminTips>().eq(AdminTips::getTipsId, tipId));
+            if(null == adminTips){
+                return null;
+            }
+            Long adminId = adminTips.getAdminId();
+            admin = adminMapper.selectById(adminId);
             // 在第二数据源中查询推荐人ID
             TUser tUser = tUserMapper.selectOne(new LambdaQueryWrapper<TUser>()
                     .eq(TUser::getPhoneNumber, currentUserPhone));
