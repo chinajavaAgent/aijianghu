@@ -17,6 +17,10 @@ export interface AiTips {
     createTime?: string;
     updateTime?: string;
     projects?: Project[]; // 关联的项目列表
+    referrerUser?: {
+        phone: string;
+        wechat: string;
+    };
 }
 
 // AI锦囊分页结果
@@ -29,4 +33,13 @@ export interface AiTipsPage {
 }
 
 // AI锦囊分类
-export type AiTipsCategory = 'AI工具' | 'AI应用' | 'AI变现' | '流量获取' | '其他'; 
+export type AiTipsCategory = 'AI工具' | 'AI应用' | 'AI变现' | '流量获取' | '其他';
+
+// API响应类型
+export interface ApiResponse<T> {
+    code: number;
+    message: string;
+    data: T;
+    records?: T[];
+    url?: string;
+} 

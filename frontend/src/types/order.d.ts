@@ -13,7 +13,19 @@ export interface Order {
   updatedAt: string
   // 关联字段
   reviewer?: string
+  reviewerPhone?: string
+  reviewerWechat?: string
   phone?: string
   wechat?: string
   credit?: number
+  introduction?: string
+}
+
+// API响应类型
+export interface ApiResponse<T> {
+  code: number;
+  message: string;
+  data: T & {
+    records?: T[];
+  };
 } 

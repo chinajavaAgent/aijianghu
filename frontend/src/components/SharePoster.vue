@@ -113,12 +113,24 @@ import { getSharePoster } from '@/api/tips'
 import { encryptUserId } from '@/api/share'
 
 const props = withDefaults(defineProps<{
-  tipId: number
-  projectId: number
+  tipId?: number
+  projectId?: number
   shareUrl: string
-  userId: number
+  userId?: number
+  title?: string
+  introduction?: string
+  coverImage?: string
+  backgroundColor?: string
+  price?: number
 }>(), {
-  userId: 0
+  userId: 0,
+  tipId: 0,
+  projectId: 0,
+  title: '',
+  introduction: '',
+  coverImage: '',
+  backgroundColor: '#F5F5F5',
+  price: 0
 })
 
 interface ColorScheme {
