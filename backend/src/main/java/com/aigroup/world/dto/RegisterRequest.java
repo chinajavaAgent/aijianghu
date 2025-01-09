@@ -48,4 +48,9 @@ public class RegisterRequest {
      * 推荐人ID
      */
     private Long referrerId;
+
+    /**
+     * 分享码
+     */
+    private String shareCode;
 } 

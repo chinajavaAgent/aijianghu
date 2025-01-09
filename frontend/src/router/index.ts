@@ -1,127 +1,129 @@
-import { createRouter, createWebHistory, RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
+import { createRouter, createWebHistory, RouteLocationNormalized, NavigationGuardNext, RouteRecordRaw } from 'vue-router'
 import { useUserStore } from '@/store/user'
 import OperationMaterials from '../views/OperationMaterials.vue'
 import Tutorials from '../views/Tutorials.vue'
 
+const routes: Array<RouteRecordRaw> = [
+  {
+    path: '/',
+    name: 'home',
+    component: () => import('@/views/Home.vue')
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/Login.vue')
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import('@/views/Register.vue')
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: () => import('@/views/Profile.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/orders',
+    name: 'orders',
+    component: () => import('@/views/Orders.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/opportunities',
+    name: 'opportunities',
+    component: () => import('@/views/Opportunities.vue')
+  },
+  {
+    path: '/project/:id',
+    name: 'project-detail',
+    component: () => import('@/views/ProjectDetail.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/opportunity-manage',
+    name: 'opportunity-manage',
+    component: () => import('@/views/OpportunityManage.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/admin-manage',
+    name: 'admin-manage',
+    component: () => import('@/views/AdminManage.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/big-opportunities',
+    name: 'big-opportunities',
+    component: () => import('@/views/BigOpportunities.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/operation-materials',
+    name: 'OperationMaterials',
+    component: OperationMaterials,
+    meta: {
+      title: '运营物料',
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/poster-generator',
+    name: 'PosterGenerator',
+    component: () => import('../views/PosterGenerator.vue'),
+    meta: {
+      title: '海报生成',
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/qrcode-generator',
+    name: 'QrcodeGenerator',
+    component: () => import('../views/QrcodeGenerator.vue'),
+    meta: {
+      title: '二维码生成',
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/copywriting-templates',
+    name: 'CopywritingTemplates',
+    component: () => import('../views/CopywritingTemplates.vue'),
+    meta: {
+      title: '文案模板',
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/tutorials',
+    name: 'tutorials',
+    component: Tutorials
+  },
+  {
+    path: '/tips',
+    name: 'AiTipsList',
+    component: () => import('@/views/AiTipsList.vue'),
+    meta: {
+      title: 'AI锦囊',
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/tips/:id',
+    name: 'AiTipsDetail',
+    component: () => import('@/views/AiTipsDetail.vue'),
+    meta: {
+      title: 'AI锦囊详情',
+      requiresAuth: true
+    }
+  }
+]
+
 const router = createRouter({
   history: createWebHistory('/aijianghu/'),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: () => import('@/views/Home.vue')
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: () => import('@/views/Login.vue')
-    },
-    {
-      path: '/register',
-      name: 'register',
-      component: () => import('@/views/Register.vue')
-    },
-    {
-      path: '/profile',
-      name: 'profile',
-      component: () => import('@/views/Profile.vue'),
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/orders',
-      name: 'orders',
-      component: () => import('@/views/Orders.vue'),
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/opportunities',
-      name: 'opportunities',
-      component: () => import('@/views/Opportunities.vue')
-    },
-    {
-      path: '/project/:id',
-      name: 'project-detail',
-      component: () => import('@/views/ProjectDetail.vue'),
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/opportunity-manage',
-      name: 'opportunity-manage',
-      component: () => import('@/views/OpportunityManage.vue'),
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/admin-manage',
-      name: 'admin-manage',
-      component: () => import('@/views/AdminManage.vue'),
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/big-opportunities',
-      name: 'big-opportunities',
-      component: () => import('@/views/BigOpportunities.vue'),
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/operation-materials',
-      name: 'OperationMaterials',
-      component: OperationMaterials,
-      meta: {
-        title: '运营物料',
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/poster-generator',
-      name: 'PosterGenerator',
-      component: () => import('../views/PosterGenerator.vue'),
-      meta: {
-        title: '海报生成',
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/qrcode-generator',
-      name: 'QrcodeGenerator',
-      component: () => import('../views/QrcodeGenerator.vue'),
-      meta: {
-        title: '二维码生成',
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/copywriting-templates',
-      name: 'CopywritingTemplates',
-      component: () => import('../views/CopywritingTemplates.vue'),
-      meta: {
-        title: '文案模板',
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/tutorials',
-      name: 'tutorials',
-      component: Tutorials
-    },
-    {
-      path: '/tips',
-      name: 'AiTipsList',
-      component: () => import('@/views/AiTipsList.vue'),
-      meta: {
-        title: 'AI锦囊',
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/tips/:id',
-      name: 'AiTipsDetail',
-      component: () => import('@/views/AiTipsDetail.vue'),
-      meta: {
-        title: 'AI锦囊详情',
-        requiresAuth: true
-      }
-    }
-  ]
+  routes
 })
 
 // 全局前置守卫
@@ -131,6 +133,11 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
   // 如果用户已登录，则更新用户信息
   if (userStore.isLoggedIn) {
     await userStore.updateUserInfo()
+  }
+  
+  // 处理分享码
+  if (to.query.shareCode) {
+    localStorage.setItem('shareCode', to.query.shareCode as string)
   }
   
   // 检查该路由是否需要登录权限

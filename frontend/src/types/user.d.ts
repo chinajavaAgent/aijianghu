@@ -6,6 +6,7 @@ export interface RegisterRequest {
     wechat: string
     realName: string
     referrerId?: number
+    shareCode?: string
 }
 
 // 用户信息

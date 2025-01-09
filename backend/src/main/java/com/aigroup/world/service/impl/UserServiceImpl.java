@@ -8,6 +8,7 @@ import com.aigroup.world.mapper.UserMapper;
 import com.aigroup.world.mapper.secondary.TUserMapper;
 import com.aigroup.world.model.User;
 import com.aigroup.world.service.UserService;
+import com.aigroup.world.utils.ShareLinkUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.Objects;
 
@@ -25,6 +27,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final TUserMapper tUserMapper;
+    private final ShareLinkUtil shareLinkUtil;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public User register(RegisterRequest request) {
@@ -42,7 +46,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (checkWechatExists(request.getWechat())) {
             throw new BusinessException("微信号已被注册");
         }
-        // 4. 创建用户
+
+        // 4. 处理分享码和推荐人
+        if (StringUtils.hasText(request.getShareCode())) {
+            try {
+                Long referrerId = shareLinkUtil.decryptUserId(request.getShareCode());
+                // 验证推荐人是否存在
+                User referrer = getById(referrerId);
+                if (referrer == null) {
+                    throw new BusinessException("推荐人不存在");
+                }
+                request.setReferrerId(referrerId);
+            } catch (Exception e) {
+                throw new BusinessException("无效的分享码");
+            }
+        }
+
+        // 5. 创建用户
         User user = new User();
         BeanUtils.copyProperties(request, user);
         // 设置密码（加密）
@@ -56,7 +76,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 保存用户
         save(user);
 
-        // 5. 清空密码后返回
+        // 6. 清空密码后返回
         user.setPassword(null);
         return user;
     }

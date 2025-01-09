@@ -10,10 +10,10 @@
           <h2 class="heading-1 text-center">注册账号</h2>
           
           <!-- 推荐人信息展示 -->
-          <div class="bg-[#FFF3CD] rounded-lg p-4">
+          <div v-if="shareCode || cachedShareCode" class="bg-[#FFF3CD] rounded-lg p-4">
             <div class="flex items-center justify-between">
               <span class="text-sm text-[#856404]">推荐人</span>
-              <span class="font-medium text-[#856404]">{{ referrer || '暂无推荐人' }}</span>
+              <span class="font-medium text-[#856404]">{{ referrerName || '正在获取推荐人信息...' }}</span>
             </div>
           </div>
           
@@ -113,17 +113,52 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { register, checkPhone } from '../api/user'
-import type { RegisterRequest } from '../types/user'
+import type { RegisterRequest, User } from '../types/user'
 import toast from '../utils/toast'
+import request from '../utils/request'
 
 const router = useRouter()
 const route = useRoute()
 
-// 从路由参数中获取推荐人信息
-const referrer = ref(route.query.referrer as string || '')
+// 从URL和缓存中获取分享码
+const shareCode = ref(route.query.shareCode as string || '')
+const cachedShareCode = ref(localStorage.getItem('shareCode') || '')
+const referrerName = ref('')
+
+// 获取推荐人信息
+const getReferrerInfo = async () => {
+  // 优先使用URL中的分享码，如果没有则使用缓存中的分享码
+  const currentShareCode = shareCode.value || cachedShareCode.value
+  if (!currentShareCode) return
+  
+  try {
+    const { data } = await request.get<{ code: number, data: number }>(`/share/decrypt/${currentShareCode}`)
+    if (data.data) {
+      // 获取推荐人用户信息
+      const userResponse = await request.get<{ code: number, data: User }>(`/users/${data.data}`)
+      if (userResponse.data.data) {
+        referrerName.value = userResponse.data.data.realName
+      }
+    }
+  } catch (error) {
+    console.error('获取推荐人信息失败:', error)
+  }
+}
+
+// 在组件挂载时获取推荐人信息
+onMounted(() => {
+  // 如果URL中有分享码，保存到缓存中
+  if (shareCode.value) {
+    localStorage.setItem('shareCode', shareCode.value)
+    cachedShareCode.value = shareCode.value
+  }
+  
+  // 获取推荐人信息
+  getReferrerInfo()
+})
 
 const form = reactive<RegisterRequest>({
   wechat: '',
@@ -131,9 +166,11 @@ const form = reactive<RegisterRequest>({
   realName: '',
   password: '',
   confirmPassword: '',
-  referrerId: undefined
+  referrerId: undefined,
+  shareCode: undefined // 初始化时不设置shareCode
 })
 
+// 在注册时设置最新的shareCode
 const handleRegister = async () => {
   try {
     // 验证手机号格式
@@ -161,17 +198,20 @@ const handleRegister = async () => {
       return
     }
 
-    // 如果有推荐人，转换为数字ID
-    if (referrer.value) {
-      form.referrerId = parseInt(referrer.value)
-    }
+    // 设置注册时的分享码（优先使用URL中的，其次使用缓存中的）
+    form.shareCode = shareCode.value || cachedShareCode.value
 
     // 调用注册API
-    await register(form)
-    toast.success('注册成功')
-    router.push('/login')
-  } catch (error) {
+    const response = await register(form)
+    if (response.code === 200) {
+      // 注册成功后清除分享码缓存
+      localStorage.removeItem('shareCode')
+      toast.success('注册成功')
+      router.push('/login')
+    }
+  } catch (error: any) {
     console.error('注册失败:', error)
+    toast.error(error.message || '注册失败，请稍后重试')
   }
 }
 </script>

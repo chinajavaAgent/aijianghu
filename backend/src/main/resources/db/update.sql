@@ -64,3 +64,8 @@ CREATE TABLE IF NOT EXISTS `aijianghu`.`order` (
     KEY `idx_status` (`status`),
     KEY `idx_apply_time` (`apply_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表'; 
+
+-- 添加推荐人字段
+ALTER TABLE `user` 
+ADD COLUMN `referrer_id` bigint(20) DEFAULT NULL COMMENT '推荐人ID' AFTER `status`,
+ADD INDEX `idx_referrer_id` (`referrer_id`) COMMENT '推荐人ID索引'; 
