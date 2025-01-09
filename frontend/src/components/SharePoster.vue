@@ -110,6 +110,7 @@ import { ref, nextTick, reactive, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import QRCode from 'qrcode'
 import { getSharePoster } from '@/api/tips'
+import { encryptUserId } from '@/api/share'
 
 const props = withDefaults(defineProps<{
   tipId: number
@@ -441,11 +442,21 @@ const generatePoster = async () => {
     // 右侧二维码
     try {
       const qrSize = 100
-      // 构建带有userId参数的URL
+      // 构建带有加密后userId参数的URL
+      console.log('shareUrl:' + props.shareUrl)
       const qrUrl = new URL(props.shareUrl)
       // 只有当userId存在且不为0时才添加到URL中
       if (props.userId && props.userId !== 0) {
-        qrUrl.searchParams.append('userId', props.userId.toString())
+        try {
+          const { data } = await encryptUserId(props.userId)
+          if (data) {
+            qrUrl.searchParams.append('shareCode', data)
+          }
+        } catch (error) {
+          console.error('Failed to encrypt userId:', error)
+          // 如果加密失败，使用原始userId作为备选方案
+          qrUrl.searchParams.append('userId', props.userId.toString())
+        }
       }
       
       const qrCodeUrl = await QRCode.toDataURL(qrUrl.toString(), {

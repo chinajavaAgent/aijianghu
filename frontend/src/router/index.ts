@@ -4,7 +4,7 @@ import OperationMaterials from '../views/OperationMaterials.vue'
 import Tutorials from '../views/Tutorials.vue'
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('/aijianghu/'),
   routes: [
     {
       path: '/',

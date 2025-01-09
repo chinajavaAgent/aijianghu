@@ -43,7 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/aiGroup/users/register",
                 "/aiGroup/users/login",
                 "/aiGroup/users/check-phone",
-                "/aiGroup/admin/**"
+                "/aiGroup/admin/**",
+                "/aiGroup/share/**"
             ).permitAll()
             // 允许未登录用户访问锦囊列表和详情
             .antMatchers(HttpMethod.GET, "/aiGroup/tips/**").permitAll()

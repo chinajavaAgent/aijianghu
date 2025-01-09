@@ -25,8 +25,8 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("AI群江湖 API文档")
-                .description("AI群江湖应用接口文档")
-                .contact(new Contact("AI Group", "http://localhost:8080", "admin@aigroup.com"))
+                .description("AI群江湖项目的API接口文档")
+                .contact(new Contact("AI Group", "http://localhost:8080", "support@aigroup.com"))
                 .version("1.0")
                 .build();
     }

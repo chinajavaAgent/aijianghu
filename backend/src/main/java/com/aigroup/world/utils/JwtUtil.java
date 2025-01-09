@@ -77,4 +77,8 @@ public class JwtUtil {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
+
+    public SecretKey getKey() {
+        return this.key;
+    }
 } 

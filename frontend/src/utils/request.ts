@@ -12,9 +12,12 @@ export interface ApiResponse<T> {
   data: T
 }
 
+// 根据环境设置基础URL
+const baseURL = import.meta.env.PROD ? '/aiGroup' : 'http://localhost:8080/aiGroup'
+
 // 创建axios实例
 const request = axios.create({
-  baseURL: 'http://localhost:3000/aiGroup',
+  baseURL,
   timeout: 15000 // 请求超时时间
 })
 
