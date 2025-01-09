@@ -39,6 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             // 设置允许访问的路径
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            // 允许所有预检请求
+            .antMatchers(HttpMethod.OPTIONS, "/aiGroup/**").permitAll()
             .antMatchers(
                 "/aiGroup/users/register",
                 "/aiGroup/users/login",
