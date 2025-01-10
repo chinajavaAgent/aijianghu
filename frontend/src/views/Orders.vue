@@ -212,7 +212,8 @@ import { ref, onMounted, watch } from 'vue'
 import { showToast } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/store/user'
-import { getUserOrders, getUserLevel } from '@/api/order'
+import { getUserOrders } from '@/api/order'
+import { getUserInfo } from '@/api/user'
 
 // 标签页配置
 const tabs = [
@@ -268,8 +269,6 @@ interface OrderItem {
 // 新增状态数据
 const hasApplied = ref(false)
 const currentLevel = ref('')
-const currentCredit = ref(0)
-const nextLevelCredit = ref(100)
 
 const pendingOrders = ref<OrderItem[]>([])
 const approvedOrders = ref<OrderItem[]>([])
@@ -278,11 +277,9 @@ const approvedOrders = ref<OrderItem[]>([])
 const loadUserLevel = async () => {
   try {
     if (!userStore.id) return
-    const data = await getUserLevel(userStore.id)
+    const { data } = await getUserInfo(userStore.id)
     if (data) {
       currentLevel.value = data.levelTitle
-      currentCredit.value = data.credit
-      nextLevelCredit.value = data.nextLevelCredit
     }
   } catch (error) {
     console.error('获取用户等级信息失败:', error)

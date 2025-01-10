@@ -24,9 +24,28 @@ export function checkPhone(phone: string) {
     })
 }
 
-/**
- * 获取用户信息
- */
-export function getUserInfo(id: number) {
-    return request.get<User>(`/users/${id}`)
+export interface UserInfoResponse {
+  id: number
+  phone: string
+  wechat: string
+  platform: string
+  realName: string
+  gender: number
+  birthDate: string
+  city: string
+  profession: string
+  experience: number
+  reason: string
+  introduction: string
+  referrerId: number
+  level: number
+  levelTitle: string
+  points: number
+  status: number
+  createTime: string
+  updateTime: string
+}
+
+export const getUserInfo = (userId: number) => {
+  return request.get<UserInfoResponse>(`/users/${userId}`)
 } 

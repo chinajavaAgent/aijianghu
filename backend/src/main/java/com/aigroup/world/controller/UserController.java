@@ -4,7 +4,9 @@ import com.aigroup.world.common.Result;
 import com.aigroup.world.dto.LoginRequest;
 import com.aigroup.world.dto.LoginResponse;
 import com.aigroup.world.dto.RegisterRequest;
+import com.aigroup.world.dto.UserInfoResponse;
 import com.aigroup.world.entity.TUser;
+import com.aigroup.world.enums.UserLevel;
 import com.aigroup.world.mapper.secondary.TUserMapper;
 import com.aigroup.world.model.User;
 import com.aigroup.world.service.UserService;
@@ -21,7 +23,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @Api(tags = "用户管理")
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/aiGroup/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -59,24 +61,27 @@ public class UserController {
 
     @ApiOperation("获取用户信息")
     @GetMapping("/{id}")
-    public Result<User> getUserInfo(@PathVariable Long id) {
+    public Result<UserInfoResponse> getUserInfo(@PathVariable Long id) {
         User user = userService.getUserById(id);
-        return Result.success(user);
+        return Result.success(UserInfoResponse.from(user));
     }
 
     @ApiOperation("获取当前登录用户信息")
     @GetMapping("/current")
-    public Result<User> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+    public Result<UserInfoResponse> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findByPhone(userDetails.getUsername());
-        return Result.success(user);
+        return Result.success(UserInfoResponse.from(user));
     }
 
     @ApiOperation("获取用户等级信息")
     @GetMapping("/{id}/level")
     public Result<Object> getUserLevel(@PathVariable Long id) {
         User user = userService.getUserById(id);
+        int level = user.getLevel() != null ? user.getLevel() : 1;
+        
         return Result.success(new Object() {
             public final int level = user.getLevel() != null ? user.getLevel() : 1;
+            public final String levelTitle = UserLevel.getTitleByLevel(level);
         });
     }
 } 
