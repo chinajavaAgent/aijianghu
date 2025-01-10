@@ -56,11 +56,13 @@
       <!-- 锦囊列表 -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
         <div v-for="tip in getFilteredTips(currentTab)" :key="tip.id"
-          class="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
+          class="bg-white/95 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 border border-gray-100/50">
           <div class="relative">
             <!-- 金元宝背景 -->
             <div class="h-36 sm:h-48 bg-gradient-to-br relative overflow-hidden"
               :class="getGradientClass(tip)">
+              <!-- 装饰纹理 -->
+              <div class="absolute inset-0 opacity-10 bg-[url('https://api.dicebear.com/7.x/shapes/svg?seed=dragon')]"></div>
               <div class="absolute inset-0 flex items-center justify-center">
                 <!-- 光效背景 -->
                 <div class="absolute inset-0 opacity-20">
@@ -81,14 +83,14 @@
               </div>
             </div>
             <!-- 价格标签 -->
-            <div class="absolute top-3 right-3 sm:top-4 sm:right-4 bg-white px-3 sm:px-4 py-1 rounded-full shadow-md">
+            <div class="absolute top-3 right-3 sm:top-4 sm:right-4 bg-white/90 backdrop-blur-sm px-3 sm:px-4 py-1 rounded-full shadow-md border border-gray-100/50">
               <span class="text-base sm:text-lg font-bold" :class="getTitleColorClass(tip)">￥{{ tip.price }}</span>
             </div>
             
             <!-- 境界标签 -->
-            <div class="absolute bottom-3 left-3 px-3 py-1 rounded-full shadow-md"
+            <div class="absolute bottom-3 left-3 backdrop-blur-sm px-3 py-1 rounded-full shadow-md border border-gray-100/50"
               :class="[
-                isLocked(tip) ? 'bg-gray-100' : 'bg-green-100',
+                isLocked(tip) ? 'bg-gray-100/90' : 'bg-green-100/90',
                 'flex items-center space-x-1'
               ]">
               <i class="fas" :class="[isLocked(tip) ? 'fa-lock text-gray-500' : 'fa-lock-open text-green-500']"></i>
@@ -98,48 +100,32 @@
             </div>
           </div>
           
-          <div class="p-4 sm:p-6">
-            <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-3" :class="getTitleColorClass(tip)">{{ tip.title }}</h3>
+          <div class="p-4 sm:p-6 relative">
+            <!-- 装饰边框 -->
+            <div class="absolute inset-0 border-2 border-gray-100/50 m-2 rounded-lg pointer-events-none"></div>
+            
+            <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-3 relative" :class="getTitleColorClass(tip)">{{ tip.title }}</h3>
             
             <!-- 温馨提醒 -->
-            <div class="bg-yellow-50 rounded-lg p-3 mb-4">
-              <p class="text-sm text-yellow-700 font-ma-shan">
-                <!-- <span class="text-yellow-600 font-bold">修炼{{ getRealmName(tip.requiredLevel) }}</span> -->
+            <div class="bg-yellow-50/80 backdrop-blur-sm rounded-lg p-3 mb-4 relative border border-yellow-100/50">
+              <!-- 装饰角 -->
+              <div class="absolute w-2 h-2 border-t-2 border-l-2 border-yellow-200/50 top-0 left-0"></div>
+              <div class="absolute w-2 h-2 border-t-2 border-r-2 border-yellow-200/50 top-0 right-0"></div>
+              <div class="absolute w-2 h-2 border-b-2 border-l-2 border-yellow-200/50 bottom-0 left-0"></div>
+              <div class="absolute w-2 h-2 border-b-2 border-r-2 border-yellow-200/50 bottom-0 right-0"></div>
+              
+              <p class="text-sm text-yellow-700 font-ma-shan relative">
                 <span class="ml-1">温馨提醒：</span>
                 {{ getRealmTip(tip.requiredLevel) }}
               </p>
             </div>
 
-            <!-- 项目列表 -->
-            <div v-if="tip.projects && tip.projects.length > 0" class="mb-4">
-              <h4 class="text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                <i class="fas fa-project-diagram mr-2 text-blue-500"></i>
-                包含项目 ({{ tip.projects.length }})
-              </h4>
-              <div class="space-y-2">
-                <div v-for="project in tip.projects" :key="project.id"
-                  class="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors cursor-pointer"
-                  @click="handleProjectSelect(project)">
-                  <div class="flex items-center justify-between mb-1">
-                    <span class="text-sm font-medium text-gray-700">{{ project.name }}</span>
-                    <div class="flex items-center space-x-2">
-                      <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
-                        {{ project.cases?.length || 0 }} 案例
-                      </span>
-                      <span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
-                        {{ project.benefits?.length || 0 }} 福利
-                      </span>
-                    </div>
-                  </div>
-                  <p class="text-xs text-gray-500 line-clamp-2">{{ project.description }}</p>
-                </div>
-              </div>
-            </div>
-
-            <button class="w-full py-2.5 sm:py-3 rounded-lg text-white font-semibold text-sm sm:text-base transition-colors"
+            <button class="w-full py-2.5 sm:py-3 rounded-lg text-white font-semibold text-sm sm:text-base transition-colors relative overflow-hidden group"
               :class="getButtonClass(tip)"
               @click="handlePurchase(tip)">
-              {{ getButtonText(tip) }}
+              <!-- 按钮装饰效果 -->
+              <div class="absolute inset-0 bg-white/10 transform -skew-x-12 translate-x-full group-hover:translate-x-[-180%] transition-transform duration-700"></div>
+              <span class="relative">{{ getButtonText(tip) }}</span>
             </button>
           </div>
         </div>
@@ -354,7 +340,7 @@ const getButtonText = (tip: AiTips) => {
   
   // 使用实时获取的用户等级
   if (userLevel.value < tip.requiredLevel) {
-    const nextRealm = getRealmName(tip.requiredLevel)
+    const nextRealm = getRealmName(tip.requiredLevel-1)
     return `需修炼至${nextRealm}`
   }
   
