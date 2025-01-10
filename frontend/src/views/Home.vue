@@ -16,11 +16,11 @@
               style="font-family: 'Ma Shan Zheng', cursive; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
             AI群江湖
           </h1>
-          <p class="text-xl md:text-2xl text-white/90 mb-6 md:mb-8 tracking-wider text-center max-w-2xl">
+          <p class="text-xl md:text-2xl text-white/90 mb-6 md:mb-8 tracking-wider text-center max-w-2xl font-ma-shan">
             一个充满神秘与机遇的AI江湖世界
           </p>
           <router-link to="/opportunities" class="inline-block w-full md:w-auto px-4 md:px-0">
-            <button class="w-full md:w-auto bg-white/90 backdrop-blur-sm text-gray-800 px-6 md:px-8 py-3 rounded-full text-lg font-semibold hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+            <button class="w-full md:w-auto bg-white/90 backdrop-blur-sm text-gray-800 px-6 md:px-8 py-3 rounded-full text-lg font-semibold hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 font-ma-shan">
               立即加入
             </button>
           </router-link>
@@ -42,7 +42,7 @@
                 </svg>
               </div>
               <h2 class="text-2xl font-bold text-gray-800 mb-2">汇聚AI英雄</h2>
-              <p class="text-gray-600">
+              <p class="text-gray-600 font-ma-shan">
                 初入江湖的"AI小白"<br>
                 身怀绝技的"AI创造者"<br>
                 勇猛精进的"创业者"
@@ -62,7 +62,7 @@
                 </svg>
               </div>
               <h2 class="text-2xl font-bold text-gray-800 mb-2">AI经纪人IP</h2>
-              <p class="text-gray-600">
+              <p class="text-gray-600 font-ma-shan">
                 社交资产变现<br>
                 好朋友的经纪人<br>
                 做人力资源专家
@@ -83,7 +83,7 @@
                 </svg>
               </div>
               <h2 class="text-2xl font-bold text-gray-800 mb-2">共享共创</h2>
-              <p class="text-gray-600">
+              <p class="text-gray-600 font-ma-shan">
                 流量共享项目共创<br>
                 品质服务创造价值<br>
                 信任连接关系网络
@@ -99,20 +99,20 @@
         <div class="container mx-auto px-4 relative z-10">
           <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div class="bg-white/95 backdrop-blur-md p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
-              <div class="text-3xl font-bold text-cyan-600 mb-2">2522+</div>
-              <div class="text-gray-600">武林藏宝阁</div>
+              <div class="text-3xl font-bold text-cyan-600 mb-2 font-ma-shan">2522+</div>
+              <div class="text-gray-600 font-ma-shan">武林藏宝阁</div>
             </div>
             <div class="bg-white/95 backdrop-blur-md p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
-              <div class="text-3xl font-bold text-fuchsia-600 mb-2">823+</div>
-              <div class="text-gray-600">江湖财富经</div>
+              <div class="text-3xl font-bold text-fuchsia-600 mb-2 font-ma-shan">823+</div>
+              <div class="text-gray-600 font-ma-shan">江湖财富经</div>
             </div>
             <div class="bg-white/95 backdrop-blur-md p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
-              <div class="text-3xl font-bold text-orange-600 mb-2">100+</div>
-              <div class="text-gray-600">抢天赐机缘</div>
+              <div class="text-3xl font-bold text-orange-600 mb-2 font-ma-shan">100+</div>
+              <div class="text-gray-600 font-ma-shan">抢天赐机缘</div>
             </div>
             <div class="bg-white/95 backdrop-blur-md p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
-              <div class="text-3xl font-bold text-orange-600 mb-2">100+</div>
-              <div class="text-gray-600">江湖共创令</div>
+              <div class="text-3xl font-bold text-orange-600 mb-2 font-ma-shan">100+</div>
+              <div class="text-gray-600 font-ma-shan">江湖共创令</div>
             </div>
           </div>
         </div>
@@ -123,10 +123,10 @@
         <!-- 背景装饰 -->
         <div class="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/10"></div>
         <div class="container mx-auto px-4 text-center relative z-10">
-          <h2 class="text-4xl font-bold mb-6 text-gray-800">你的AI江湖冒险即将开启</h2>
-          <p class="text-xl mb-8 text-gray-600">与各路英雄一起，探索AI带来的无限可能</p>
+          <h2 class="text-4xl font-bold mb-6 text-gray-800 font-ma-shan">你的AI江湖冒险即将开启</h2>
+          <p class="text-xl mb-8 text-gray-600 font-ma-shan">与各路英雄一起，探索AI带来的无限可能</p>
           <router-link to="/opportunities" class="inline-block">
-            <button class="bg-white/95 backdrop-blur-md text-gray-800 px-8 py-3 rounded-full text-lg font-semibold hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+            <button class="bg-white/95 backdrop-blur-md text-gray-800 px-8 py-3 rounded-full text-lg font-semibold hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 font-ma-shan">
               立即加入
             </button>
           </router-link>
@@ -215,5 +215,25 @@ h1, h2 {
   .bg-cover {
     background-position: center 30%;
   }
+}
+
+/* 统一字体设置 */
+.font-ma-shan {
+  font-family: 'Ma Shan Zheng', cursive;
+}
+
+/* 所有文字都使用毛笔字体 */
+h1, h2, p, button, div {
+  font-family: 'Ma Shan Zheng', cursive;
+}
+
+/* 优化字间距 */
+.tracking-wider {
+  letter-spacing: 0.05em;
+}
+
+/* 数字使用正常字体权重 */
+.text-3xl.font-bold {
+  font-weight: normal;
 }
 </style> 
