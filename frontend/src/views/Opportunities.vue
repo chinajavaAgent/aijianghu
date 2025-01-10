@@ -3,12 +3,19 @@
   <div class="min-h-screen bg-gradient-to-br from-cyan-50 via-fuchsia-50 to-yellow-50 py-6 sm:py-12">
     <div class="container mx-auto px-4">
       <!-- 页面标题 -->
-      <div class="text-center mb-8 sm:mb-12">
-        <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-2 sm:mb-4">AI经纪人修炼机缘</h1>
-        <p class="text-lg sm:text-xl text-gray-600">神秘强者留下17个锦囊，隐藏17份机缘
+      <div class="text-center mb-8 sm:mb-12 relative">
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-black/5 to-transparent"></div>
+        <h1 class="text-4xl sm:text-5xl font-bold text-gray-800 mb-4 sm:mb-6 relative z-10 font-ma-shan" 
+            style="text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">
+          AI经纪人修炼机缘
+        </h1>
+        <p class="text-xl sm:text-2xl text-gray-700 mb-2 font-ma-shan tracking-wider">
+          神秘强者留下17个锦囊，隐藏17份机缘
         </p>
-        <p class="text-lg sm:text-xl text-gray-600">
-          1个机缘遇1位守关强者，机缘需按照数字大小逐一打开，当你把守关强者能力复制，你此关境界圆满，将成为此关的新任守关强者，17关闯完，你将武功大成
+        <p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto font-ma-shan tracking-wider leading-relaxed">
+          1个机缘遇1位守关强者，机缘需按照数字大小逐一打开<br>
+          当你把守关强者能力复制，你此关境界圆满<br>
+          将成为此关的新任守关强者，17关闯完，你将武功大成
         </p>
       </div>
 
@@ -199,7 +206,7 @@ const loadPendingOrders = async () => {
       size: 100,
       status: 0 // 待审核状态
     })
-    pendingOrders.value = response.data.records || []
+    pendingOrders.value = (response.data as any).records || []
   } catch (error) {
     console.error('加载待审核订单失败:', error)
   }
@@ -419,6 +426,8 @@ const getFilteredTips = (tab: string) => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
+
 /* 添加移动端滚动优化 */
 @media (max-width: 640px) {
   .container {
@@ -439,5 +448,48 @@ const getFilteredTips = (tab: string) => {
 
 .animate-float {
   animation: float 3s ease-in-out infinite;
+}
+
+/* 统一字体设置 */
+.font-ma-shan {
+  font-family: 'Ma Shan Zheng', cursive;
+}
+
+/* 优化字间距 */
+.tracking-wider {
+  letter-spacing: 0.05em;
+}
+
+/* 优化标题阴影 */
+h1.text-4xl {
+  text-shadow: 
+    0 2px 4px rgba(0,0,0,0.2),
+    0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* 优化文字阴影效果 */
+.text-white {
+  text-shadow: 
+    0 2px 4px rgba(0,0,0,0.3),
+    0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* 所有文字都使用毛笔字体 */
+h1, h2, h3, p, button, div {
+  font-family: 'Ma Shan Zheng', cursive;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  h1.text-4xl {
+    text-shadow: 
+      0 1px 2px rgba(0,0,0,0.4),
+      0 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .text-xl {
+    text-shadow: 
+      0 1px 2px rgba(0,0,0,0.3);
+  }
 }
 </style> 
