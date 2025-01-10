@@ -1,8 +1,12 @@
 <!-- AI锦囊列表页面 -->
 <template>
-  <div class="min-h-screen bg-[#F5F7F4] font-ma-shan">
+  <div class="min-h-screen font-ma-shan bg-cover bg-center bg-fixed relative bg-blend-soft-light"
+    style="background-image: url('https://wechat-group-all.oss-cn-hangzhou.aliyuncs.com/image/header_back.png')">
+    <!-- 添加一个浅色遮罩层 -->
+    <div class="absolute inset-0 bg-white/85 backdrop-blur-[1px]"></div>
+
     <!-- 页面内容 -->
-    <div class="container mx-auto px-4 py-8 sm:py-12">
+    <div class="container mx-auto px-4 py-8 sm:py-12 relative z-10">
       <!-- 页面标题区域 -->
       <div class="max-w-3xl mx-auto text-center mb-12">
         <h1 class="text-4xl sm:text-5xl font-bold text-[#7A9D96] font-ma-shan mb-4">
@@ -64,7 +68,11 @@
         <div v-for="tip in getFilteredTips(currentTab)" :key="tip.id"
           class="group bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
           <!-- 卡片头部 -->
-          <div class="aspect-[2/1] rounded-t-2xl bg-[#deedd6] relative overflow-hidden p-4">
+          <div class="aspect-[2/1] rounded-t-2xl relative overflow-hidden p-4 transition-all duration-300"
+            :style="{ 
+              background: getCardColor(tip.requiredLevel),
+              boxShadow: getCardShadow(tip.requiredLevel)
+            }">
             <!-- 图标容器 -->
             <div class="absolute inset-0 flex items-center justify-center">
               <img src="https://canyin-app.oss-cn-guangzhou.aliyuncs.com/images/money.png" 
@@ -74,14 +82,17 @@
             <!-- 价格标签 -->
             <div class="relative z-10">
               <div class="inline-block bg-white/30 backdrop-blur-sm px-3 py-1 rounded-full">
-                <span class="text-base font-medium text-[#2c4c3b] font-ma-shan">￥{{ tip.price }}</span>
+                <span class="text-base font-medium font-ma-shan"
+                  :style="{ color: getTextColor(tip.requiredLevel) }">￥{{ tip.price }}</span>
               </div>
             </div>
             <!-- 境界标签 -->
             <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center">
               <div class="flex items-center gap-2 bg-white/30 backdrop-blur-sm px-3 py-1 rounded-full">
-                <i class="fas text-[#2c4c3b]" :class="[isLocked(tip) ? 'fa-lock' : 'fa-lock-open']"></i>
-                <span class="text-sm text-[#2c4c3b] font-ma-shan">{{ getRealmName(tip.requiredLevel) }}</span>
+                <i class="fas" :class="[isLocked(tip) ? 'fa-lock' : 'fa-lock-open']"
+                  :style="{ color: getTextColor(tip.requiredLevel) }"></i>
+                <span class="text-sm font-ma-shan"
+                  :style="{ color: getTextColor(tip.requiredLevel) }">{{ getRealmName(tip.requiredLevel) }}</span>
               </div>
             </div>
           </div>
@@ -359,6 +370,43 @@ const getFilteredTips = (tab: string) => {
   }
   return []
 }
+
+// 获取卡片背景色
+const getCardColor = (level: number) => {
+  // 使用图片中的颜色，添加透明度
+  const baseColors = [
+    'rgba(255,153,153,0.85)',  // 桃红色 - 略微柔和的红色
+    'rgba(232,240,240,0.85)',  // 凝脂/浅青色 - 清雅的浅青灰色
+    'rgba(255,214,102,0.85)',  // 缃叶/金黄色 - 温暖的金黄色
+    'rgba(27,75,124,0.85)'     // 群青/深蓝色 - 深邃的蓝色
+  ]
+  
+  const colorIndex = ((level - 1) % 4)
+  return baseColors[colorIndex]
+}
+
+// 获取文字颜色
+const getTextColor = (level: number) => {
+  // 计算当前使用的是哪个颜色
+  const colorIndex = ((level - 1) % 4)
+  // 群青背景使用浅色文字，其他使用深色文字
+  return colorIndex === 3 ? '#E8F0F0' : '#1B4B7C'
+}
+
+// 获取卡片阴影
+const getCardShadow = (level: number) => {
+  // 四种基本颜色的RGB值
+  const baseColors = {
+    0: '255,153,153',  // 桃红
+    1: '232,240,240',  // 凝脂/浅青
+    2: '255,214,102',  // 缃叶/金黄
+    3: '27,75,124'     // 群青/深蓝
+  }
+  
+  const colorIndex = ((level - 1) % 4)
+  const rgb = baseColors[colorIndex as keyof typeof baseColors]
+  return `0 0 20px rgba(${rgb},0.25)`
+}
 </script>
 
 <style scoped>
@@ -366,6 +414,32 @@ const getFilteredTips = (tab: string) => {
 
 .font-ma-shan {
   font-family: 'Ma Shan Zheng', cursive;
+}
+
+/* 添加卡片磨砂玻璃效果 */
+.group {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background-blend-mode: overlay;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.group:hover {
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 卡片头部磨砂效果 */
+.aspect-\[2\/1\] {
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  background-blend-mode: soft-light;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 @keyframes bounce-up {
@@ -395,5 +469,23 @@ const getFilteredTips = (tab: string) => {
   .grid {
     gap: 1.5rem;
   }
+}
+
+/* 磨砂玻璃效果 */
+.bg-white {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+/* 温馨提醒区域磨砂效果 */
+.bg-\[#F5F7F4\] {
+  background: rgba(245, 247, 244, 0.5) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
 }
 </style> 
