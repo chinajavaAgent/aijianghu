@@ -373,12 +373,12 @@ const getFilteredTips = (tab: string) => {
 
 // 获取卡片背景色
 const getCardColor = (level: number) => {
-  // 使用图片中的颜色，添加透明度
+  // 使用更深的颜色，降低透明度以配合磨砂效果
   const baseColors = [
-    'rgba(255,153,153,0.85)',  // 桃红色 - 略微柔和的红色
-    'rgba(232,240,240,0.85)',  // 凝脂/浅青色 - 清雅的浅青灰色
-    'rgba(255,214,102,0.85)',  // 缃叶/金黄色 - 温暖的金黄色
-    'rgba(27,75,124,0.85)'     // 群青/深蓝色 - 深邃的蓝色
+    'rgba(255,102,102,0.65)',  // 更深的桃红色
+    'rgba(200,220,220,0.65)',  // 更深的凝脂色
+    'rgba(255,190,60,0.65)',   // 更深的缃叶色
+    'rgba(20,60,100,0.65)'     // 更深的群青色
   ]
   
   const colorIndex = ((level - 1) % 4)
@@ -387,25 +387,25 @@ const getCardColor = (level: number) => {
 
 // 获取文字颜色
 const getTextColor = (level: number) => {
-  // 计算当前使用的是哪个颜色
   const colorIndex = ((level - 1) % 4)
-  // 群青背景使用浅色文字，其他使用深色文字
-  return colorIndex === 3 ? '#E8F0F0' : '#1B4B7C'
+  // 群青和凝脂背景使用不同的文字颜色
+  if (colorIndex === 3) return '#E8F0F0'  // 群青背景用浅色
+  if (colorIndex === 1) return '#1B4B7C'  // 凝脂背景用深色
+  return '#2A3F54'  // 其他背景用中性色
 }
 
 // 获取卡片阴影
 const getCardShadow = (level: number) => {
-  // 四种基本颜色的RGB值
   const baseColors = {
-    0: '255,153,153',  // 桃红
-    1: '232,240,240',  // 凝脂/浅青
-    2: '255,214,102',  // 缃叶/金黄
-    3: '27,75,124'     // 群青/深蓝
+    0: '255,102,102',  // 桃红
+    1: '200,220,220',  // 凝脂
+    2: '255,190,60',   // 缃叶
+    3: '20,60,100'     // 群青
   }
   
   const colorIndex = ((level - 1) % 4)
   const rgb = baseColors[colorIndex as keyof typeof baseColors]
-  return `0 0 20px rgba(${rgb},0.25)`
+  return `0 12px 36px rgba(${rgb},0.4), 0 8px 16px rgba(${rgb},0.2)`
 }
 </script>
 
@@ -418,28 +418,41 @@ const getCardShadow = (level: number) => {
 
 /* 添加卡片磨砂玻璃效果 */
 .group {
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   background-blend-mode: overlay;
   transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    inset 0 2px 3px rgba(255, 255, 255, 0.25);
+  transform: perspective(1000px) translateZ(0);
+  will-change: transform;
 }
 
 .group:hover {
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.3);
-  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transform: perspective(1000px) translateZ(20px) translateY(-5px);
+  border-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 16px 48px rgba(0, 0, 0, 0.2),
+    0 8px 24px rgba(0, 0, 0, 0.15),
+    inset 0 2px 6px rgba(255, 255, 255, 0.3);
 }
 
 /* 卡片头部磨砂效果 */
 .aspect-\[2\/1\] {
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   background-blend-mode: soft-light;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    inset 0 2px 4px rgba(255, 255, 255, 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 @keyframes bounce-up {
@@ -473,19 +486,25 @@ const getCardShadow = (level: number) => {
 
 /* 磨砂玻璃效果 */
 .bg-white {
-  background: rgba(255, 255, 255, 0.15) !important;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  background: rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 
+    0 8px 32px rgba(31, 38, 135, 0.2),
+    0 4px 16px rgba(31, 38, 135, 0.15),
+    inset 0 2px 3px rgba(255, 255, 255, 0.2);
 }
 
 /* 温馨提醒区域磨砂效果 */
 .bg-\[#F5F7F4\] {
-  background: rgba(245, 247, 244, 0.5) !important;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  background: rgba(245, 247, 244, 0.65) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 
+    0 8px 32px rgba(31, 38, 135, 0.2),
+    0 4px 16px rgba(31, 38, 135, 0.15),
+    inset 0 2px 3px rgba(255, 255, 255, 0.2);
 }
 </style> 
