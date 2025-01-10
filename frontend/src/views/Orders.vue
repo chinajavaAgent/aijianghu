@@ -21,7 +21,33 @@
         </div>
       </div>
 
-      <div class="container mx-auto px-4 py-6">
+      <!-- 未申请升级时的显示界面 -->
+      <div v-if="!hasApplied" class="container mx-auto px-4 py-12">
+        <div class="text-center">
+          <!-- 当前境界显示 -->
+          <div class="mb-8">
+            <div class="text-2xl font-bold text-[#2A3F54] mb-2">当前境界</div>
+            <div class="text-4xl font-bold text-[#7A9D96] mb-4">{{ currentLevel }}</div>
+            <div class="text-gray-600">修为值：{{ currentCredit }} / {{ nextLevelCredit }}</div>
+          </div>
+
+          <!-- 升级按钮 -->
+          <button
+            @click="handleUpgrade"
+            class="px-8 py-4 bg-[#7A9D96] hover:bg-[#6B8E87] text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl font-bold text-xl mb-8"
+          >
+            升级修为
+          </button>
+
+          <!-- 底部文字 -->
+          <div class="mt-8 text-gray-600 text-lg italic">
+            "我有秘法流于心间，等待有缘人来领取"
+          </div>
+        </div>
+      </div>
+
+      <!-- 已申请升级时的显示界面 -->
+      <div v-else class="container mx-auto px-4 py-6">
         <!-- 标签页导航 -->
         <div class="rounded-xl shadow-sm mb-6 overflow-hidden">
           <div class="flex border-b">
@@ -51,7 +77,7 @@
               <div 
                 v-for="order in pendingOrders" 
                 :key="order.id" 
-                class="bg-white rounded-xl p-4 mt-4 shadow-sm transition-shadow duration-200 hover:shadow-md cursor-pointer"
+                class="bg-white rounded-xl p-4 shadow-sm transition-shadow duration-200 hover:shadow-md cursor-pointer"
                 @click="goToTipDetail(order.tipsId)"
               >
                 <div class="flex items-start gap-3">
@@ -74,12 +100,12 @@
                       <div v-if="order.reviewer" class="flex items-center text-sm text-gray-500 mb-1">
                         <span class="font-medium text-gray-700">掌门电话：</span>
                         <span class="ml-2">{{ order.reviewerPhone }}</span>
-                        <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click.stop="copyText(order.reviewerPhone)">一键传信</button>
+                        <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click.stop="handleCopyContact('phone', order)">一键传信</button>
                       </div>
                       <div v-if="order.reviewer" class="flex items-center text-sm text-gray-500 mb-1">
                         <span class="font-medium text-gray-700">掌门微信：</span>
                         <span>{{ order.reviewerWechat }}</span>
-                        <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click.stop="copyText(order.reviewerWechat)">点击复制</button>
+                        <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click.stop="handleCopyContact('wechat', order)">点击复制</button>
                       </div>
                     </div>
                     <div class="mt-3 pt-3 border-t border-gray-100">
@@ -135,12 +161,12 @@
                       <div class="flex items-center text-sm text-gray-500 mb-1">
                         <span class="font-medium text-gray-700">传信飞鸽：</span>
                         <span>{{ order.reviewerPhone }}</span>
-                        <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click.stop="copyText(order.phone)">一键传信</button>
+                        <button class="ml-2 px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded" @click.stop="handleCopyContact('phone', order)">一键传信</button>
                       </div>
                       <div class="flex items-center text-sm text-gray-500 mb-1">
                         <span class="font-medium text-gray-700">江湖微信：</span>
                         <span>{{ order.reviewerWechat }}</span>
-                        <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click.stop="copyText(order.wechat)">点击复制</button>
+                        <button class="ml-2 px-2 py-0.5 text-xs bg-green-50 text-green-600 rounded" @click.stop="handleCopyContact('wechat', order)">点击复制</button>
                       </div>
                       <div class="flex items-center text-sm text-gray-500 mb-1">
                         <span class="font-medium text-gray-700">江湖声望：</span>
@@ -187,7 +213,7 @@ import { ref, onMounted, watch } from 'vue'
 import { showToast } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/store/user'
-import { getUserOrders } from '@/api/order'
+import { getUserOrders, getUserLevel } from '@/api/order'
 
 // 标签页配置
 const tabs = [
@@ -213,41 +239,6 @@ const checkLogin = () => {
   }
   return true
 }
-
-// 获取订单列表
-const loadOrders = async () => {
-  try {
-    if (!userStore.id) return
-
-    const response = await getUserOrders(userStore.id, {
-      page: 1,
-      size: 100,
-      status: activeTab.value === 'pending' ? 0 : 1
-    })
-
-    if (response.data) {
-      if (activeTab.value === 'pending') {
-        pendingOrders.value = response.data.records
-      } else {
-        approvedOrders.value = response.data.records
-      }
-    }
-  } catch (error) {
-    console.error('获取订单列表失败:', error)
-    showToast('获取订单列表失败')
-  }
-}
-
-// 监听标签页切换
-watch(activeTab, () => {
-  loadOrders()
-})
-
-// 在组件挂载时检查登录状态并获取用户信息
-onMounted(async () => {
-  if (!checkLogin()) return
-  loadOrders()
-})
 
 // 订单数据
 interface OrderItem {
@@ -275,8 +266,67 @@ interface OrderItem {
   introduction: string
 }
 
+// 新增状态数据
+const hasApplied = ref(false)
+const currentLevel = ref('')
+const currentCredit = ref(0)
+const nextLevelCredit = ref(100)
+
 const pendingOrders = ref<OrderItem[]>([])
 const approvedOrders = ref<OrderItem[]>([])
+
+// 获取用户当前等级信息
+const loadUserLevel = async () => {
+  try {
+    if (!userStore.id) return
+    const data = await getUserLevel(userStore.id)
+    if (data) {
+      currentLevel.value = data.levelTitle
+      currentCredit.value = data.credit
+      nextLevelCredit.value = data.nextLevelCredit
+    }
+  } catch (error) {
+    console.error('获取用户等级信息失败:', error)
+    showToast('获取用户等级信息失败')
+  }
+}
+
+// 获取订单列表
+const loadOrders = async () => {
+  try {
+    if (!userStore.id) return
+
+    const data = await getUserOrders(userStore.id, {
+      page: 1,
+      size: 100,
+      status: activeTab.value === 'pending' ? 0 : 1
+    })
+
+    if (data?.records) {
+      if (activeTab.value === 'pending') {
+        pendingOrders.value = data.records
+      } else {
+        approvedOrders.value = data.records
+      }
+      // 更新申请状态
+      hasApplied.value = data.records.length > 0
+    }
+  } catch (error) {
+    console.error('获取订单列表失败:', error)
+    showToast('获取订单列表失败')
+  }
+}
+
+// 监听标签页切换
+watch(activeTab, () => {
+  loadOrders()
+})
+
+// 在组件挂载时检查登录状态并获取用户信息
+onMounted(async () => {
+  if (!checkLogin()) return
+  await Promise.all([loadOrders(), loadUserLevel()])
+})
 
 // 复制文本
 const copyText = (text: string) => {
@@ -292,6 +342,15 @@ const copyText = (text: string) => {
     }).catch(() => {
       showToast('复制失败，请手动复制')
     })
+  }
+}
+
+// 修改按钮点击事件处理
+const handleCopyContact = (type: 'phone' | 'wechat', order: OrderItem) => {
+  if (type === 'phone') {
+    copyText(order.reviewerPhone)
+  } else {
+    copyText(order.reviewerWechat)
   }
 }
 
