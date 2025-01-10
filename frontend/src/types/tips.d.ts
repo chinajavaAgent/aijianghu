@@ -42,4 +42,16 @@ export interface ApiResponse<T> {
     data: T;
     records?: T[];
     url?: string;
+}
+
+// 管理员信息
+export interface Admin {
+    id: number;
+    phone: string;
+    wechatId: string;
+    referrerUser?: {
+        phone: string;
+        wechat: string;
+    };
+    url?: string;
 } 
