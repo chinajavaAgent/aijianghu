@@ -85,7 +85,7 @@
               <span class="text-base sm:text-lg font-bold" :class="getTitleColorClass(tip)">￥{{ tip.price }}</span>
             </div>
             
-            <!-- 解锁状态标签 -->
+            <!-- 境界标签 -->
             <div class="absolute bottom-3 left-3 px-3 py-1 rounded-full shadow-md"
               :class="[
                 isLocked(tip) ? 'bg-gray-100' : 'bg-green-100',
@@ -93,14 +93,22 @@
               ]">
               <i class="fas" :class="[isLocked(tip) ? 'fa-lock text-gray-500' : 'fa-lock-open text-green-500']"></i>
               <span class="text-sm" :class="[isLocked(tip) ? 'text-gray-500' : 'text-green-500']">
-                {{ isLocked(tip) ? '未解锁' : '已解锁' }}
+                {{ getRealmName(tip.requiredLevel) }}
               </span>
             </div>
           </div>
           
           <div class="p-4 sm:p-6">
             <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-3" :class="getTitleColorClass(tip)">{{ tip.title }}</h3>
-            <p class="text-gray-600 text-sm sm:text-base mb-4">{{ tip.description }}</p>
+            
+            <!-- 温馨提醒 -->
+            <div class="bg-yellow-50 rounded-lg p-3 mb-4">
+              <p class="text-sm text-yellow-700 font-ma-shan">
+                <!-- <span class="text-yellow-600 font-bold">修炼{{ getRealmName(tip.requiredLevel) }}</span> -->
+                <span class="ml-1">温馨提醒：</span>
+                {{ getRealmTip(tip.requiredLevel) }}
+              </p>
+            </div>
 
             <!-- 项目列表 -->
             <div v-if="tip.projects && tip.projects.length > 0" class="mb-4">
@@ -295,6 +303,38 @@ const getButtonClass = (tip: AiTips) => {
   return buttons[index]
 }
 
+// 境界映射
+const REALM_MAPPING = [
+  { level: 1, name: '搬血境', tip: '搬血初成，需稳扎稳打，按部就班，切忌急功近利，方能血气充盈，根基稳固。' },
+  { level: 2, name: '洞天境', tip: '初入洞天，莫急莫躁，循序渐进，方能稳固根基，洞开新天地。' },
+  { level: 3, name: '化灵境', tip: '灵性初显，需静心养神，以灵驭气，切勿心浮气躁，致灵性受损。' },
+  { level: 4, name: '铭文境', tip: '铭文刻道，需心细如发，一丝不苟，错一字则满盘皆输，耐心是关键。' },
+  { level: 5, name: '列阵境', tip: '阵法千变，需熟记于心，灵活运用，遇敌时方能临危不乱，布阵御敌。' },
+  { level: 6, name: '尊者境', tip: '身为尊者，威严自重，待人接物需有度，切勿恃强凌弱，失了尊者风范。' },
+  { level: 7, name: '神火境', tip: '神火炽烈，需谨慎掌控，以防灼伤自身，同时也要以火炼心，淬炼道心。' },
+  { level: 8, name: '真一境', tip: '真一归元，需摒弃杂念，一心向道，方能领悟真一之妙，突破瓶颈。' },
+  { level: 9, name: '圣祭境', tip: '圣祭之路，需虔诚祭炼，心怀敬畏，以圣心行祭事，方得圣力加持。' },
+  { level: 10, name: '天神境', tip: '天神高远，需仰望星空，志存高远，不断追求，方能触摸神之领域。' },
+  { level: 11, name: '虚道境', tip: '虚道缥缈，需心如止水，洞察虚无，以虚御实，方能领悟虚道真谛。' },
+  { level: 12, name: '斩我境', tip: '斩我断念，需狠心决绝，斩断执念，方能突破自我，重塑道心。' },
+  { level: 13, name: '遁一境', tip: '遁一归隐，需隐于无形，藏于虚无，以一遁万，方能遁入无尽虚空。' },
+  { level: 14, name: '至尊境', tip: '至尊之位，需心怀天下，以德服人，方能统领群雄，成就至尊霸业。' },
+  { level: 15, name: '仙王境', tip: '仙王临世，需仙心不泯，慈悲为怀，以仙力庇佑众生，方得仙王之名。' },
+  { level: 16, name: '仙帝境', tip: '仙帝之尊，需掌控仙界，运筹帷幄，以帝道统御仙途，方成仙帝霸业。' }
+]
+
+// 获取境界名称
+const getRealmName = (level: number) => {
+  const realm = REALM_MAPPING.find(r => r.level === level)
+  return realm ? realm.name : '未知境界'
+}
+
+// 获取境界提示
+const getRealmTip = (level: number) => {
+  const realm = REALM_MAPPING.find(r => r.level === level)
+  return realm ? realm.tip : ''
+}
+
 // 获取按钮文本
 const getButtonText = (tip: AiTips) => {
   if (!tip.projects || tip.projects.length === 0) {
@@ -314,14 +354,8 @@ const getButtonText = (tip: AiTips) => {
   
   // 使用实时获取的用户等级
   if (userLevel.value < tip.requiredLevel) {
-    const levelGap = tip.requiredLevel - userLevel.value
-    const texts = [
-      '需继续修炼',
-      `需提升${levelGap}重境界`,
-      `需达${tip.requiredLevel}重天`,
-      `需突破${levelGap}层瓶颈`
-    ]
-    return texts[Math.floor(Math.random() * texts.length)]
+    const nextRealm = getRealmName(tip.requiredLevel)
+    return `需修炼至${nextRealm}`
   }
   
   // 用户等级已满足要求
