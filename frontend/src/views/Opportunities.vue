@@ -1,34 +1,34 @@
 <!-- AI锦囊列表页面 -->
 <template>
-  <div class="min-h-screen bg-[#F5F7F4]">
+  <div class="min-h-screen bg-[#F5F7F4] font-ma-shan">
     <!-- 页面内容 -->
     <div class="container mx-auto px-4 py-8 sm:py-12">
       <!-- 页面标题区域 -->
       <div class="max-w-3xl mx-auto text-center mb-12">
-        <h1 class="text-4xl sm:text-5xl font-bold text-[#4A4940] font-ma-shan mb-4">
+        <h1 class="text-4xl sm:text-5xl font-bold text-[#7A9D96] font-ma-shan mb-4">
           AI经纪人修炼机缘
         </h1>
-        <p class="text-lg text-[#7A9D96] font-ma-shan mb-8">
+        <p class="text-lg text-[#4A4940]/80 font-ma-shan mb-8">
           神秘强者留下十七份机缘，待有缘人
         </p>
         <!-- 修炼步骤说明 -->
         <div class="inline-flex flex-col gap-3 bg-white/50 backdrop-blur-sm rounded-2xl p-6 shadow-sm">
-          <div class="flex items-center gap-4 text-[#4A4940]/80">
-            <div class="flex items-center gap-2 min-w-[100px] justify-end font-medium">
+          <div class="flex items-center gap-4 text-[#4A4940]/90">
+            <div class="flex items-center gap-2 min-w-[100px] justify-end font-medium text-[#7A9D96]">
               <span class="w-2 h-2 rounded-full bg-[#C7DDBB]"></span>
               <span>第一步</span>
             </div>
             <div class="text-left">按数字大小逐一开启</div>
           </div>
-          <div class="flex items-center gap-4 text-[#4A4940]/80">
-            <div class="flex items-center gap-2 min-w-[100px] justify-end font-medium">
+          <div class="flex items-center gap-4 text-[#4A4940]/90">
+            <div class="flex items-center gap-2 min-w-[100px] justify-end font-medium text-[#7A9D96]">
               <span class="w-2 h-2 rounded-full bg-[#C7DDBB]"></span>
               <span>第二步</span>
             </div>
             <div class="text-left">遇一位守关强者，习得其能力</div>
           </div>
-          <div class="flex items-center gap-4 text-[#4A4940]/80">
-            <div class="flex items-center gap-2 min-w-[100px] justify-end font-medium">
+          <div class="flex items-center gap-4 text-[#4A4940]/90">
+            <div class="flex items-center gap-2 min-w-[100px] justify-end font-medium text-[#7A9D96]">
               <span class="w-2 h-2 rounded-full bg-[#C7DDBB]"></span>
               <span>第三步</span>
             </div>
@@ -44,7 +44,7 @@
             v-for="tab in tabs" 
             :key="tab.value"
             @click="currentTab = tab.value"
-            class="px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+            class="px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 font-ma-shan"
             :class="[
               currentTab === tab.value 
                 ? 'bg-[#7A9D96] text-white' 
@@ -52,7 +52,7 @@
             ]"
           >
             {{ tab.label }}
-            <span class="ml-1 text-xs opacity-80">
+            <span class="ml-1 text-xs opacity-80 font-ma-shan">
               ({{ getFilteredTips(tab.value).length }})
             </span>
           </button>
@@ -64,7 +64,7 @@
         <div v-for="tip in getFilteredTips(currentTab)" :key="tip.id"
           class="group bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
           <!-- 卡片头部 -->
-          <div class="aspect-[2/1] rounded-t-2xl bg-[#C7DDBB] relative overflow-hidden p-4">
+          <div class="aspect-[2/1] rounded-t-2xl bg-[#deedd6] relative overflow-hidden p-4">
             <!-- 图标容器 -->
             <div class="absolute inset-0 flex items-center justify-center">
               <img src="https://canyin-app.oss-cn-guangzhou.aliyuncs.com/images/money.png" 
@@ -74,32 +74,32 @@
             <!-- 价格标签 -->
             <div class="relative z-10">
               <div class="inline-block bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
-                <span class="text-base font-medium text-[#4A4940]">￥{{ tip.price }}</span>
+                <span class="text-base font-medium text-[#4A4940] font-ma-shan">￥{{ tip.price }}</span>
               </div>
             </div>
             <!-- 境界标签 -->
             <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center">
               <div class="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
                 <i class="fas text-[#4A4940]" :class="[isLocked(tip) ? 'fa-lock' : 'fa-lock-open']"></i>
-                <span class="text-sm text-[#4A4940]">{{ getRealmName(tip.requiredLevel) }}</span>
+                <span class="text-sm text-[#4A4940] font-ma-shan">{{ getRealmName(tip.requiredLevel) }}</span>
               </div>
             </div>
           </div>
           
           <!-- 卡片内容 -->
           <div class="p-6">
-            <h3 class="text-lg font-medium text-[#4A4940] mb-4">{{ tip.title }}</h3>
+            <h3 class="text-lg font-medium text-[#4A4940] mb-4 font-ma-shan">{{ tip.title }}</h3>
             
             <!-- 温馨提醒 -->
             <div class="bg-[#F5F7F4] rounded-lg p-4 mb-5">
-              <p class="text-sm text-[#4A4940]/80">
-                <span class="font-medium">温馨提醒：</span>
+              <p class="text-sm text-[#4A4940]/90 font-ma-shan">
+                <span class="font-medium text-[#7A9D96]">温馨提醒：</span>
                 {{ getRealmTip(tip.requiredLevel) }}
               </p>
             </div>
 
             <button class="w-full py-3 rounded-lg text-white font-medium text-sm transition-colors duration-200
-              bg-[#7A9D96] hover:bg-[#6B8E87]">
+              bg-[#7A9D96] hover:bg-[#6B8E87] font-ma-shan">
               {{ getButtonText(tip) }}
             </button>
           </div>
