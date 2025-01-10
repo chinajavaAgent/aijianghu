@@ -28,13 +28,10 @@
           <!-- AI资源库 -->
           <div class="bg-white/95 backdrop-blur-md rounded-xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 hover:shadow-xl border border-gray-100">
             <div class="text-center mb-4">
-              <div class="w-16 h-16 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2L13 4H19L20 6L12 22L4 6L5 4H11L12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M12 6V18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M8 8L16 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M9 12L15 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+              <div class="w-24 h-24 mx-auto mb-4 overflow-hidden">
+                <img src="https://wechat-group-all.oss-cn-hangzhou.aliyuncs.com/image/ai_heroes.png" 
+                     alt="AI英雄汇聚" 
+                     class="w-full h-full object-cover rounded-lg shadow-lg">
               </div>
               <h2 class="text-2xl font-bold text-gray-800 mb-2">汇聚AI英雄</h2>
               <p class="text-gray-600 font-ma-shan">
@@ -48,13 +45,10 @@
           <!-- AI副业机会 -->
           <div class="bg-white/95 backdrop-blur-md rounded-xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 hover:shadow-xl border border-gray-100">
             <div class="text-center mb-4">
-              <div class="w-16 h-16 bg-gradient-to-br from-fuchsia-400 to-fuchsia-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3Z" stroke="currentColor" stroke-width="1.5"/>
-                  <path d="M7 7H17M7 12H17M7 17H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                  <path d="M6 3C6 3 8 7 12 7C16 7 18 3 18 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                  <path d="M6 21C6 21 8 17 12 17C16 17 18 21 18 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
+              <div class="w-24 h-24 mx-auto mb-4 overflow-hidden">
+                <img src="https://wechat-group-all.oss-cn-hangzhou.aliyuncs.com/image/icon2.png" 
+                     alt="AI英雄汇聚" 
+                     class="w-full h-full object-cover rounded-lg shadow-lg">
               </div>
               <h2 class="text-2xl font-bold text-gray-800 mb-2">AI经纪人IP</h2>
               <p class="text-gray-600 font-ma-shan">
@@ -68,14 +62,10 @@
           <!-- AI流量池 -->
           <div class="bg-white/95 backdrop-blur-md rounded-xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 hover:shadow-xl border border-gray-100">
             <div class="text-center mb-4">
-              <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5"/>
-                  <path d="M12 2C14.5 7 17 9.5 22 12C17 14.5 14.5 17 12 22C9.5 17 7 14.5 2 12C7 9.5 9.5 7 12 2Z" stroke="currentColor" stroke-width="1.5"/>
-                  <circle cx="12" cy="12" r="2" fill="currentColor"/>
-                  <path d="M12 7C12 7 14 9 14 12C14 15 12 17 12 17" stroke="currentColor" stroke-width="1.5"/>
-                  <path d="M12 7C12 7 10 9 10 12C10 15 12 17 12 17" stroke="currentColor" stroke-width="1.5"/>
-                </svg>
+              <div class="w-24 h-24 mx-auto mb-4 overflow-hidden">
+                <img src="https://wechat-group-all.oss-cn-hangzhou.aliyuncs.com/image/icon3.png" 
+                     alt="AI英雄汇聚" 
+                     class="w-full h-full object-cover rounded-lg shadow-lg">
               </div>
               <h2 class="text-2xl font-bold text-gray-800 mb-2">共享共创</h2>
               <p class="text-gray-600 font-ma-shan">
