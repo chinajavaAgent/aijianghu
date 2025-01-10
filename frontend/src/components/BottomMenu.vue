@@ -64,12 +64,12 @@ const isActive = (name: string) => {
 }
 
 .nav-item.active {
-  @apply text-primary;
+  @apply text-[#7A9D96];
 }
 
 .nav-item.active svg {
-  @apply text-primary;
-  filter: drop-shadow(0 0 2px rgba(79, 70, 229, 0.3));
+  @apply text-[#7A9D96];
+  filter: drop-shadow(0 0 2px rgba(122, 157, 150, 0.3));
   transform: scale(1.1);
   transition: all 0.3s ease;
 }
@@ -88,7 +88,7 @@ const isActive = (name: string) => {
 }
 
 .nav-item.active .menu-text {
-  @apply text-primary;
+  @apply text-[#7A9D96];
   transform: scale(1.05);
 }
 

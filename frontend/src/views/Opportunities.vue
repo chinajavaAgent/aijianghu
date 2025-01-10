@@ -3,37 +3,37 @@
   <div class="min-h-screen font-ma-shan bg-cover bg-center bg-fixed relative bg-blend-soft-light"
     style="background-image: url('https://wechat-group-all.oss-cn-hangzhou.aliyuncs.com/image/header_back.png')">
     <!-- 添加一个浅色遮罩层 -->
-    <div class="absolute inset-0 bg-white/85 backdrop-blur-[1px]"></div>
+    <div class="absolute inset-0 bg-white/90 backdrop-blur-[1px]"></div>
 
     <!-- 页面内容 -->
     <div class="container mx-auto px-4 py-8 sm:py-12 relative z-10">
       <!-- 页面标题区域 -->
       <div class="max-w-3xl mx-auto text-center mb-12">
-        <h1 class="text-4xl sm:text-5xl font-bold text-[#7A9D96] font-ma-shan mb-4">
+        <h1 class="text-4xl sm:text-5xl font-bold text-[#2A3F54] font-ma-shan mb-4 drop-shadow-sm">
           AI经纪人修炼机缘
         </h1>
-        <p class="text-lg text-[#4A4940]/80 font-ma-shan mb-8">
+        <p class="text-lg text-[#2A3F54] font-ma-shan mb-8">
           神秘强者留下十七份机缘，待有缘人
         </p>
         <!-- 修炼步骤说明 -->
         <div class="inline-flex flex-col gap-3 bg-white/50 backdrop-blur-sm rounded-2xl p-6 shadow-sm">
-          <div class="flex items-center gap-4 text-[#4A4940]/90">
-            <div class="flex items-center gap-2 min-w-[100px] justify-end font-medium text-[#7A9D96]">
-              <span class="w-2 h-2 rounded-full bg-[#C7DDBB]"></span>
+          <div class="flex items-center gap-4 text-[#2A3F54]">
+            <div class="flex items-center gap-2 min-w-[100px] justify-end font-medium text-[#2A3F54]">
+              <span class="w-2 h-2 rounded-full bg-[#7A9D96]"></span>
               <span>第一步</span>
             </div>
             <div class="text-left">按数字大小逐一开启</div>
           </div>
-          <div class="flex items-center gap-4 text-[#4A4940]/90">
-            <div class="flex items-center gap-2 min-w-[100px] justify-end font-medium text-[#7A9D96]">
-              <span class="w-2 h-2 rounded-full bg-[#C7DDBB]"></span>
+          <div class="flex items-center gap-4 text-[#2A3F54]">
+            <div class="flex items-center gap-2 min-w-[100px] justify-end font-medium text-[#2A3F54]">
+              <span class="w-2 h-2 rounded-full bg-[#7A9D96]"></span>
               <span>第二步</span>
             </div>
             <div class="text-left">遇一位守关强者，习得其能力</div>
           </div>
-          <div class="flex items-center gap-4 text-[#4A4940]/90">
-            <div class="flex items-center gap-2 min-w-[100px] justify-end font-medium text-[#7A9D96]">
-              <span class="w-2 h-2 rounded-full bg-[#C7DDBB]"></span>
+          <div class="flex items-center gap-4 text-[#2A3F54]">
+            <div class="flex items-center gap-2 min-w-[100px] justify-end font-medium text-[#2A3F54]">
+              <span class="w-2 h-2 rounded-full bg-[#7A9D96]"></span>
               <span>第三步</span>
             </div>
             <div class="text-left">成为新任守关者，继续修炼</div>
@@ -66,7 +66,8 @@
       <!-- 锦囊列表 -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div v-for="tip in getFilteredTips(currentTab)" :key="tip.id"
-          class="group bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
+          class="group bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer"
+          @click="handlePurchase(tip)">
           <!-- 卡片头部 -->
           <div class="aspect-[2/1] rounded-t-2xl relative overflow-hidden p-4 transition-all duration-300"
             :style="{ 
@@ -110,7 +111,8 @@
             </div>
 
             <button class="w-full py-3 rounded-lg text-white font-medium text-sm transition-colors duration-200
-              bg-[#7A9D96] hover:bg-[#6B8E87] font-ma-shan">
+              bg-[#7A9D96] hover:bg-[#6B8E87] font-ma-shan"
+              @click.stop="handlePurchase(tip)">
               {{ getButtonText(tip) }}
             </button>
           </div>
@@ -388,10 +390,10 @@ const getCardColor = (level: number) => {
 // 获取文字颜色
 const getTextColor = (level: number) => {
   const colorIndex = ((level - 1) % 4)
-  // 群青和凝脂背景使用不同的文字颜色
-  if (colorIndex === 3) return '#E8F0F0'  // 群青背景用浅色
-  if (colorIndex === 1) return '#1B4B7C'  // 凝脂背景用深色
-  return '#2A3F54'  // 其他背景用中性色
+  // 群青背景使用浅色文字，其他使用深色文字
+  if (colorIndex === 3) return '#FFFFFF'  // 群青背景用白色
+  if (colorIndex === 1) return '#2A3F54'  // 凝脂背景用深蓝色
+  return '#2A3F54'  // 其他背景用深蓝色
 }
 
 // 获取卡片阴影
@@ -423,13 +425,14 @@ const getCardShadow = (level: number) => {
   background-blend-mode: overlay;
   transition: all 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.35);
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.3);
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.15),
     0 4px 16px rgba(0, 0, 0, 0.1),
     inset 0 2px 3px rgba(255, 255, 255, 0.25);
   transform: perspective(1000px) translateZ(0);
   will-change: transform;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
 }
 
 .group:hover {
@@ -437,7 +440,7 @@ const getCardShadow = (level: number) => {
   -webkit-backdrop-filter: blur(20px);
   transform: perspective(1000px) translateZ(20px) translateY(-5px);
   border-color: rgba(255, 255, 255, 0.5);
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.35);
   box-shadow: 
     0 16px 48px rgba(0, 0, 0, 0.2),
     0 8px 24px rgba(0, 0, 0, 0.15),
@@ -486,7 +489,7 @@ const getCardShadow = (level: number) => {
 
 /* 磨砂玻璃效果 */
 .bg-white {
-  background: rgba(255, 255, 255, 0.25) !important;
+  background: rgba(255, 255, 255, 0.35) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.35);
@@ -498,7 +501,7 @@ const getCardShadow = (level: number) => {
 
 /* 温馨提醒区域磨砂效果 */
 .bg-\[#F5F7F4\] {
-  background: rgba(245, 247, 244, 0.65) !important;
+  background: rgba(245, 247, 244, 0.75) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.35);
@@ -506,5 +509,12 @@ const getCardShadow = (level: number) => {
     0 8px 32px rgba(31, 38, 135, 0.2),
     0 4px 16px rgba(31, 38, 135, 0.15),
     inset 0 2px 3px rgba(255, 255, 255, 0.2);
+}
+
+/* 增加文字清晰度 */
+h1, h2, h3, p, span, div {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 </style> 
