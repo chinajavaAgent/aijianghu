@@ -1,16 +1,19 @@
 <template>
-  <div class="min-h-screen bg-fixed bg-cover bg-center" 
-       style="background-image: url('https://wechat-group-all.oss-cn-hangzhou.aliyuncs.com/image/header_back.png');">
-    <!-- 整体背景遮罩 -->
-    <div class="min-h-screen bg-gradient-to-b from-black/30 via-white/80 to-white/90 pb-20">
+  <div class="min-h-screen font-ma-shan bg-cover bg-center bg-fixed relative bg-blend-soft-light"
+    style="background-image: url('https://wechat-group-all.oss-cn-hangzhou.aliyuncs.com/image/header_back.png')">
+    <!-- 添加一个浅色遮罩层 -->
+    <div class="absolute inset-0 bg-white/90 backdrop-blur-[1px]"></div>
+
+    <!-- 页面内容 -->
+    <div class="relative z-10">
       <!-- 顶部导航栏 -->
-      <div class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-10">
+      <div class="bg-white/60 backdrop-blur-sm shadow-sm sticky top-0 z-20">
         <div class="container mx-auto px-4">
           <div class="flex items-center justify-between">
-            <h1 class="text-xl font-bold text-gray-800 py-4 font-ma-shan">修炼进阶</h1>
+            <h1 class="text-xl font-bold text-[#2A3F54] py-4 font-ma-shan">修炼进阶</h1>
             <button
               @click="handleUpgrade"
-              class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg font-ma-shan"
+              class="px-4 py-2 bg-[#7A9D96] hover:bg-[#6B8E87] text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg font-ma-shan"
             >
               <span class="block text-sm">去升级解锁更多机缘</span>
             </button>
@@ -352,11 +355,24 @@ h1, h2, p, button, div {
 }
 
 /* 磨砂玻璃效果 */
-.backdrop-blur-md {
-  backdrop-filter: blur(12px);
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
 }
 
-.bg-white\/95 {
-  background-color: rgba(255, 255, 255, 0.92);
+.bg-white\/60 {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+/* 统一颜色主题 */
+.text-primary {
+  color: #2A3F54;
+}
+
+.bg-primary {
+  background-color: #7A9D96;
+}
+
+.hover\:bg-primary-dark:hover {
+  background-color: #6B8E87;
 }
 </style> 
