@@ -8,31 +8,31 @@
     <!-- 页面内容 -->
     <div class="container mx-auto px-4 py-8 sm:py-12 relative z-10">
       <!-- 页面标题区域 -->
-      <div class="max-w-3xl mx-auto text-center mb-12">
+      <div class="max-w-3xl mx-auto text-center mb-4">
         <h1 class="text-4xl sm:text-5xl font-bold text-[#2A3F54] font-ma-shan mb-4 drop-shadow-sm">
           AI经纪人修炼机缘
         </h1>
-        <p class="text-lg text-[#2A3F54] font-ma-shan mb-8">
+        <p class="text-lg text-[#2A3F54] font-ma-shan mb-2">
           神秘强者留下十七份机缘，待有缘人
         </p>
         <!-- 修炼步骤说明 -->
         <div class="inline-flex flex-col gap-3 bg-white/50 backdrop-blur-sm rounded-2xl p-6 shadow-sm">
           <div class="flex items-center gap-4 text-[#2A3F54]">
-            <div class="flex items-center gap-2 min-w-[100px] justify-end font-medium text-[#2A3F54]">
+            <div class="flex items-center gap-2 justify-end font-medium text-[#2A3F54]">
               <span class="w-2 h-2 rounded-full bg-[#7A9D96]"></span>
               <span>第一步</span>
             </div>
             <div class="text-left">按数字大小逐一开启</div>
           </div>
-          <div class="flex items-center gap-4 text-[#2A3F54]">
-            <div class="flex items-center gap-2 min-w-[100px] justify-end font-medium text-[#2A3F54]">
+          <div class="flex items-center gap-2 text-[#2A3F54]">
+            <div class="flex items-center gap-2 justify-end font-medium text-[#2A3F54]">
               <span class="w-2 h-2 rounded-full bg-[#7A9D96]"></span>
               <span>第二步</span>
             </div>
             <div class="text-left">遇一位守关强者，习得其能力</div>
           </div>
-          <div class="flex items-center gap-4 text-[#2A3F54]">
-            <div class="flex items-center gap-2 min-w-[100px] justify-end font-medium text-[#2A3F54]">
+          <div class="flex items-center gap-2 text-[#2A3F54]">
+            <div class="flex items-center gap-2 justify-end font-medium text-[#2A3F54]">
               <span class="w-2 h-2 rounded-full bg-[#7A9D96]"></span>
               <span>第三步</span>
             </div>
