@@ -181,9 +181,10 @@ const loadPendingOrders = async () => {
       size: 100,
       status: 0 // 待审核状态
     })
-    pendingOrders.value = (response.data as any).records || []
+    pendingOrders.value = (response.records || []) as Order[]
   } catch (error) {
     console.error('加载待审核订单失败:', error)
+    pendingOrders.value = []
   }
 }
 

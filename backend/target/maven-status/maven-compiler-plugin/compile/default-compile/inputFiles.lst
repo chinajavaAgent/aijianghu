@@ -26,6 +26,7 @@
 /Users/mac/Desktop/cusor-project/AI群江湖/backend/src/main/java/com/aigroup/world/dto/LoginResponse.java
 /Users/mac/Desktop/cusor-project/AI群江湖/backend/src/main/java/com/aigroup/world/entity/UserTipsLike.java
 /Users/mac/Desktop/cusor-project/AI群江湖/backend/src/main/java/com/aigroup/world/dto/LoginRequest.java
+/Users/mac/Desktop/cusor-project/AI群江湖/backend/src/main/java/com/aigroup/world/enums/UserLevel.java
 /Users/mac/Desktop/cusor-project/AI群江湖/backend/src/main/java/com/aigroup/world/service/impl/ExternalUserServiceImpl.java
 /Users/mac/Desktop/cusor-project/AI群江湖/backend/src/main/java/com/aigroup/world/service/OrderService.java
 /Users/mac/Desktop/cusor-project/AI群江湖/backend/src/main/java/com/aigroup/world/model/User.java
@@ -49,6 +50,7 @@
 /Users/mac/Desktop/cusor-project/AI群江湖/backend/src/main/java/com/aigroup/world/entity/AdminTips.java
 /Users/mac/Desktop/cusor-project/AI群江湖/backend/src/main/java/com/aigroup/world/config/SwaggerConfig.java
 /Users/mac/Desktop/cusor-project/AI群江湖/backend/src/main/java/com/aigroup/world/controller/ProxyController.java
+/Users/mac/Desktop/cusor-project/AI群江湖/backend/src/main/java/com/aigroup/world/dto/UserInfoResponse.java
 /Users/mac/Desktop/cusor-project/AI群江湖/backend/src/main/java/com/aigroup/world/entity/AiTips.java
 /Users/mac/Desktop/cusor-project/AI群江湖/backend/src/main/java/com/aigroup/world/controller/ProjectController.java
 /Users/mac/Desktop/cusor-project/AI群江湖/backend/src/main/java/com/aigroup/world/model/ExternalUser.java
