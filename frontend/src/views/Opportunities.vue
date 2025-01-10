@@ -73,15 +73,15 @@
             </div>
             <!-- 价格标签 -->
             <div class="relative z-10">
-              <div class="inline-block bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
-                <span class="text-base font-medium text-[#4A4940] font-ma-shan">￥{{ tip.price }}</span>
+              <div class="inline-block bg-white/30 backdrop-blur-sm px-3 py-1 rounded-full">
+                <span class="text-base font-medium text-[#2c4c3b] font-ma-shan">￥{{ tip.price }}</span>
               </div>
             </div>
             <!-- 境界标签 -->
             <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center">
-              <div class="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
-                <i class="fas text-[#4A4940]" :class="[isLocked(tip) ? 'fa-lock' : 'fa-lock-open']"></i>
-                <span class="text-sm text-[#4A4940] font-ma-shan">{{ getRealmName(tip.requiredLevel) }}</span>
+              <div class="flex items-center gap-2 bg-white/30 backdrop-blur-sm px-3 py-1 rounded-full">
+                <i class="fas text-[#2c4c3b]" :class="[isLocked(tip) ? 'fa-lock' : 'fa-lock-open']"></i>
+                <span class="text-sm text-[#2c4c3b] font-ma-shan">{{ getRealmName(tip.requiredLevel) }}</span>
               </div>
             </div>
           </div>
