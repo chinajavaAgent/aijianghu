@@ -123,17 +123,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public User getUserById(Long id) {
         User user = userMapper.selectById(id);
-
-        if(user.getLevel()==0) {
-            TUser tUser = tUserMapper.selectOne(new LambdaQueryWrapper<TUser>(new TUser())
-                    .eq(TUser::getPhoneNumber, user.getPhone()));
-            if (tUser != null) {
-                Integer proxyUser = tUser.getProxyUser();
-                if(proxyUser == 1) {
-                    user.setLevel(1);
-                    userMapper.updateById(user);
-                }
-            }
+        if (user == null) {
+            throw new BusinessException("用户不存在");
         }
         return user;
     }

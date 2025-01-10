@@ -80,6 +80,7 @@ public class User {
     /**
      * 用户等级
      */
+    @TableField("level")
     private Integer level;
 
     /**

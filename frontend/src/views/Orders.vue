@@ -28,7 +28,6 @@
           <div class="mb-8">
             <div class="text-2xl font-bold text-[#2A3F54] mb-2">当前境界</div>
             <div class="text-4xl font-bold text-[#7A9D96] mb-4">{{ currentLevel }}</div>
-            <div class="text-gray-600">修为值：{{ currentCredit }} / {{ nextLevelCredit }}</div>
           </div>
 
           <!-- 升级按钮 -->

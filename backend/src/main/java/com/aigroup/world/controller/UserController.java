@@ -21,7 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @Api(tags = "用户管理")
 @RestController
-@RequestMapping("/aiGroup/users")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -69,5 +69,14 @@ public class UserController {
     public Result<User> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findByPhone(userDetails.getUsername());
         return Result.success(user);
+    }
+
+    @ApiOperation("获取用户等级信息")
+    @GetMapping("/{id}/level")
+    public Result<Object> getUserLevel(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        return Result.success(new Object() {
+            public final int level = user.getLevel() != null ? user.getLevel() : 1;
+        });
     }
 } 

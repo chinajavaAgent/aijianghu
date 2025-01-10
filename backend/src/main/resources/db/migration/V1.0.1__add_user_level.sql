@@ -1,0 +1,3 @@
+-- 添加用户等级字段
+ALTER TABLE users
+ADD COLUMN IF NOT EXISTS level INT DEFAULT 1 COMMENT '用户等级'; 
