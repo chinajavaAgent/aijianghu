@@ -4,8 +4,12 @@
     <div class="container mx-auto px-4">
       <!-- 页面标题 -->
       <div class="text-center mb-8 sm:mb-12">
-        <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-2 sm:mb-4">AI副业项目库</h1>
-        <p class="text-lg sm:text-xl text-gray-600">精选AI副业项目，助你快速变现</p>
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-2 sm:mb-4">AI经纪人修炼机缘</h1>
+        <p class="text-lg sm:text-xl text-gray-600">神秘强者留下17个锦囊，隐藏17份机缘
+        </p>
+        <p class="text-lg sm:text-xl text-gray-600">
+          1个机缘遇1位守关强者，机缘需按照数字大小逐一打开，当你把守关强者能力复制，你此关境界圆满，将成为此关的新任守关强者，17关闯完，你将武功大成
+        </p>
       </div>
 
       <!-- 标签页切换 -->

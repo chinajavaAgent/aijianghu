@@ -30,17 +30,17 @@ const menuItems = [
   },
   {
     icon: 'opportunity' as IconType,
-    text: 'AI锦囊',
+    text: '机缘',
     route: '/opportunity-manage'
   },
   {
     icon: 'order' as IconType,
-    text: '升级',
+    text: '升境',
     route: '/orders'
   },
   {
     icon: 'opportunity' as IconType,
-    text: '大机缘',
+    text: '考核',
     route: '/big-opportunities'
   },
   {
