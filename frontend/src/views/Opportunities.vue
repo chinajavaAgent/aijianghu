@@ -1,158 +1,100 @@
 <!-- AI锦囊列表页面 -->
 <template>
-  <div class="min-h-screen bg-fixed bg-cover bg-center" 
-       style="background-image: url('https://wechat-group-all.oss-cn-hangzhou.aliyuncs.com/image/header_back.png');">
-    <!-- 整体背景遮罩 -->
-    <div class="min-h-screen bg-gradient-to-b from-black/30 via-white/80 to-white/90">
-      <div class="container mx-auto px-4">
-        <!-- 页面标题区域 -->
-        <div class="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4 pt-8">
-          <!-- 左侧标题和说明 -->
-          <div class="flex flex-col items-center sm:items-end w-full sm:w-auto">
-            <h1 class="text-4xl sm:text-5xl font-bold text-white font-ma-shan mb-4 text-center sm:text-right relative" 
-                style="text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
-              AI经纪人修炼机缘
-              <div class="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white to-transparent"></div>
-            </h1>
-            <p class="text-lg text-white/90 font-ma-shan mb-3 text-center sm:text-right">
-              神秘强者留下十七份机缘，待有缘人
-            </p>
-            <div class="text-base text-white/80 font-ma-shan tracking-wider flex flex-col items-center sm:items-end gap-2">
-              <p class="flex items-center gap-2 flex-row-reverse">
-                <span>按数字大小逐一开启</span>
-                <span class="bg-white/10 text-white px-3 py-1 rounded-full border border-white/30">壹至十七关</span>
-              </p>
-              <p class="flex items-center gap-2 flex-row-reverse">
-                <span>遇一位守关强者，习得其能力</span>
-                <span class="bg-white/10 text-white px-3 py-1 rounded-full border border-white/30">每一关</span>
-              </p>
-              <p class="flex items-center gap-2 flex-row-reverse">
-                <span>成为新任守关者，继续修炼</span>
-                <span class="bg-white/10 text-white px-3 py-1 rounded-full border border-white/30">突破后</span>
-              </p>
-            </div>
+  <div class="min-h-screen bg-[#F5F7F4]">
+    <!-- 页面内容 -->
+    <div class="container mx-auto px-4 py-8 sm:py-12">
+      <!-- 页面标题区域 -->
+      <div class="max-w-2xl mx-auto text-center mb-12">
+        <h1 class="text-4xl sm:text-5xl font-bold text-[#4A4940] font-ma-shan mb-4">
+          AI经纪人修炼机缘
+        </h1>
+        <p class="text-lg text-[#7A9D96] font-ma-shan mb-6">
+          神秘强者留下十七份机缘，待有缘人
+        </p>
+        <div class="flex flex-wrap justify-center gap-4 text-sm text-[#4A4940]/70">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-[#C7DDBB]"></span>
+            <span>按数字大小逐一开启</span>
           </div>
-        </div>
-
-        <!-- 标签页切换 -->
-        <div class="flex justify-center mb-6">
-          <div class="bg-white/90 backdrop-blur-sm rounded-full shadow-md p-1 inline-flex space-x-1">
-            <button 
-              v-for="tab in tabs" 
-              :key="tab.value"
-              @click="currentTab = tab.value"
-              class="px-6 py-2 rounded-full text-sm font-medium transition-colors duration-200"
-              :class="[
-                currentTab === tab.value 
-                  ? 'bg-gray-800 text-white' 
-                  : 'text-gray-600 hover:bg-gray-100'
-              ]"
-            >
-              {{ tab.label }}
-              <span class="ml-1 text-xs" :class="currentTab === tab.value ? 'text-white' : 'text-gray-400'">
-                ({{ getFilteredTips(tab.value).length }})
-              </span>
-            </button>
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-[#C7DDBB]"></span>
+            <span>遇一位守关强者，习得其能力</span>
           </div>
-        </div>
-
-        <!-- 锦囊列表 -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
-          <div v-for="tip in getFilteredTips(currentTab)" :key="tip.id"
-            class="bg-white/95 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 border border-gray-100/50">
-            <div class="relative">
-              <!-- 金元宝背景 -->
-              <div class="h-36 sm:h-48 bg-gradient-to-br relative overflow-hidden"
-                :class="getGradientClass(tip)">
-                <!-- 装饰纹理 -->
-                <div class="absolute inset-0 opacity-10 bg-[url('https://api.dicebear.com/7.x/shapes/svg?seed=dragon')]"></div>
-                <div class="absolute inset-0 flex items-center justify-center">
-                  <!-- 光效背景 -->
-                  <div class="absolute inset-0 opacity-20">
-                    <div class="absolute inset-0 animate-pulse" 
-                      :class="getGlowClass(tip)"></div>
-                  </div>
-                  <!-- 金元宝图片容器 -->
-                  <div class="relative w-24 h-24 sm:w-32 sm:h-32 
-                    transform hover:scale-110 transition-transform duration-500
-                    animate-float">
-                    <img src="https://canyin-app.oss-cn-guangzhou.aliyuncs.com/images/money.png" 
-                      alt="金元宝" 
-                      class="w-full h-full object-contain drop-shadow-2xl filter brightness-110"/>
-                    <!-- 光晕效果 -->
-                    <div class="absolute inset-0 bg-white opacity-0 hover:opacity-20 
-                      transition-opacity duration-300 rounded-full"></div>
-                  </div>
-                </div>
-              </div>
-              <!-- 价格标签 -->
-              <div class="absolute top-3 right-3 sm:top-4 sm:right-4 bg-white/90 backdrop-blur-sm px-3 sm:px-4 py-1 rounded-full shadow-md border border-gray-100/50">
-                <span class="text-base sm:text-lg font-bold" :class="getTitleColorClass(tip)">￥{{ tip.price }}</span>
-              </div>
-              
-              <!-- 境界标签 -->
-              <div class="absolute bottom-3 left-3 backdrop-blur-sm px-3 py-1 rounded-full shadow-md border border-gray-100/50"
-                :class="[
-                  isLocked(tip) ? 'bg-gray-100/90' : 'bg-green-100/90',
-                  'flex items-center space-x-1'
-                ]">
-                <i class="fas" :class="[isLocked(tip) ? 'fa-lock text-gray-500' : 'fa-lock-open text-green-500']"></i>
-                <span class="text-sm" :class="[isLocked(tip) ? 'text-gray-500' : 'text-green-500']">
-                  {{ getRealmName(tip.requiredLevel) }}
-                </span>
-              </div>
-            </div>
-            
-            <div class="p-4 sm:p-6 relative">
-              <!-- 装饰边框 -->
-              <div class="absolute inset-0 border-2 border-gray-100/50 m-2 rounded-lg pointer-events-none"></div>
-              
-              <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-3 relative" :class="getTitleColorClass(tip)">{{ tip.title }}</h3>
-              
-              <!-- 温馨提醒 -->
-              <div class="bg-yellow-50/80 backdrop-blur-sm rounded-lg p-3 mb-4 relative border border-yellow-100/50">
-                <!-- 装饰角 -->
-                <div class="absolute w-2 h-2 border-t-2 border-l-2 border-yellow-200/50 top-0 left-0"></div>
-                <div class="absolute w-2 h-2 border-t-2 border-r-2 border-yellow-200/50 top-0 right-0"></div>
-                <div class="absolute w-2 h-2 border-b-2 border-l-2 border-yellow-200/50 bottom-0 left-0"></div>
-                <div class="absolute w-2 h-2 border-b-2 border-r-2 border-yellow-200/50 bottom-0 right-0"></div>
-                
-                <p class="text-sm text-yellow-700 font-ma-shan relative">
-                  <span class="ml-1">温馨提醒：</span>
-                  {{ getRealmTip(tip.requiredLevel) }}
-                </p>
-              </div>
-
-              <button class="w-full py-2.5 sm:py-3 rounded-lg text-white font-semibold text-sm sm:text-base transition-colors relative overflow-hidden group"
-                :class="getButtonClass(tip)"
-                @click="handlePurchase(tip)">
-                <!-- 按钮装饰效果 -->
-                <div class="absolute inset-0 bg-white/10 transform -skew-x-12 translate-x-full group-hover:translate-x-[-180%] transition-transform duration-700"></div>
-                <span class="relative">{{ getButtonText(tip) }}</span>
-              </button>
-            </div>
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-[#C7DDBB]"></span>
+            <span>成为新任守关者，继续修炼</span>
           </div>
         </div>
       </div>
 
-      <!-- 项目选择对话框 -->
-      <van-dialog
-        v-model:show="showProjectDialog"
-        title="选择项目"
-        :show-cancel-button="true"
-        cancel-button-text="关闭"
-        confirm-button-text=""
-        class="project-select-dialog"
-      >
-        <div class="space-y-4 p-4">
-          <div v-for="project in selectedTipProjects" :key="project.id"
-            class="p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100"
-            @click="handleProjectSelect(project)">
-            <div class="font-medium text-gray-800 mb-1">{{ project.name }}</div>
-            <div class="text-sm text-gray-600">{{ project.description }}</div>
+      <!-- 标签页切换 -->
+      <div class="flex justify-center mb-8">
+        <div class="inline-flex bg-white rounded-lg p-1 shadow-sm">
+          <button 
+            v-for="tab in tabs" 
+            :key="tab.value"
+            @click="currentTab = tab.value"
+            class="px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+            :class="[
+              currentTab === tab.value 
+                ? 'bg-[#7A9D96] text-white' 
+                : 'text-[#7A9D96] hover:bg-[#F5F7F4]'
+            ]"
+          >
+            {{ tab.label }}
+            <span class="ml-1 text-xs opacity-80">
+              ({{ getFilteredTips(tab.value).length }})
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 锦囊列表 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div v-for="tip in getFilteredTips(currentTab)" :key="tip.id"
+          class="group bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
+          <!-- 卡片头部 -->
+          <div class="aspect-[4/3] rounded-t-2xl bg-[#7A9D96] relative overflow-hidden p-6">
+            <!-- 图标容器 -->
+            <div class="absolute inset-0 flex items-center justify-center">
+              <img src="https://canyin-app.oss-cn-guangzhou.aliyuncs.com/images/money.png" 
+                alt="金元宝" 
+                class="w-32 h-32 object-contain opacity-20"/>
+            </div>
+            <!-- 价格标签 -->
+            <div class="relative z-10">
+              <div class="inline-block bg-white/10 backdrop-blur-sm px-4 py-1.5 rounded-full">
+                <span class="text-lg font-medium text-white">￥{{ tip.price }}</span>
+              </div>
+            </div>
+            <!-- 境界标签 -->
+            <div class="absolute bottom-6 left-6 right-6 flex justify-between items-center">
+              <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                <i class="fas" :class="[isLocked(tip) ? 'fa-lock' : 'fa-lock-open']"></i>
+                <span class="text-sm text-white">{{ getRealmName(tip.requiredLevel) }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 卡片内容 -->
+          <div class="p-6">
+            <h3 class="text-lg font-medium text-[#4A4940] mb-4">{{ tip.title }}</h3>
+            
+            <!-- 温馨提醒 -->
+            <div class="bg-[#F5F7F4] rounded-lg p-4 mb-5">
+              <p class="text-sm text-[#4A4940]/80">
+                <span class="font-medium">温馨提醒：</span>
+                {{ getRealmTip(tip.requiredLevel) }}
+              </p>
+            </div>
+
+            <button class="w-full py-3 rounded-lg text-white font-medium text-sm transition-colors duration-200
+              bg-[#7A9D96] hover:bg-[#6B8E87]">
+              {{ getButtonText(tip) }}
+            </button>
           </div>
         </div>
-      </van-dialog>
+      </div>
     </div>
   </div>
 </template>
@@ -224,73 +166,21 @@ const loadPendingOrders = async () => {
 
 // 获取样式类
 const getGradientClass = (tip: AiTips) => {
-  const index = (tip.id || 0) % 10
-  const gradients = [
-    'from-blue-400 to-blue-600',
-    'from-red-400 to-red-600',
-    'from-yellow-400 to-yellow-600',
-    'from-pink-400 to-pink-600',
-    'from-indigo-400 to-indigo-600',
-    'from-cyan-400 to-cyan-600',
-    'from-teal-400 to-teal-600',
-    'from-orange-400 to-orange-600',
-    'from-lime-400 to-lime-600',
-    'from-emerald-400 to-emerald-600'
-  ]
-  return gradients[index]
+  return 'from-gray-800 to-gray-900'
 }
 
 const getGlowClass = (tip: AiTips) => {
-  const index = (tip.id || 0) % 10
-  const glows = [
-    'bg-blue-300',
-    'bg-red-300',
-    'bg-yellow-300',
-    'bg-pink-300',
-    'bg-indigo-300',
-    'bg-cyan-300',
-    'bg-teal-300',
-    'bg-orange-300',
-    'bg-lime-300',
-    'bg-emerald-300'
-  ]
-  return glows[index]
+  return 'bg-white/20'
 }
 
 const getTitleColorClass = (tip: AiTips) => {
-  const index = (tip.id || 0) % 10
-  const colors = [
-    'text-blue-600',
-    'text-red-600',
-    'text-yellow-600',
-    'text-pink-600',
-    'text-indigo-600',
-    'text-cyan-600',
-    'text-teal-600',
-    'text-orange-600',
-    'text-lime-600',
-    'text-emerald-600'
-  ]
-  return colors[index]
+  return 'text-gray-800'
 }
 
 const getPriceColorClass = getTitleColorClass
 
 const getButtonClass = (tip: AiTips) => {
-  const index = (tip.id || 0) % 10
-  const buttons = [
-    'bg-blue-600 hover:bg-blue-700',
-    'bg-red-600 hover:bg-red-700',
-    'bg-yellow-600 hover:bg-yellow-700',
-    'bg-pink-600 hover:bg-pink-700',
-    'bg-indigo-600 hover:bg-indigo-700',
-    'bg-cyan-600 hover:bg-cyan-700',
-    'bg-teal-600 hover:bg-teal-700',
-    'bg-orange-600 hover:bg-orange-700',
-    'bg-lime-600 hover:bg-lime-700',
-    'bg-emerald-600 hover:bg-emerald-700'
-  ]
-  return buttons[index]
+  return 'bg-gray-800 hover:bg-gray-900'
 }
 
 // 境界映射
@@ -464,68 +354,19 @@ const getFilteredTips = (tab: string) => {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
 
-/* 添加移动端滚动优化 */
-@media (max-width: 640px) {
-  .container {
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-}
-
-/* 添加漂浮动画 */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-10px) rotate(5deg);
-  }
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-/* 统一字体设置 */
 .font-ma-shan {
   font-family: 'Ma Shan Zheng', cursive;
 }
 
-/* 优化字间距 */
-.tracking-wider {
-  letter-spacing: 0.05em;
-}
-
-/* 优化标题阴影 */
-h1.text-4xl {
-  text-shadow: 
-    0 2px 4px rgba(0,0,0,0.2),
-    0 4px 8px rgba(0,0,0,0.1);
-}
-
-/* 优化文字阴影效果 */
-.text-white {
-  text-shadow: 
-    0 2px 4px rgba(0,0,0,0.3),
-    0 4px 8px rgba(0,0,0,0.2);
-}
-
-/* 所有文字都使用毛笔字体 */
-h1, h2, h3, p, button, div {
-  font-family: 'Ma Shan Zheng', cursive;
-}
-
 /* 移动端优化 */
-@media (max-width: 768px) {
-  h1.text-4xl {
-    text-shadow: 
-      0 1px 2px rgba(0,0,0,0.4),
-      0 2px 4px rgba(0,0,0,0.3);
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
   
-  .text-xl {
-    text-shadow: 
-      0 1px 2px rgba(0,0,0,0.3);
+  .grid {
+    gap: 1.5rem;
   }
 }
 </style> 
