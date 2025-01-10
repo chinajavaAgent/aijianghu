@@ -1,22 +1,17 @@
 <template>
-  <div class="min-h-screen bg-fixed bg-cover bg-center" :style="{ backgroundImage: 'url(' + bgImage + ')' }">
+  <div class="min-h-screen bg-fixed bg-cover bg-center" 
+       style="background-image: url('https://wechat-group-all.oss-cn-hangzhou.aliyuncs.com/image/header_back.png');">
     <!-- 整体背景遮罩 -->
-    <div class="min-h-screen bg-gradient-to-b from-white/90 via-white/80 to-white/90">
+    <div class="min-h-screen bg-gradient-to-b from-black/30 via-white/80 to-white/90">
       <!-- 顶部横幅 -->
       <div class="relative overflow-hidden min-h-[280px] md:min-h-[400px]">
-        <!-- 背景图片 -->
-        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat" 
-             style="background-image: url('https://wechat-group-all.oss-cn-hangzhou.aliyuncs.com/image/header_back.png');">
-          <!-- 渐变遮罩 -->
-          <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-white"></div>
-        </div>
         <!-- 内容 -->
         <div class="container mx-auto px-4 h-full flex flex-col items-center justify-center relative z-10 py-12 md:py-20">
           <h1 class="text-4xl md:text-6xl font-bold mb-4 md:mb-6 text-white drop-shadow-lg text-center" 
               style="font-family: 'Ma Shan Zheng', cursive; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
             AI群江湖
           </h1>
-          <p class="text-xl md:text-2xl text-white/90 mb-6 md:mb-8 tracking-wider text-center max-w-2xl font-ma-shan">
+          <p class="text-xl md:text-2xl text-white mb-6 md:mb-8 tracking-wider text-center max-w-2xl font-ma-shan">
             一个充满神秘与机遇的AI江湖世界
           </p>
           <router-link to="/opportunities" class="inline-block w-full md:w-auto px-4 md:px-0">
@@ -138,9 +133,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-
-// 导入背景图片
-const bgImage = new URL('../assets/images/ink-texture.jpg', import.meta.url).href
 </script>
 
 <style scoped>
@@ -208,12 +200,34 @@ h1, h2 {
 /* 优化背景图片在不同设备上的显示 */
 .bg-cover {
   background-size: cover;
-  background-position: center 40%;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
+/* 增强卡片的透明度和模糊效果 */
+.backdrop-blur-md {
+  backdrop-filter: blur(12px);
+}
+
+.bg-white\/95 {
+  background-color: rgba(255, 255, 255, 0.92);
+}
+
+/* 优化文字阴影效果 */
+.text-white {
+  text-shadow: 
+    0 2px 4px rgba(0,0,0,0.3),
+    0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* 移动端优化 */
 @media (max-width: 768px) {
   .bg-cover {
-    background-position: center 30%;
+    background-position: center center;
+  }
+  
+  .from-black\/30 {
+    --tw-gradient-from: rgba(0, 0, 0, 0.4);
   }
 }
 
