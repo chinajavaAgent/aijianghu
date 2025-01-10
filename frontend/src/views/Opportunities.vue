@@ -69,7 +69,7 @@
             <div class="absolute inset-0 flex items-center justify-center">
               <img src="https://canyin-app.oss-cn-guangzhou.aliyuncs.com/images/money.png" 
                 alt="金元宝" 
-                class="w-24 h-24 object-contain"/>
+                class="w-24 h-24 object-contain rounded-2xl opacity-90 transition-all duration-300 ease-in-out transform group-hover:scale-110 group-hover:opacity-100 bounce-animation"/>
             </div>
             <!-- 价格标签 -->
             <div class="relative z-10">
@@ -366,6 +366,23 @@ const getFilteredTips = (tab: string) => {
 
 .font-ma-shan {
   font-family: 'Ma Shan Zheng', cursive;
+}
+
+@keyframes bounce-up {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.bounce-animation {
+  animation: bounce-up 2s ease-in-out infinite;
+}
+
+.group:hover .bounce-animation {
+  animation-play-state: running;
 }
 
 /* 移动端优化 */
