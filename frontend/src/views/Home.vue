@@ -1,146 +1,146 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-cyan-50 via-fuchsia-50 to-yellow-50">
-    <!-- 顶部横幅 -->
-    <div class="bg-gradient-to-r from-cyan-500 via-fuchsia-500 to-yellow-400 text-white py-16 relative overflow-hidden">
-      <!-- 添加动态光效 -->
-      <div class="absolute inset-0">
-        <div class="absolute inset-0 bg-gradient-to-r from-cyan-400/30 via-fuchsia-400/30 to-yellow-400/30 animate-pulse"></div>
-        <div class="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJ3YXZlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNMjggNjZDNDAgNjYgNDAgMzQgNTYgMzRMNTYgMEw1NiAxMDBMMjggNjZaIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDMpIi8+PHBhdGggZD0iTTI4IDY2QzE2IDY2IDE2IDM0IDAgMzRMMCAwTDAgMTAwTDI4IDY2WiIgZmlsbD0icmJnYSgyNTUsMjU1LDI1NSwwLjAzKSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCN3YXZlKSIvPjwvc3ZnPg==')] opacity-10"></div>
-      </div>
-      <div class="container mx-auto px-4 text-center relative z-10">
-        <h1 class="text-4xl font-bold mb-4 drop-shadow-lg">AI群江湖</h1>
-        <p class="text-xl opacity-90">一个充满神秘与机遇的AI江湖世界</p>
-        <router-link to="/opportunities" class="inline-block">
-        <button class="mt-4 bg-white text-gray-800 px-8 py-3 rounded-full text-lg font-semibold hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl">
-          立即加入
-        </button>
-      </router-link>
-      </div>
-      
-    </div>
-
-    <!-- 三大核心价值主张 -->
-    <div class="container mx-auto px-4 py-12">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <!-- AI资源库 -->
-        <div class="bg-gradient-to-br from-white to-cyan-50 rounded-xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 hover:shadow-xl border border-cyan-100/50">
-          <div class="text-center mb-4">
-            <div class="w-16 h-16 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyan-200">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-              </svg>
-            </div>
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">汇聚AI英雄</h2>
-            <p class="text-gray-600">
-              初入江湖的“AI小白”<br>
-              身怀绝技的“AI创造者”<br>
-              勇猛精进的“创业者”
-            </p>
-          </div>
-          <!-- <div class="text-center">
-            <router-link to="/opportunities" class="inline-block">
-              <button class="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white px-6 py-2 rounded-full hover:shadow-lg hover:from-cyan-600 hover:to-cyan-700 transition-all duration-300">
-                探索资源
-              </button>
-            </router-link>
-          </div> -->
+  <div class="min-h-screen bg-fixed bg-cover bg-center" :style="{ backgroundImage: 'url(' + bgImage + ')' }">
+    <!-- 整体背景遮罩 -->
+    <div class="min-h-screen bg-gradient-to-b from-white/90 via-white/80 to-white/90">
+      <!-- 顶部横幅 -->
+      <div class="relative overflow-hidden" style="height: 480px;">
+        <!-- 背景图片 -->
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image: url('/src/assets/images/ink-bg.jpg');">
+          <!-- 渐变遮罩 -->
+          <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-white"></div>
         </div>
-
-        <!-- AI副业机会 -->
-        <div class="bg-gradient-to-br from-white to-fuchsia-50 rounded-xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 hover:shadow-xl border border-fuchsia-100/50">
-          <div class="text-center mb-4">
-            <div class="w-16 h-16 bg-gradient-to-br from-fuchsia-400 to-fuchsia-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-fuchsia-200">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">AI经纪人IP</h2>
-            <p class="text-gray-600">
-              社交资产变现<br>
-              好朋友的经纪人<br>
-              做人力资源专家
-            </p>
-          </div>
-          <!-- <div class="text-center">
-            <button class="bg-gradient-to-r from-fuchsia-500 to-fuchsia-600 text-white px-6 py-2 rounded-full hover:shadow-lg hover:from-fuchsia-600 hover:to-fuchsia-700 transition-all duration-300">
-              发现机会
+        <!-- 内容 -->
+        <div class="container mx-auto px-4 h-full flex flex-col items-center justify-center relative z-10">
+          <h1 class="text-6xl font-bold mb-6 text-white drop-shadow-lg" style="font-family: 'Ma Shan Zheng', cursive;">AI群江湖</h1>
+          <p class="text-2xl text-white/90 mb-8 tracking-wider">一个充满神秘与机遇的AI江湖世界</p>
+          <router-link to="/opportunities" class="inline-block">
+            <button class="bg-white/90 backdrop-blur-sm text-gray-800 px-8 py-3 rounded-full text-lg font-semibold hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+              立即加入
             </button>
-          </div> -->
+          </router-link>
         </div>
+      </div>
 
-        <!-- AI流量池 -->
-        <div class="bg-gradient-to-br from-white to-yellow-50 rounded-xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 hover:shadow-xl border border-yellow-100/50">
-          <div class="text-center mb-4">
-            <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-yellow-200">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-              </svg>
+      <!-- 三大核心价值主张 -->
+      <div class="container mx-auto px-4 py-12 -mt-20 relative z-20">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- AI资源库 -->
+          <div class="bg-white/95 backdrop-blur-md rounded-xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 hover:shadow-xl border border-gray-100">
+            <div class="text-center mb-4">
+              <div class="w-16 h-16 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2L13 4H19L20 6L12 22L4 6L5 4H11L12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 6V18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M8 8L16 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M9 12L15 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <h2 class="text-2xl font-bold text-gray-800 mb-2">汇聚AI英雄</h2>
+              <p class="text-gray-600">
+                初入江湖的"AI小白"<br>
+                身怀绝技的"AI创造者"<br>
+                勇猛精进的"创业者"
+              </p>
             </div>
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">共享共创</h2>
-            <p class="text-gray-600">
-              流量共享项目共创<br>
-              品质服务创造价值<br>
-              信任连接关系网络
-            </p>
           </div>
-          <!-- <div class="text-center">
-            <button class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-6 py-2 rounded-full hover:shadow-lg hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300">
-              了解更多
+
+          <!-- AI副业机会 -->
+          <div class="bg-white/95 backdrop-blur-md rounded-xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 hover:shadow-xl border border-gray-100">
+            <div class="text-center mb-4">
+              <div class="w-16 h-16 bg-gradient-to-br from-fuchsia-400 to-fuchsia-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3Z" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M7 7H17M7 12H17M7 17H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <path d="M6 3C6 3 8 7 12 7C16 7 18 3 18 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <path d="M6 21C6 21 8 17 12 17C16 17 18 21 18 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <h2 class="text-2xl font-bold text-gray-800 mb-2">AI经纪人IP</h2>
+              <p class="text-gray-600">
+                社交资产变现<br>
+                好朋友的经纪人<br>
+                做人力资源专家
+              </p>
+            </div>
+          </div>
+
+          <!-- AI流量池 -->
+          <div class="bg-white/95 backdrop-blur-md rounded-xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 hover:shadow-xl border border-gray-100">
+            <div class="text-center mb-4">
+              <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M12 2C14.5 7 17 9.5 22 12C17 14.5 14.5 17 12 22C9.5 17 7 14.5 2 12C7 9.5 9.5 7 12 2Z" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="12" cy="12" r="2" fill="currentColor"/>
+                  <path d="M12 7C12 7 14 9 14 12C14 15 12 17 12 17" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M12 7C12 7 10 9 10 12C10 15 12 17 12 17" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+              </div>
+              <h2 class="text-2xl font-bold text-gray-800 mb-2">共享共创</h2>
+              <p class="text-gray-600">
+                流量共享项目共创<br>
+                品质服务创造价值<br>
+                信任连接关系网络
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 数据统计 -->
+      <div class="py-12 relative">
+        <div class="absolute inset-0 bg-black/5"></div>
+        <div class="container mx-auto px-4 relative z-10">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div class="bg-white/95 backdrop-blur-md p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+              <div class="text-3xl font-bold text-cyan-600 mb-2">2522+</div>
+              <div class="text-gray-600">武林藏宝阁</div>
+            </div>
+            <div class="bg-white/95 backdrop-blur-md p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+              <div class="text-3xl font-bold text-fuchsia-600 mb-2">823+</div>
+              <div class="text-gray-600">江湖财富经</div>
+            </div>
+            <div class="bg-white/95 backdrop-blur-md p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+              <div class="text-3xl font-bold text-orange-600 mb-2">100+</div>
+              <div class="text-gray-600">抢天赐机缘</div>
+            </div>
+            <div class="bg-white/95 backdrop-blur-md p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+              <div class="text-3xl font-bold text-orange-600 mb-2">100+</div>
+              <div class="text-gray-600">江湖共创令</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 加入我们 -->
+      <div class="relative overflow-hidden py-16">
+        <!-- 背景装饰 -->
+        <div class="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/10"></div>
+        <div class="container mx-auto px-4 text-center relative z-10">
+          <h2 class="text-4xl font-bold mb-6 text-gray-800">你的AI江湖冒险即将开启</h2>
+          <p class="text-xl mb-8 text-gray-600">与各路英雄一起，探索AI带来的无限可能</p>
+          <router-link to="/opportunities" class="inline-block">
+            <button class="bg-white/95 backdrop-blur-md text-gray-800 px-8 py-3 rounded-full text-lg font-semibold hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+              立即加入
             </button>
-          </div> -->
+          </router-link>
         </div>
-      </div>
-    </div>
-
-    <!-- 数据统计 -->
-    <div class="bg-gradient-to-br from-white to-gray-50 py-12">
-      <div class="container mx-auto px-4">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div class="bg-gradient-to-br from-white to-cyan-50 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
-            <div class="text-3xl font-bold text-cyan-600 mb-2">2522+</div>
-            <div class="text-gray-600">武林藏宝阁</div>
-          </div>
-          <div class="bg-gradient-to-br from-white to-fuchsia-50 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
-            <div class="text-3xl font-bold text-fuchsia-600 mb-2">823+</div>
-            <div class="text-gray-600">江湖财富经</div>
-          </div>
-          <div class="bg-gradient-to-br from-white to-orange-50 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
-            <div class="text-3xl font-bold text-orange-600 mb-2">100+</div>
-            <div class="text-gray-600">抢天赐机缘</div>
-          </div>
-          <div class="bg-gradient-to-br from-white to-orange-50 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
-            <div class="text-3xl font-bold text-orange-600 mb-2">100+</div>
-            <div class="text-gray-600">江湖共创令</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 加入我们 -->
-    <div class="bg-gradient-to-r from-cyan-500 via-fuchsia-500 to-yellow-400 text-white py-16 relative overflow-hidden">
-      <!-- 添加动态光效 -->
-      <div class="absolute inset-0">
-        <div class="absolute inset-0 bg-gradient-to-r from-cyan-400/30 via-fuchsia-400/30 to-yellow-400/30 animate-pulse"></div>
-        <div class="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJ3YXZlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNMjggNjZDNDAgNjYgNDAgMzQgNTYgMzRMNTYgMEw1NiAxMDBMMjggNjZaIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDMpIi8+PHBhdGggZD0iTTI4IDY2QzE2IDY2IDE2IDM0IDAgMzRMMCAwTDAgMTAwTDI4IDY2WiIgZmlsbD0icmJnYSgyNTUsMjU1LDI1NSwwLjAzKSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCN3YXZlKSIvPjwvc3ZnPg==')] opacity-10"></div>
-      </div>
-      <div class="container mx-auto px-4 text-center relative z-10">
-        <h2 class="text-3xl font-bold mb-4">你的AI江湖冒险即将开启</h2>
-        <p class="text-xl mb-8 opacity-90">与各路英雄一起，探索AI带来的无限可能</p>
-        <router-link to="/opportunities" class="inline-block">
-        <button class="bg-white text-gray-800 px-8 py-3 rounded-full text-lg font-semibold hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl">
-          立即加入
-        </button>
-      </router-link>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// 可以在这里添加交互逻辑
+import { ref } from 'vue'
+
+// 导入背景图片
+const bgImage = new URL('../assets/images/ink-texture.jpg', import.meta.url).href
+const headerImage = new URL('../assets/images/ink-bg.jpg', import.meta.url).href
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
+
 .aspect-w-16 {
   position: relative;
   padding-bottom: 56.25%; /* 16:9 */
@@ -167,5 +167,22 @@
 
 .animate-pulse {
   animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* 添加毛笔字体效果 */
+h1, h2 {
+  font-family: 'Ma Shan Zheng', cursive;
+  letter-spacing: 0.05em;
+}
+
+/* 添加卡片悬浮效果 */
+.hover\:scale-105:hover {
+  transform: scale(1.05);
+  transition: all 0.3s ease-in-out;
+}
+
+/* 添加磨砂玻璃效果 */
+.backdrop-blur-sm {
+  backdrop-filter: blur(8px);
 }
 </style> 
