@@ -69,7 +69,7 @@
           class="group bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer"
           @click="handlePurchase(tip)">
           <!-- 卡片头部 -->
-          <div class="aspect-[2/1] rounded-t-2xl relative overflow-hidden p-4 transition-all duration-300"
+          <div class="aspect-[2/1] rounded-t-2xl relative overflow-hidden p-2 transition-all duration-300"
             :style="{ 
               background: getCardColor(tip.requiredLevel),
               boxShadow: getCardShadow(tip.requiredLevel)
@@ -99,11 +99,11 @@
           </div>
           
           <!-- 卡片内容 -->
-          <div class="p-6">
-            <h3 class="text-lg font-medium text-[#4A4940] mb-4 font-ma-shan">{{ tip.title }}</h3>
+          <div class="p-4">
+            <h3 class="text-lg font-medium text-[#4A4940] mb-2 font-ma-shan">{{ tip.title }}</h3>
             
             <!-- 温馨提醒 -->
-            <div class="bg-[#F5F7F4] rounded-lg p-4 mb-5">
+            <div class="bg-[#F5F7F4] rounded-lg mb-2">
               <p class="text-sm text-[#4A4940]/90 font-ma-shan">
                 <span class="font-medium text-[#7A9D96]">温馨提醒：</span>
                 {{ getRealmTip(tip.requiredLevel) }}
