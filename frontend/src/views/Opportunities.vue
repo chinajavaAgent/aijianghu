@@ -5,23 +5,26 @@
       <!-- 页面标题区域 -->
       <div class="flex flex-col sm:flex-row items-center justify-between mb-4 gap-4">
         <!-- 左侧标题和说明 -->
-        <div class="flex flex-col items-center sm:items-start">
-          <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 font-ma-shan mb-2" 
+        <div class="flex flex-col items-center sm:items-end w-full sm:w-auto">
+          <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 font-ma-shan mb-2 text-center sm:text-right" 
               style="text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">
             AI经纪人修炼机缘
           </h1>
-          <div class="text-sm text-gray-600 font-ma-shan tracking-wider flex flex-col items-center sm:items-start gap-1">
-            <p class="flex items-center gap-2">
-              <span class="bg-yellow-100 text-yellow-600 px-2 py-0.5 rounded-full">1-17关</span>
+          <p class="text-base text-gray-600 font-ma-shan mb-2 text-center sm:text-right">
+            神秘强者留下17个锦囊，隐藏17份机缘
+          </p>
+          <div class="text-sm text-gray-600 font-ma-shan tracking-wider flex flex-col items-center sm:items-end gap-1">
+            <p class="flex items-center gap-2 flex-row-reverse">
               <span>按数字大小逐一开启</span>
+              <span class="bg-yellow-100 text-yellow-600 px-2 py-0.5 rounded-full">1-17关</span>
             </p>
-            <p class="flex items-center gap-2">
-              <span class="bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">每一关</span>
+            <p class="flex items-center gap-2 flex-row-reverse">
               <span>遇一位守关强者，习得其能力</span>
+              <span class="bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">每一关</span>
             </p>
-            <p class="flex items-center gap-2">
-              <span class="bg-green-100 text-green-600 px-2 py-0.5 rounded-full">突破后</span>
+            <p class="flex items-center gap-2 flex-row-reverse">
               <span>成为新任守关者，继续修炼</span>
+              <span class="bg-green-100 text-green-600 px-2 py-0.5 rounded-full">突破后</span>
             </p>
           </div>
         </div>
