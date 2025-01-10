@@ -3,18 +3,24 @@
     <!-- 整体背景遮罩 -->
     <div class="min-h-screen bg-gradient-to-b from-white/90 via-white/80 to-white/90">
       <!-- 顶部横幅 -->
-      <div class="relative overflow-hidden" style="height: 480px;">
+      <div class="relative overflow-hidden min-h-[280px] md:min-h-[400px]">
         <!-- 背景图片 -->
-        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image: url('/src/assets/images/ink-bg.jpg');">
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat" 
+             style="background-image: url('https://wechat-group-all.oss-cn-hangzhou.aliyuncs.com/image/header_back.png');">
           <!-- 渐变遮罩 -->
-          <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-white"></div>
+          <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-white"></div>
         </div>
         <!-- 内容 -->
-        <div class="container mx-auto px-4 h-full flex flex-col items-center justify-center relative z-10">
-          <h1 class="text-6xl font-bold mb-6 text-white drop-shadow-lg" style="font-family: 'Ma Shan Zheng', cursive;">AI群江湖</h1>
-          <p class="text-2xl text-white/90 mb-8 tracking-wider">一个充满神秘与机遇的AI江湖世界</p>
-          <router-link to="/opportunities" class="inline-block">
-            <button class="bg-white/90 backdrop-blur-sm text-gray-800 px-8 py-3 rounded-full text-lg font-semibold hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+        <div class="container mx-auto px-4 h-full flex flex-col items-center justify-center relative z-10 py-12 md:py-20">
+          <h1 class="text-4xl md:text-6xl font-bold mb-4 md:mb-6 text-white drop-shadow-lg text-center" 
+              style="font-family: 'Ma Shan Zheng', cursive; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
+            AI群江湖
+          </h1>
+          <p class="text-xl md:text-2xl text-white/90 mb-6 md:mb-8 tracking-wider text-center max-w-2xl">
+            一个充满神秘与机遇的AI江湖世界
+          </p>
+          <router-link to="/opportunities" class="inline-block w-full md:w-auto px-4 md:px-0">
+            <button class="w-full md:w-auto bg-white/90 backdrop-blur-sm text-gray-800 px-6 md:px-8 py-3 rounded-full text-lg font-semibold hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
               立即加入
             </button>
           </router-link>
@@ -135,7 +141,6 @@ import { ref } from 'vue'
 
 // 导入背景图片
 const bgImage = new URL('../assets/images/ink-texture.jpg', import.meta.url).href
-const headerImage = new URL('../assets/images/ink-bg.jpg', import.meta.url).href
 </script>
 
 <style scoped>
@@ -184,5 +189,31 @@ h1, h2 {
 /* 添加磨砂玻璃效果 */
 .backdrop-blur-sm {
   backdrop-filter: blur(8px);
+}
+
+/* 优化移动端标题阴影 */
+@media (max-width: 768px) {
+  h1.text-4xl {
+    text-shadow: 
+      0 1px 2px rgba(0,0,0,0.4),
+      0 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .text-xl {
+    text-shadow: 
+      0 1px 2px rgba(0,0,0,0.3);
+  }
+}
+
+/* 优化背景图片在不同设备上的显示 */
+.bg-cover {
+  background-size: cover;
+  background-position: center 40%;
+}
+
+@media (max-width: 768px) {
+  .bg-cover {
+    background-position: center 30%;
+  }
 }
 </style> 
