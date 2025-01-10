@@ -4,25 +4,35 @@
     <!-- 页面内容 -->
     <div class="container mx-auto px-4 py-8 sm:py-12">
       <!-- 页面标题区域 -->
-      <div class="max-w-2xl mx-auto text-center mb-12">
+      <div class="max-w-3xl mx-auto text-center mb-12">
         <h1 class="text-4xl sm:text-5xl font-bold text-[#4A4940] font-ma-shan mb-4">
           AI经纪人修炼机缘
         </h1>
-        <p class="text-lg text-[#7A9D96] font-ma-shan mb-6">
+        <p class="text-lg text-[#7A9D96] font-ma-shan mb-8">
           神秘强者留下十七份机缘，待有缘人
         </p>
-        <div class="flex flex-wrap justify-center gap-4 text-sm text-[#4A4940]/70">
-          <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-[#C7DDBB]"></span>
-            <span>按数字大小逐一开启</span>
+        <!-- 修炼步骤说明 -->
+        <div class="inline-flex flex-col gap-3 bg-white/50 backdrop-blur-sm rounded-2xl p-6 shadow-sm">
+          <div class="flex items-center gap-4 text-[#4A4940]/80">
+            <div class="flex items-center gap-2 min-w-[100px] justify-end font-medium">
+              <span class="w-2 h-2 rounded-full bg-[#C7DDBB]"></span>
+              <span>第一步</span>
+            </div>
+            <div class="text-left">按数字大小逐一开启</div>
           </div>
-          <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-[#C7DDBB]"></span>
-            <span>遇一位守关强者，习得其能力</span>
+          <div class="flex items-center gap-4 text-[#4A4940]/80">
+            <div class="flex items-center gap-2 min-w-[100px] justify-end font-medium">
+              <span class="w-2 h-2 rounded-full bg-[#C7DDBB]"></span>
+              <span>第二步</span>
+            </div>
+            <div class="text-left">遇一位守关强者，习得其能力</div>
           </div>
-          <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-[#C7DDBB]"></span>
-            <span>成为新任守关者，继续修炼</span>
+          <div class="flex items-center gap-4 text-[#4A4940]/80">
+            <div class="flex items-center gap-2 min-w-[100px] justify-end font-medium">
+              <span class="w-2 h-2 rounded-full bg-[#C7DDBB]"></span>
+              <span>第三步</span>
+            </div>
+            <div class="text-left">成为新任守关者，继续修炼</div>
           </div>
         </div>
       </div>
@@ -54,24 +64,24 @@
         <div v-for="tip in getFilteredTips(currentTab)" :key="tip.id"
           class="group bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
           <!-- 卡片头部 -->
-          <div class="aspect-[4/3] rounded-t-2xl bg-[#7A9D96] relative overflow-hidden p-6">
+          <div class="aspect-[2/1] rounded-t-2xl bg-[#C7DDBB] relative overflow-hidden p-4">
             <!-- 图标容器 -->
             <div class="absolute inset-0 flex items-center justify-center">
               <img src="https://canyin-app.oss-cn-guangzhou.aliyuncs.com/images/money.png" 
                 alt="金元宝" 
-                class="w-32 h-32 object-contain opacity-20"/>
+                class="w-24 h-24 object-contain"/>
             </div>
             <!-- 价格标签 -->
             <div class="relative z-10">
-              <div class="inline-block bg-white/10 backdrop-blur-sm px-4 py-1.5 rounded-full">
-                <span class="text-lg font-medium text-white">￥{{ tip.price }}</span>
+              <div class="inline-block bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
+                <span class="text-base font-medium text-[#4A4940]">￥{{ tip.price }}</span>
               </div>
             </div>
             <!-- 境界标签 -->
-            <div class="absolute bottom-6 left-6 right-6 flex justify-between items-center">
-              <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                <i class="fas" :class="[isLocked(tip) ? 'fa-lock' : 'fa-lock-open']"></i>
-                <span class="text-sm text-white">{{ getRealmName(tip.requiredLevel) }}</span>
+            <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center">
+              <div class="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
+                <i class="fas text-[#4A4940]" :class="[isLocked(tip) ? 'fa-lock' : 'fa-lock-open']"></i>
+                <span class="text-sm text-[#4A4940]">{{ getRealmName(tip.requiredLevel) }}</span>
               </div>
             </div>
           </div>
