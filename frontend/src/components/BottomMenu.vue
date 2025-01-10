@@ -64,11 +64,18 @@ const isActive = (name: string) => {
 }
 
 .nav-item.active {
-  @apply text-gray-800;
+  @apply text-primary;
 }
 
 .nav-item.active svg {
-  @apply text-gray-800;
+  @apply text-primary;
+  filter: drop-shadow(0 0 2px rgba(79, 70, 229, 0.3));
+  transform: scale(1.1);
+  transition: all 0.3s ease;
+}
+
+.nav-item svg {
+  transition: all 0.3s ease;
 }
 
 /* 菜单文字样式 */
@@ -77,6 +84,12 @@ const isActive = (name: string) => {
   font-size: 1rem;
   line-height: 1.2;
   margin-top: 4px;
+  transition: all 0.3s ease;
+}
+
+.nav-item.active .menu-text {
+  @apply text-primary;
+  transform: scale(1.05);
 }
 
 /* 磨砂玻璃效果 */
@@ -86,5 +99,13 @@ const isActive = (name: string) => {
 
 .bg-white\/95 {
   background-color: rgba(255, 255, 255, 0.95);
+}
+
+:root {
+  --primary-color: #4F46E5;
+}
+
+.text-primary {
+  color: var(--primary-color);
 }
 </style> 
