@@ -1,49 +1,31 @@
 <!-- AI锦囊列表页面 -->
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-cyan-50 via-fuchsia-50 to-yellow-50 py-6 sm:py-12">
+  <div class="min-h-screen bg-gradient-to-br from-cyan-50 via-fuchsia-50 to-yellow-50 py-4 sm:py-8">
     <div class="container mx-auto px-4">
-      <!-- 页面标题 -->
-      <div class="text-center mb-8 sm:mb-12">
-        <h1 class="text-4xl sm:text-5xl font-bold text-gray-800 mb-4 sm:mb-6 font-ma-shan" 
-            style="text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">
-          AI经纪人修炼机缘
-        </h1>
-        
-        <!-- 机缘卡片 -->
-        <div class="flex flex-wrap justify-center gap-4 mb-6">
-          <div class="bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg transform hover:scale-105 transition-all duration-300 w-full sm:w-auto">
-            <div class="flex items-center justify-center gap-3">
-              <div class="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full">
-                <span class="text-2xl text-white font-ma-shan">秘</span>
-              </div>
-              <p class="text-xl text-gray-700 font-ma-shan">
-                17个锦囊藏机缘
-              </p>
-            </div>
-          </div>
-          
-          <div class="bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg transform hover:scale-105 transition-all duration-300 w-full sm:w-auto">
-            <div class="flex items-center justify-center gap-3">
-              <div class="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-blue-400 to-blue-600 rounded-full">
-                <span class="text-2xl text-white font-ma-shan">境</span>
-              </div>
-              <p class="text-xl text-gray-700 font-ma-shan">
-                逐关突破修炼
-              </p>
-            </div>
-          </div>
-          
-          <div class="bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg transform hover:scale-105 transition-all duration-300 w-full sm:w-auto">
-            <div class="flex items-center justify-center gap-3">
-              <div class="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-green-400 to-green-600 rounded-full">
-                <span class="text-2xl text-white font-ma-shan">成</span>
-              </div>
-              <p class="text-xl text-gray-700 font-ma-shan">
-                闯关成就武功
-              </p>
-            </div>
+      <!-- 页面标题区域 -->
+      <div class="flex flex-col sm:flex-row items-center justify-between mb-4 gap-4">
+        <!-- 左侧标题和说明 -->
+        <div class="flex flex-col items-center sm:items-start">
+          <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 font-ma-shan mb-2" 
+              style="text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">
+            AI经纪人修炼机缘
+          </h1>
+          <div class="text-sm text-gray-600 font-ma-shan tracking-wider flex flex-col items-center sm:items-start gap-1">
+            <p class="flex items-center gap-2">
+              <span class="bg-yellow-100 text-yellow-600 px-2 py-0.5 rounded-full">1-17关</span>
+              <span>按数字大小逐一开启</span>
+            </p>
+            <p class="flex items-center gap-2">
+              <span class="bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">每一关</span>
+              <span>遇一位守关强者，习得其能力</span>
+            </p>
+            <p class="flex items-center gap-2">
+              <span class="bg-green-100 text-green-600 px-2 py-0.5 rounded-full">突破后</span>
+              <span>成为新任守关者，继续修炼</span>
+            </p>
           </div>
         </div>
+       
       </div>
 
       <!-- 标签页切换 -->
