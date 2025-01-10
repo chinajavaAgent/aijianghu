@@ -3,20 +3,47 @@
   <div class="min-h-screen bg-gradient-to-br from-cyan-50 via-fuchsia-50 to-yellow-50 py-6 sm:py-12">
     <div class="container mx-auto px-4">
       <!-- 页面标题 -->
-      <div class="text-center mb-8 sm:mb-12 relative">
-        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-black/5 to-transparent"></div>
-        <h1 class="text-4xl sm:text-5xl font-bold text-gray-800 mb-4 sm:mb-6 relative z-10 font-ma-shan" 
+      <div class="text-center mb-8 sm:mb-12">
+        <h1 class="text-4xl sm:text-5xl font-bold text-gray-800 mb-4 sm:mb-6 font-ma-shan" 
             style="text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">
           AI经纪人修炼机缘
         </h1>
-        <p class="text-xl sm:text-2xl text-gray-700 mb-2 font-ma-shan tracking-wider">
-          神秘强者留下17个锦囊，隐藏17份机缘
-        </p>
-        <p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto font-ma-shan tracking-wider leading-relaxed">
-          1个机缘遇1位守关强者，机缘需按照数字大小逐一打开<br>
-          当你把守关强者能力复制，你此关境界圆满<br>
-          将成为此关的新任守关强者，17关闯完，你将武功大成
-        </p>
+        
+        <!-- 机缘卡片 -->
+        <div class="flex flex-wrap justify-center gap-4 mb-6">
+          <div class="bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg transform hover:scale-105 transition-all duration-300 w-full sm:w-auto">
+            <div class="flex items-center justify-center gap-3">
+              <div class="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full">
+                <span class="text-2xl text-white font-ma-shan">秘</span>
+              </div>
+              <p class="text-xl text-gray-700 font-ma-shan">
+                17个锦囊藏机缘
+              </p>
+            </div>
+          </div>
+          
+          <div class="bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg transform hover:scale-105 transition-all duration-300 w-full sm:w-auto">
+            <div class="flex items-center justify-center gap-3">
+              <div class="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-blue-400 to-blue-600 rounded-full">
+                <span class="text-2xl text-white font-ma-shan">境</span>
+              </div>
+              <p class="text-xl text-gray-700 font-ma-shan">
+                逐关突破修炼
+              </p>
+            </div>
+          </div>
+          
+          <div class="bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg transform hover:scale-105 transition-all duration-300 w-full sm:w-auto">
+            <div class="flex items-center justify-center gap-3">
+              <div class="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-green-400 to-green-600 rounded-full">
+                <span class="text-2xl text-white font-ma-shan">成</span>
+              </div>
+              <p class="text-xl text-gray-700 font-ma-shan">
+                闯关成就武功
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- 标签页切换 -->
