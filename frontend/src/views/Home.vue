@@ -108,7 +108,7 @@
         <!-- 背景装饰 -->
         <div class="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/10"></div>
         <div class="container mx-auto px-4 text-center relative z-10">
-          <h2 class="text-4xl font-bold mb-6 text-gray-800 font-ma-shan">你的AI江湖冒险即将开启</h2>
+          <h2 class="text-3xl font-bold mb-6 text-gray-800 font-ma-shan whitespace-nowrap">你的AI江湖冒险即将开启</h2>
           <p class="text-xl mb-8 text-gray-600 font-ma-shan">与各路英雄一起，探索AI带来的无限可能</p>
           <router-link to="/opportunities" class="inline-block">
             <button class="bg-white/95 backdrop-blur-md text-gray-800 px-8 py-3 rounded-full text-lg font-semibold hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 font-ma-shan">
