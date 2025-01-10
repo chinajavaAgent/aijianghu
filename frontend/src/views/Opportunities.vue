@@ -140,6 +140,7 @@ const showProjectDialog = ref(false)
 const selectedTipProjects = ref<any[]>([])
 const userStore = useUserStore()
 const pendingOrders = ref<Order[]>([])
+const approvedOrders = ref<Order[]>([])
 const userLevel = ref(0)
 const currentTab = ref('all')
 
@@ -185,6 +186,21 @@ const loadPendingOrders = async () => {
   } catch (error) {
     console.error('加载待审核订单失败:', error)
     pendingOrders.value = []
+  }
+}
+
+// 加载已通过订单
+const loadApprovedOrders = async () => {
+  try {
+    const response = await getUserOrders(userStore.$state.id, {
+      page: 1,
+      size: 100,
+      status: 1 // 已通过状态
+    })
+    approvedOrders.value = (response.records || []) as Order[]
+  } catch (error) {
+    console.error('加载已通过订单失败:', error)
+    approvedOrders.value = []
   }
 }
 
@@ -256,14 +272,20 @@ const getButtonText = (tip: AiTips) => {
     return '掌门正在审核'
   }
   
+  // 检查是否已通过
+  const hasApprovedOrder = approvedOrders.value.some(order => order.tipsId === tip.id)
+  if (hasApprovedOrder) {
+    return '已获得传承'
+  }
+  
   // 使用实时获取的用户等级
   if (userLevel.value < tip.requiredLevel) {
-    const nextRealm = getRealmName(tip.requiredLevel-1)
+    const nextRealm = getRealmName(tip.requiredLevel)
     return `需修炼至${nextRealm}`
   }
   
   // 用户等级已满足要求
-  return '已解锁'
+  return '可以学习'
 }
 
 // 添加购买处理函数
@@ -277,6 +299,14 @@ const handlePurchase = async (tip: AiTips) => {
     // 检查用户是否登录
     if (!isLoggedIn.value) {
       router.push('/login')
+      return
+    }
+    
+    // 检查是否已通过
+    const hasApprovedOrder = approvedOrders.value.some(order => order.tipsId === tip.id)
+    if (hasApprovedOrder) {
+      // 已通过的订单直接查看详情
+      router.push(`/tips/${tip.id}`)
       return
     }
     
@@ -340,6 +370,12 @@ const isLocked = (tip: AiTips) => {
     return true
   }
   
+  // 如果已经通过，则解锁
+  const hasApprovedOrder = approvedOrders.value.some(order => order.tipsId === tip.id)
+  if (hasApprovedOrder) {
+    return false
+  }
+  
   // 如果用户等级不足，则锁定
   return userLevel.value < tip.requiredLevel
 }
@@ -359,6 +395,8 @@ onMounted(async () => {
   if (isLoggedIn.value) {
     // 先获取用户信息，确保等级是最新的
     await fetchUserInfo()
+    // 加载订单数据
+    await Promise.all([loadPendingOrders(), loadApprovedOrders()])
   }
   await loadTipsList()
 })

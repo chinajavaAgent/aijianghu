@@ -301,11 +301,13 @@ const loadOrders = async () => {
     if (data?.records) {
       if (activeTab.value === 'pending') {
         pendingOrders.value = data.records
+        // 更新申请状态
+        hasApplied.value = data.records.length > 0
       } else {
         approvedOrders.value = data.records
+        hasApplied.value = true
       }
-      // 更新申请状态
-      hasApplied.value = data.records.length > 0
+      
     }
   } catch (error) {
     console.error('获取订单列表失败:', error)
