@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aigroup.world.mapper.OrderMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.aigroup.world.entity.Order">
+        <id column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="user_id" property="userId"/>
+        <result column="tips_id" property="tipsId"/>
+        <result column="admin_id" property="adminId"/>
+        <result column="title" property="title"/>
+        <result column="price" property="price"/>
+        <result column="status" property="status"/>
+        <result column="apply_time" property="applyTime"/>
+        <result column="approve_time" property="approveTime"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, order_no, user_id, tips_id, admin_id, title, price, status, apply_time, approve_time, created_at, updated_at
+    </sql>
+
+    <!-- 获取用户订单列表（包含用户和审核人信息） -->
+    <select id="selectUserOrdersWithAdmin" resultType="com.aigroup.world.entity.Order">
+        SELECT 
+            o.*,
+            u.real_name as userName,
+            u.gender,
+            TIMESTAMPDIFF(YEAR, u.birth_date, CURDATE()) as age,
+            u.city,
+            u.phone as userPhone,
+            u.wechat as userWechat,
+            u.profession,
+            u.experience,
+            u.reason,
+            u.introduction,
+            a.real_name as reviewer,
+            a.phone as reviewerPhone,
+            a.wechat_id as reviewerWechat
+        FROM `order` o
+        LEFT JOIN user u ON o.user_id = u.id
+        LEFT JOIN ai_tips t ON o.tips_id = t.id
+        LEFT JOIN admin a ON o.admin_id = a.id
+        WHERE o.user_id = #{userId}
+        <if test="status != null">
+            AND o.status = #{status}
+        </if>
+        ORDER BY o.created_at DESC
+    </select>
+</mapper> 
