@@ -43,7 +43,7 @@ export interface OrderCreateRequest {
 }
 
 // 创建订单
-export const createOrder = async (data: OrderCreateRequest) => {
+export const createOrder = async (data: OrderCreateRequest & { adminId: number }) => {
   const response = await request.post<Order>('/orders', data)
   return response.data
 }

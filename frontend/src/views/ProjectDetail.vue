@@ -221,7 +221,7 @@ const submitForReview = async () => {
       return
     }
 
-    const orderData: OrderCreateRequest = {
+    const orderData: OrderCreateRequest & { adminId: number } = {
       tipsId: currentProject.value.tipId,
       userId: userStore.id,
       title: currentTip.value.title,
@@ -235,7 +235,8 @@ const submitForReview = async () => {
       profession: '',
       experience: 0,
       reason: '',
-      introduction: ''
+      introduction: '',
+      adminId: adminInfo.value.id
     }
 
     const response = await createOrder(orderData)
