@@ -42,7 +42,7 @@
           class="learn-btn relative px-6 py-2 text-2xl text-white font-ma-shan rounded-lg transition-all duration-300"
           @click="handleLearn"
         >
-          拜师学艺
+          {{ isUnlocked ? '已解锁' : '拜师学艺' }}
         </button>
       </div>
     </div>
@@ -170,6 +170,12 @@ const fetchTipDetailAndAdmin = async (tipId: number) => {
   }
 }
 
+// 是否已解锁
+const isUnlocked = computed(() => {
+  if (!currentTip.value || !userStore.level) return false
+  return userStore.level >= currentTip.value.requiredLevel
+})
+
 // 处理拜师学艺点击
 const handleLearn = async () => {
   if (!userStore.isLoggedIn) {
@@ -181,6 +187,12 @@ const handleLearn = async () => {
     return
   }
 
+  if (isUnlocked.value) {
+    // 如果已解锁，跳转到订单页面
+    router.push('/orders')
+    return
+  }
+
   if (!currentProject.value?.tipId) {
     showToast({
       message: '项目信息不完整',
@@ -189,7 +201,6 @@ const handleLearn = async () => {
     return
   }
 
-  await fetchTipDetailAndAdmin(currentProject.value.tipId)
   showContactModal.value = true
 }
 
@@ -275,6 +286,10 @@ const loadProject = async () => {
     const response = await getProjectById(projectId)
     if (response.data) {
       currentProject.value = response.data
+      // 加载项目后立即获取锦囊信息
+      if (response.data.tipId) {
+        await fetchTipDetailAndAdmin(response.data.tipId)
+      }
     } else {
       ElMessage.error('获取项目数据失败')
       router.back()
