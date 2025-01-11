@@ -65,4 +65,18 @@ public class OrderController {
         boolean success = orderService.approveOrder(orderId, status);
         return Result.success(success);
     }
+
+    /**
+     * 根据锦囊ID获取订单列表
+     */
+    @GetMapping("/tips/{tipId}")
+    public Result<IPage<Order>> getOrdersByTipId(
+            @PathVariable Long tipId,
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(required = false) Integer status
+    ) {
+        IPage<Order> orders = orderService.getOrdersByTipId(tipId, page, size, status);
+        return Result.success(orders);
+    }
 } 

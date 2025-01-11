@@ -20,4 +20,9 @@ public interface OrderService extends IService<Order> {
      * 审核订单
      */
     boolean approveOrder(Long orderId, Integer status);
+
+    /**
+     * 根据锦囊ID获取订单列表
+     */
+    IPage<Order> getOrdersByTipId(Long tipId, Integer page, Integer size, Integer status);
 } 

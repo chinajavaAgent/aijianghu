@@ -42,7 +42,7 @@
           class="learn-btn relative px-6 py-2 text-2xl text-white font-ma-shan rounded-lg transition-all duration-300"
           @click="handleLearn"
         >
-          {{ isUnlocked ? '已解锁' : '拜师学艺' }}
+          {{ buttonText }}
         </button>
       </div>
     </div>
@@ -107,7 +107,7 @@ import type { AiTips } from '@/types/tips'
 import type { ApiResponse } from '@/types/common'
 import type { Order } from '@/types/order'
 import { getProjectById } from '@/api/project'
-import { createOrder, type OrderCreateRequest } from '@/api/order'
+import { createOrder, getOrdersByTipId, type OrderCreateRequest } from '@/api/order'
 import { useUserStore } from '@/store/user'
 import SharePoster from '@/components/SharePoster.vue'
 import { getAiTipsDetail } from '@/api/tips'
@@ -121,6 +121,7 @@ const currentTip = ref<AiTips | null>(null)
 const showContactModal = ref(false)
 const loading = ref(false)
 const adminInfo = ref<any>(null)
+const hasAppliedOrder = ref(false)
 
 // 显示提示信息的函数
 const showToast = (options: { message: string; duration?: number }) => {
@@ -176,6 +177,36 @@ const isUnlocked = computed(() => {
   return userStore.level >= currentTip.value.requiredLevel
 })
 
+// 检查是否已申请该锦囊
+const checkOrderStatus = async (tipId: number) => {
+  if (!userStore.id) return
+
+  try {
+    const response = await getOrdersByTipId(tipId, {
+      page: 1,
+      size: 100,
+      status: undefined // 不传 status 参数，获取所有状态的订单
+    })
+    
+    if (response?.records) {
+      // 检查是否存在当前用户的订单
+      hasAppliedOrder.value = response.records.some(order => 
+        order.userId === userStore.id && 
+        [0, 1].includes(order.status) // 0: 待审核, 1: 审核中
+      )
+    }
+  } catch (error) {
+    console.error('获取订单状态失败:', error)
+  }
+}
+
+// 修改计算属性
+const buttonText = computed(() => {
+  if (isUnlocked.value) return '已解锁'
+  if (hasAppliedOrder.value) return '师门考核中'
+  return '拜师学艺'
+})
+
 // 处理拜师学艺点击
 const handleLearn = async () => {
   if (!userStore.isLoggedIn) {
@@ -187,8 +218,8 @@ const handleLearn = async () => {
     return
   }
 
-  if (isUnlocked.value) {
-    // 如果已解锁，跳转到订单页面
+  if (isUnlocked.value || hasAppliedOrder.value) {
+    // 如果已解锁或已申请，跳转到订单页面
     router.push('/orders')
     return
   }
@@ -289,6 +320,7 @@ const loadProject = async () => {
       // 加载项目后立即获取锦囊信息
       if (response.data.tipId) {
         await fetchTipDetailAndAdmin(response.data.tipId)
+        await checkOrderStatus(response.data.tipId)
       }
     } else {
       ElMessage.error('获取项目数据失败')

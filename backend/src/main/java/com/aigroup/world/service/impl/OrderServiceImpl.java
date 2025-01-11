@@ -14,6 +14,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -92,5 +93,19 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
         
         return updateById(order);
+    }
+
+    /**
+     * 根据锦囊ID获取订单列表
+     */
+    @Override
+    public IPage<Order> getOrdersByTipId(Long tipId, Integer page, Integer size, Integer status) {
+        Page<Order> pageParam = new Page<>(page, size);
+        LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<Order>()
+            .eq(Order::getTipsId, tipId)
+            .eq(status != null, Order::getStatus, status)
+            .orderByDesc(Order::getCreatedAt);
+        
+        return this.page(pageParam, queryWrapper);
     }
 } 

@@ -79,4 +79,21 @@ export interface ApproveOrderRequest {
 export const approveOrder = async (data: ApproveOrderRequest) => {
   const response = await request.post<Order>(`/orders/${data.orderId}/approve`, data)
   return response.data
+}
+
+// 根据锦囊ID获取订单列表
+export const getOrdersByTipId = async (tipId: number, params?: { page?: number; size?: number; status?: number }) => {
+  try {
+    const response = await request.get<OrderResponse>(`/orders/tips/${tipId}`, {
+      params: {
+        page: params?.page || 1,
+        size: params?.size || 100,
+        status: params?.status
+      }
+    })
+    return response.data
+  } catch (error) {
+    console.error('获取锦囊订单失败:', error)
+    return { records: [], total: 0, size: params?.size || 100, current: params?.page || 1 }
+  }
 } 
