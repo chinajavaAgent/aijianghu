@@ -142,49 +142,47 @@ interface ColorScheme {
 // 预设颜色方案
 const colorSchemes: ColorScheme[] = [
   {
-    startColor: '#40E0D0',
-    endColor: '#4169E1',
-    type: 'gradient',
-    name: '默认蓝绿'
-  },
-  {
-    startColor: '#FF6B6B',
-    endColor: '#4ECDC4',
-    type: 'gradient',
-    name: '珊瑚红'
-  },
-  {
-    startColor: '#A8E6CF',
-    endColor: '#FFD3B6',
-    type: 'gradient',
-    name: '清新绿'
-  },
-  {
-    startColor: '#3494E6',
-    endColor: '#EC6EAD',
-    type: 'gradient',
-    name: '梦幻紫'
-  },
-  {
-    startColor: '#11998E',
-    endColor: '#38EF7D',
-    type: 'gradient',
-    name: '森林绿'
-  },
-  {
-    startColor: '#FC466B',
-    type: 'solid',
-    name: '活力红'
-  },
-  {
-    startColor: '#3B4371',
-    type: 'solid',
-    name: '深邃蓝'
-  },
-  {
     startColor: '#F5F5F5',
     type: 'solid',
     name: '简约白'
+  },
+  {
+    startColor: '#F9F1E7',
+    type: 'solid',
+    name: '温暖米'
+  },
+  {
+    startColor: '#F3F7F0',
+    type: 'solid',
+    name: '清新绿'
+  },
+  {
+    startColor: '#F5F6F8',
+    type: 'solid',
+    name: '淡雅蓝'
+  },
+  {
+    startColor: '#F8F6F9',
+    type: 'solid',
+    name: '柔和紫'
+  },
+  {
+    startColor: '#F9F6F1',
+    endColor: '#F1F6F9',
+    type: 'gradient',
+    name: '晨曦'
+  },
+  {
+    startColor: '#F5F7FA',
+    endColor: '#F7F3F5',
+    type: 'gradient',
+    name: '云雾'
+  },
+  {
+    startColor: '#F6F8F5',
+    endColor: '#F8F5F6',
+    type: 'gradient',
+    name: '山水'
   }
 ]
 
@@ -266,13 +264,15 @@ const generatePoster = async () => {
   // 加载字体
   await document.fonts.load('16px "Ma Shan Zheng"')
 
-  // 创建浅灰色渐变背景
-  const bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
-  bgGradient.addColorStop(0, '#F5F5F5')    // 浅灰色
-  bgGradient.addColorStop(0.3, '#EFEFEF')  // 稍浅的灰色
-  bgGradient.addColorStop(0.7, '#EFEFEF')  // 稍浅的灰色
-  bgGradient.addColorStop(1, '#F5F5F5')    // 浅灰色
-  ctx.fillStyle = bgGradient
+  // 创建背景
+  if (customBackground.type === 'gradient') {
+    const bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+    bgGradient.addColorStop(0, customBackground.startColor)
+    bgGradient.addColorStop(1, customBackground.endColor)
+    ctx.fillStyle = bgGradient
+  } else {
+    ctx.fillStyle = customBackground.startColor
+  }
   ctx.fillRect(0, 0, canvas.width, canvas.height)
 
   // 绘制装饰边框
