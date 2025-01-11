@@ -50,7 +50,6 @@ public class OssServiceImpl implements OssService {
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(file.getContentType());
             metadata.setContentLength(file.getSize());
-
             // 上传文件
             PutObjectRequest putObjectRequest = new PutObjectRequest(
                 ossProperties.getBucketName(),
