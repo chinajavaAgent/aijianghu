@@ -19,20 +19,20 @@ export interface ProjectBenefit {
 
 // 项目信息
 export interface Project {
-  id?: number;
+  id: number;
   tipId: number;
   name: string;
   description: string;
-  icon?: string;
+  icon: string;
   detail: string;
   videoUrl?: string;
-  status?: number;
-  views?: number;
-  likes?: number;
-  cases?: ProjectCase[];
-  benefits?: ProjectBenefit[];
-  createdAt?: string;
-  updatedAt?: string;
+  status: number;
+  views: number;
+  likes: number;
+  cases: ProjectCase[];
+  benefits: ProjectBenefit[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ProjectUpdateDto {

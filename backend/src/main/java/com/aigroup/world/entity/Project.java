@@ -18,6 +18,8 @@ public class Project {
     
     private String description;
     
+    private String detail;
+    
     @TableField("cover_image")
     private String coverImage;
     

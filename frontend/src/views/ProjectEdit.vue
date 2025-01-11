@@ -128,8 +128,9 @@ const loadProject = async () => {
   
   try {
     const response = await getProjectById(projectId)
-    if (response?.data?.code === 200 && response.data.data) {
-      const project = response.data.data
+    console.log(response.data)
+    if (response?.code === 200 && response.data) {
+      const project = response.data
       Object.assign(form, {
         id: project.id,
         name: project.name,
