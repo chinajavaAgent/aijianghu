@@ -512,7 +512,7 @@ const generatePoster = async () => {
 
   // 绘制二维码背景装饰
   const qrSize = 180
-  const qrX = (canvas.width - qrSize) / 2
+  const qrX = 100
   const qrY = canvas.height - qrSize - 100
   
   // 绘制二维码装饰框
@@ -573,12 +573,18 @@ const generatePoster = async () => {
 
     // 绘制二维码提示文字
     ctx.fillStyle = '#000000'
-    ctx.font = '32px "Ma Shan Zheng"'
-    ctx.textAlign = 'center'
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.1)'
-    ctx.shadowBlur = 5
-    ctx.fillText('扫码入江湖', canvas.width / 2, canvas.height - 40)
-    ctx.shadowBlur = 0
+    ctx.font = '36px "Ma Shan Zheng"'
+    ctx.textAlign = 'left'
+    ctx.textBaseline = 'middle'
+    
+    // 计算文字位置，在二维码右侧
+    const textX = qrX + qrSize + 50
+    const textY = qrY + qrSize/2
+    
+    // 绘制提示文字
+    ctx.fillText('我有秘法流于心间，', textX, textY - 30)
+    ctx.fillText('等待有缘人扫码领取', textX, textY + 30)
+    
   } catch (error) {
     console.error('Failed to generate QR code:', error)
   }
