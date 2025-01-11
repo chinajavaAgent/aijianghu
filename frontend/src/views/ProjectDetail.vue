@@ -93,10 +93,13 @@ onMounted(() => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
+
 .prose {
   color: #1a1a1a;
   font-size: 16px;
   line-height: 1.75;
+  font-family: 'Ma Shan Zheng', cursive;
 }
 
 .prose :deep(img) {
@@ -108,6 +111,7 @@ onMounted(() => {
 
 .prose :deep(p) {
   margin: 1em 0;
+  font-family: 'Ma Shan Zheng', cursive;
 }
 
 .prose :deep(h1),
@@ -116,6 +120,7 @@ onMounted(() => {
 .prose :deep(h4),
 .prose :deep(h5),
 .prose :deep(h6) {
+  font-family: 'Ma Shan Zheng', cursive;
   font-weight: 600;
   line-height: 1.4;
   margin: 1.2em 0 0.8em;
@@ -127,16 +132,19 @@ onMounted(() => {
   border-left: 4px solid #e5e7eb;
   background-color: #f9fafb;
   color: #4b5563;
+  font-family: 'Ma Shan Zheng', cursive;
 }
 
 .prose :deep(ul),
 .prose :deep(ol) {
   margin: 1em 0;
   padding-left: 1.5em;
+  font-family: 'Ma Shan Zheng', cursive;
 }
 
 .prose :deep(li) {
   margin: 0.5em 0;
+  font-family: 'Ma Shan Zheng', cursive;
 }
 
 .prose :deep(pre) {
@@ -157,9 +165,20 @@ onMounted(() => {
 .prose :deep(a) {
   color: #1890ff;
   text-decoration: none;
+  font-family: 'Ma Shan Zheng', cursive;
 }
 
 .prose :deep(a:hover) {
   text-decoration: underline;
+}
+
+/* 统一字体设置 */
+h1, h2, p, button, div {
+  font-family: 'Ma Shan Zheng', cursive;
+}
+
+/* 优化字间距 */
+.tracking-wider {
+  letter-spacing: 0.05em;
 }
 </style> 
