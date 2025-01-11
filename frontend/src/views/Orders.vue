@@ -77,7 +77,7 @@
                 v-for="order in pendingOrders" 
                 :key="order.id" 
                 class="bg-white rounded-xl p-4 shadow-sm transition-shadow duration-200 hover:shadow-md cursor-pointer"
-                @click="goToTipDetail(order.tipsId)"
+                @click="goToProjectList(order.tipsId)"
               >
                 <div class="flex items-start gap-3">
                   <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -139,7 +139,7 @@
                 v-for="order in approvedOrders" 
                 :key="order.id" 
                 class="bg-white rounded-xl p-4 shadow-sm transition-shadow duration-200 hover:shadow-md cursor-pointer"
-                @click="goToTipDetail(order.tipsId)"
+                @click="goToProjectList(order.tipsId)"
               >
                 <div class="flex items-start gap-3">
                   <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -352,9 +352,9 @@ const handleCopyContact = (type: 'phone' | 'wechat', order: OrderItem) => {
   }
 }
 
-// 跳转到锦囊详情
-const goToTipDetail = (tipsId: number) => {
-  router.push(`/tips/${tipsId}`)
+// 跳转到项目列表
+const goToProjectList = (tipsId: number) => {
+  router.push(`/projects/${tipsId}`)
 }
 
 // 格式化时间
