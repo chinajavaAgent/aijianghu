@@ -266,60 +266,25 @@ const generatePoster = async () => {
   // 加载字体
   await document.fonts.load('16px "Ma Shan Zheng"')
 
-  // 创建古风渐变背景
+  // 创建浅灰色渐变背景
   const bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
-  bgGradient.addColorStop(0, '#2c1810')    // 深褐色
-  bgGradient.addColorStop(0.3, '#4a2511')  // 红褐色
-  bgGradient.addColorStop(0.7, '#4a2511')  // 红褐色
-  bgGradient.addColorStop(1, '#2c1810')    // 深褐色
+  bgGradient.addColorStop(0, '#F5F5F5')    // 浅灰色
+  bgGradient.addColorStop(0.3, '#EFEFEF')  // 稍浅的灰色
+  bgGradient.addColorStop(0.7, '#EFEFEF')  // 稍浅的灰色
+  bgGradient.addColorStop(1, '#F5F5F5')    // 浅灰色
   ctx.fillStyle = bgGradient
   ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-  // 添加水墨纹理效果
-  ctx.globalCompositeOperation = 'soft-light'
-  for (let i = 0; i < 5; i++) {
-    const x = Math.random() * canvas.width
-    const y = Math.random() * canvas.height
-    const radius = Math.random() * 300 + 200
-    
-    const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius)
-    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.1)')
-    gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.05)')
-    gradient.addColorStop(1, 'transparent')
-    
-    ctx.fillStyle = gradient
-    ctx.beginPath()
-    ctx.arc(x, y, radius, 0, Math.PI * 2)
-    ctx.fill()
-  }
-  ctx.globalCompositeOperation = 'source-over'
-
-  // 添加云纹装饰
-  ctx.strokeStyle = 'rgba(212, 175, 55, 0.1)'
-  ctx.lineWidth = 2
-  for (let i = 0; i < 8; i++) {
-    const y = i * 200
-    ctx.beginPath()
-    ctx.moveTo(0, y)
-    for (let x = 0; x < canvas.width; x += 50) {
-      ctx.quadraticCurveTo(
-        x + 25, y + (Math.sin(x / 50) * 20),
-        x + 50, y
-      )
-    }
-    ctx.stroke()
-  }
-
   // 绘制装饰边框
   const margin = 40
-  ctx.strokeStyle = '#D4AF37' // 金色边框
+  ctx.strokeStyle = '#000000' // 黑色边框
   ctx.lineWidth = 3
   ctx.beginPath()
   ctx.rect(margin, margin, canvas.width - margin * 2, canvas.height - margin * 2)
   ctx.stroke()
 
   // 添加边框内层装饰
-  ctx.strokeStyle = 'rgba(212, 175, 55, 0.5)' // 半透明金色
+  ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)' // 半透明黑色
   ctx.lineWidth = 1
   ctx.beginPath()
   ctx.rect(margin + 10, margin + 10, canvas.width - (margin + 10) * 2, canvas.height - (margin + 10) * 2)
@@ -327,7 +292,7 @@ const generatePoster = async () => {
 
   // 添加四角装饰
   const drawCornerDecoration = (x: number, y: number, type: 'tl' | 'tr' | 'bl' | 'br') => {
-    ctx.strokeStyle = '#D4AF37'
+    ctx.strokeStyle = '#000000'
     ctx.lineWidth = 2
     ctx.beginPath()
     
@@ -352,7 +317,7 @@ const generatePoster = async () => {
     ctx.stroke()
 
     // 添加装饰点
-    ctx.fillStyle = '#D4AF37'
+    ctx.fillStyle = '#000000'
     ctx.beginPath()
     ctx.arc(x, y, 4, 0, Math.PI * 2)
     ctx.fill()
@@ -364,21 +329,20 @@ const generatePoster = async () => {
   drawCornerDecoration(margin, canvas.height - margin, 'bl')
   drawCornerDecoration(canvas.width - margin, canvas.height - margin, 'br')
 
-  // 绘制标题（江湖风格）
-  ctx.fillStyle = '#D4AF37' // 金色文字
-  ctx.font = 'bold 60px "Ma Shan Zheng"' // 使用马善政字体
+  // 绘制标题
+  ctx.fillStyle = '#000000' // 黑色文字
+  ctx.font = 'bold 60px "Ma Shan Zheng"'
   ctx.textAlign = 'center'
   
-  // 添加标题装饰
+  // 绘制标题装饰线
   const titleY = 160
   const titleWidth = canvas.width - 200
   
-  // 绘制标题装饰线
   const drawDecorativeLine = (y: number) => {
     ctx.beginPath()
     ctx.moveTo(100, y)
     ctx.lineTo(canvas.width - 100, y)
-    ctx.strokeStyle = '#D4AF37'
+    ctx.strokeStyle = '#000000'
     ctx.lineWidth = 2
     ctx.stroke()
     
@@ -386,7 +350,7 @@ const generatePoster = async () => {
     ctx.beginPath()
     ctx.arc(100, y, 4, 0, Math.PI * 2)
     ctx.arc(canvas.width - 100, y, 4, 0, Math.PI * 2)
-    ctx.fillStyle = '#D4AF37'
+    ctx.fillStyle = '#000000'
     ctx.fill()
   }
 
@@ -396,9 +360,8 @@ const generatePoster = async () => {
   const titleLines = wrapText(ctx, props.title || '', titleWidth, 60)
   let currentY = titleY
   titleLines.forEach((line, index) => {
-    // 添加文字阴影效果
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.3)'
-    ctx.shadowBlur = 15
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.1)'
+    ctx.shadowBlur = 5
     ctx.fillText(line, canvas.width / 2, currentY)
     ctx.shadowBlur = 0
     currentY += 80
@@ -408,7 +371,7 @@ const generatePoster = async () => {
 
   // 绘制简介
   ctx.font = '36px "Ma Shan Zheng"'
-  ctx.fillStyle = '#E8D5A9' // 淡金色
+  ctx.fillStyle = '#333333' // 深灰色
   const introLines = wrapText(ctx, props.introduction || '', canvas.width - 200, 36)
   currentY += 60
   introLines.forEach(line => {
@@ -421,7 +384,7 @@ const generatePoster = async () => {
     const detailText = stripHtmlTags(props.detail)
     const detailLines = wrapText(ctx, detailText, canvas.width - 200, 32)
     ctx.font = '32px "Ma Shan Zheng"'
-    ctx.fillStyle = '#E8D5A9' // 淡金色
+    ctx.fillStyle = '#333333' // 深灰色
     currentY += 60
     detailLines.slice(0, 12).forEach(line => {
       ctx.fillText(line, canvas.width / 2, currentY)
@@ -438,7 +401,7 @@ const generatePoster = async () => {
   const qrY = canvas.height - qrSize - 120
   
   // 绘制二维码装饰框
-  ctx.strokeStyle = '#D4AF37'
+  ctx.strokeStyle = '#000000'
   ctx.lineWidth = 2
   ctx.beginPath()
   ctx.rect(qrX - 20, qrY - 20, qrSize + 40, qrSize + 40)
@@ -465,16 +428,16 @@ const generatePoster = async () => {
       ctx.lineTo(x, y)
       ctx.lineTo(x + cornerSize, y)
     }
-    ctx.strokeStyle = '#D4AF37'
+    ctx.strokeStyle = '#000000'
     ctx.lineWidth = 3
     ctx.stroke()
   }
 
   // 绘制四个角
-  drawCorner(qrX - 20, qrY - 20, 1) // 左上
-  drawCorner(qrX + qrSize + 20, qrY - 20, 2) // 右上
-  drawCorner(qrX + qrSize + 20, qrY + qrSize + 20, 3) // 右下
-  drawCorner(qrX - 20, qrY + qrSize + 20, 4) // 左下
+  drawCorner(qrX - 20, qrY - 20, 1)
+  drawCorner(qrX + qrSize + 20, qrY - 20, 2)
+  drawCorner(qrX + qrSize + 20, qrY + qrSize + 20, 3)
+  drawCorner(qrX - 20, qrY + qrSize + 20, 4)
 
   // 绘制二维码
   try {
@@ -482,7 +445,7 @@ const generatePoster = async () => {
       width: qrSize,
       margin: 1,
       color: {
-        dark: '#D4AF37', // 金色二维码
+        dark: '#000000', // 黑色二维码
         light: '#FFFFFF'
       }
     })
@@ -494,10 +457,10 @@ const generatePoster = async () => {
     ctx.drawImage(qrImage, qrX, qrY, qrSize, qrSize)
 
     // 绘制二维码提示文字
-    ctx.fillStyle = '#D4AF37'
+    ctx.fillStyle = '#000000'
     ctx.font = '36px "Ma Shan Zheng"'
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.3)'
-    ctx.shadowBlur = 15
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.1)'
+    ctx.shadowBlur = 5
     ctx.fillText('扫码入江湖', canvas.width / 2, canvas.height - 50)
     ctx.shadowBlur = 0
   } catch (error) {
