@@ -1,0 +1,1 @@
+ALTER TABLE project ADD COLUMN detail TEXT COMMENT '项目详情' AFTER description; 

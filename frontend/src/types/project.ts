@@ -23,7 +23,7 @@ export interface Project {
   tipId: number;
   name: string;
   description: string;
-  icon: string;
+  coverImage: string;
   detail: string;
   videoUrl?: string;
   status: number;
@@ -36,12 +36,14 @@ export interface Project {
 }
 
 export interface ProjectUpdateDto {
-  name: string;
-  description: string;
+  name?: string;
+  description?: string;
+  coverImage?: string;
+  detail?: string;
   videoUrl?: string;
   status?: number;
-  cases: ProjectCase[];
-  benefits: ProjectBenefit[];
+  cases?: ProjectCase[];
+  benefits?: ProjectBenefit[];
 }
 
 export interface Order {

@@ -4,7 +4,7 @@ import type { ApiResponse, PageResponse } from '@/types/common'
 
 // 获取项目列表
 export const getProjects = (page: number, size: number, tipId?: number) => {
-  return request.get<ApiResponse<PageResponse<Project>>>('/projects', {
+  return request.get<ApiResponse<Project>>('/projects', {
     params: {
       page,
       size,
@@ -15,7 +15,7 @@ export const getProjects = (page: number, size: number, tipId?: number) => {
 
 // 获取项目详情
 export const getProjectById = (id: number) => {
-  return request.get<ApiResponse<Project>>(`/projects/${id}`)
+  return request.get<Project>(`/projects/${id}`)
 }
 
 // 创建项目
@@ -30,22 +30,22 @@ export const updateProject = (id: number, data: Partial<Project>) => {
 
 // 删除项目
 export const deleteProject = (id: number) => {
-  return request.delete<ApiResponse<void>>(`/projects/${id}`)
+  return request.delete<void>(`/projects/${id}`)
 }
 
 // 添加案例
 export const addCase = (projectId: number, data: ProjectCase) => {
-  return request.post<ApiResponse<ProjectCase>>(`/projects/${projectId}/cases`, data)
+  return request.post<ProjectCase>(`/projects/${projectId}/cases`, data)
 }
 
 // 更新案例
 export const updateCase = (projectId: number, caseId: number, data: Partial<ProjectCase>) => {
-  return request.put<ApiResponse<ProjectCase>>(`/projects/${projectId}/cases/${caseId}`, data)
+  return request.put<ProjectCase>(`/projects/${projectId}/cases/${caseId}`, data)
 }
 
 // 删除案例
 export const deleteCase = (projectId: number, caseId: number) => {
-  return request.delete<ApiResponse<void>>(`/projects/${projectId}/cases/${caseId}`)
+  return request.delete<void>(`/projects/${projectId}/cases/${caseId}`)
 }
 
 // 上传案例图片
@@ -89,6 +89,18 @@ export const deleteBenefit = (projectId: number, benefitId: number) => {
 export const uploadProjectIcon = (file: File) => {
   const formData = new FormData()
   formData.append('file', file)
+  return request.post<ApiResponse<string>>('/oss/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
+// 富文本编辑器专用的图片上传
+export const uploadEditorImage = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('directory', 'project/detail')
   return request.post<ApiResponse<string>>('/oss/upload', formData, {
     headers: {
       'Content-Type': 'multipart/form-data'

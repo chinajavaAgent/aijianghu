@@ -31,11 +31,11 @@
           <!-- 项目图标 -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">项目图标</label>
-            <div v-if="form.icon" class="relative w-20 h-20">
-              <img :src="form.icon" 
+            <div v-if="form.coverImage" class="relative w-20 h-20">
+              <img :src="form.coverImage" 
                 class="w-full h-full object-cover rounded-lg" 
                 alt="项目图标">
-              <button @click="form.icon = ''"
+              <button @click="form.coverImage = ''"
                 class="absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600">
                 <i class="fas fa-times"></i>
               </button>
@@ -102,7 +102,8 @@ import {
   getProjectById,
   createProject,
   updateProject,
-  uploadProjectIcon
+  uploadProjectIcon,
+  uploadEditorImage
 } from '@/api/project'
 import type { Project } from '@/types/project'
 import type { IDomEditor, IEditorConfig, IToolbarConfig } from '@wangeditor/editor'
@@ -118,7 +119,7 @@ const form = reactive({
   id: null as number | null,
   name: '',
   description: '',
-  icon: '',
+  coverImage: '',
   detail: ''
 })
 
@@ -129,13 +130,13 @@ const loadProject = async () => {
   try {
     const response = await getProjectById(projectId)
     console.log(response.data)
-    if (response?.code === 200 && response.data) {
+    if (response.code === 200 && response.data) {
       const project = response.data
       Object.assign(form, {
         id: project.id,
         name: project.name,
         description: project.description,
-        icon: project.icon,
+        coverImage: project.coverImage,
         detail: project.detail
       })
     } else {
@@ -157,29 +158,34 @@ const handleSubmit = async () => {
       return
     }
 
-    const projectData = {
+    const projectData: Partial<Project> = {
       tipId,
       name: form.name,
       description: form.description,
-      icon: form.icon || '',
-      detail: form.detail || ''
+      coverImage: form.coverImage || '',
+      detail: form.detail || '',
+      status: 1,  // 默认状态
+      views: 0,   // 默认浏览量
+      likes: 0,   // 默认点赞数
+      cases: [],  // 默认案例列表
+      benefits: [] // 默认福利列表
     }
 
     if (isEditing.value && form.id) {
       const response = await updateProject(form.id, projectData)
-      if (response?.data?.code === 200) {
+      if (response.code === 200) {
         showToast('更新成功')
         router.back()
       } else {
-        showToast(response?.data?.message || '更新失败')
+        showToast(response.message || '更新失败')
       }
     } else {
-      const response = await createProject(projectData)
-      if (response?.data?.code === 200) {
+      const response = await createProject(projectData as Project)
+      if (response.code === 200) {
         showToast('创建成功')
         router.back()
       } else {
-        showToast(response?.data?.message || '创建失败')
+        showToast(response.message || '创建失败')
       }
     }
   } catch (error) {
@@ -204,8 +210,23 @@ const handleIconUpload = async (event: Event) => {
   try {
     const file = input.files[0]
     const response = await uploadProjectIcon(file)
-    form.icon = response.data.toString()
-    showToast('上传成功')
+    if (response.code === 200 && response.data) {
+      const imageUrl = response.data.data
+      form.coverImage = imageUrl
+      // 如果是编辑模式，立即更新项目信息
+      if (isEditing.value && form.id) {
+        const updateResult = await updateProject(form.id, { coverImage: imageUrl })
+        if (updateResult.code === 200) {
+          showToast('图标上传成功')
+        } else {
+          showToast(updateResult.message || '图标保存失败')
+        }
+      } else {
+        showToast('图标上传成功')
+      }
+    } else {
+      showToast(response.message || '上传失败')
+    }
   } catch (error) {
     console.error('上传图标失败:', error)
     showToast('上传失败，请重试')
@@ -230,20 +251,25 @@ const editorConfig: Partial<IEditorConfig> = {
   placeholder: '请输入项目详情...',
   MENU_CONF: {
     uploadImage: {
-      server: '/api/upload/image',
       fieldName: 'file',
-      maxFileSize: 5 * 1024 * 1024, // 5M
+      maxFileSize: 5 * 1024 * 1024,
       maxNumberOfFiles: 10,
       allowedFileTypes: ['image/*'],
-      metaWithUrl: true,
-      customInsert(res: any, insertFn: Function) {
-        // res 即服务端的返回结果
-        if (res.code === 200 && res.data) {
-          insertFn(res.data)
-        } else {
-          showToast('上传失败')
+      // 自定义上传
+      customUpload: async (file: File, insertFn: any) => {
+        try {
+          const response = await uploadEditorImage(file)
+          if (response.code === 200 && response.data) {
+            // 直接插入图片URL
+            insertFn(response.data)
+          } else {
+            showToast(response.message || '上传失败')
+          }
+        } catch (err) {
+          console.error('上传图片失败:', err)
+          showToast('上传失败，请重试')
         }
-      },
+      }
     }
   }
 }
