@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: world
+  profiles:
+    active: dev
   datasource:
     dynamic:
       primary: primary

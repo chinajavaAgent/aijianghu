@@ -203,12 +203,8 @@ const handleIconUpload = async (event: Event) => {
   try {
     const file = input.files[0]
     const response = await uploadProjectIcon(file)
-    if (response?.data?.code === 200 && response.data.data) {
-      form.icon = response.data.data.toString()
-      showToast('上传成功')
-    } else {
-      showToast(response?.data?.message || '上传失败')
-    }
+    form.icon = response.data.toString()
+    showToast('上传成功')
   } catch (error) {
     console.error('上传图标失败:', error)
     showToast('上传失败，请重试')
