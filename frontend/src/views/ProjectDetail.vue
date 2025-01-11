@@ -11,6 +11,9 @@
         <SharePoster 
           :projectId="Number(route.params.id)"
           :share-url="shareUrl"
+          :title="currentProject?.name"
+          :introduction="currentProject?.description"
+          :detail="currentProject?.detail"
           class="flex-shrink-0"
         />
       </div>

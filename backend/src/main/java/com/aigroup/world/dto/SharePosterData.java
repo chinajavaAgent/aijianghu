@@ -44,6 +44,11 @@ public class SharePosterData {
         private String description;
 
         /**
+         * 项目详情（富文本内容）
+         */
+        private String detail;
+
+        /**
          * 项目视频链接
          */
         private String videoUrl;
