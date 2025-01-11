@@ -1,0 +1,102 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: world
+  datasource:
+    dynamic:
+      primary: primary
+      strict: true
+      datasource:
+        primary:
+          url: jdbc:mysql://rm-bp18or2tye31a67112o.mysql.rds.aliyuncs.com:3306/aijianghu?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+          username: root
+          password: chaojigeti@666
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          hikari:
+            maximum-pool-size: 10
+            minimum-idle: 5
+            idle-timeout: 300000
+            connection-timeout: 20000
+            pool-name: PrimaryHikariPool
+        secondary:
+          url: jdbc:mysql://rm-bp18or2tye31a67112o.mysql.rds.aliyuncs.com:3306/wechat_group?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+          username: root
+          password: chaojigeti@666
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          hikari:
+            maximum-pool-size: 5
+            minimum-idle: 2
+            idle-timeout: 300000
+            connection-timeout: 20000
+            pool-name: SecondaryHikariPool
+  
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  # SQL初始化配置
+  sql:
+    init:
+      mode: never
+      schema-locations: 
+        - classpath:db/init.sql
+        - classpath:db/update.sql
+      encoding: utf-8
+      continue-on-error: true
+      platform: mysql
+
+  # 文件上传配置
+  file:
+    upload:
+      path: /Users/mac/Desktop/cusor-project/AI群江湖/backend/uploads  # 文件上传路径
+    access:
+      url: http://localhost:8080/uploads  # 文件访问URL
+
+  # 文件上传大小限制
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  # 开发工具配置
+  devtools:
+    restart:
+      enabled: true  # 开启热重启
+      additional-paths: src/main/java  # 重启目录
+      exclude: static/**,public/**,WEB-INF/**  # 排除不需要重启的目录
+    livereload:
+      enabled: true  # 开启页面热加载
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.aigroup.world.model
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+logging:
+  level:
+    com.aigroup.world: debug 
+
+jwt:
+  # 密钥需要至少32字节（256位）
+  secret: 9a4f2c8d3b7a1e6f45c8a0b3f267d8b1d4e6f3c8a9d2b5f8e3a9c6b5d8a7f1e2
+  expiration: 86400 # 24小时，单位：秒 
+
+# 阿里云OSS配置
+aliyun:
+  oss:
+    endpoint: your-endpoint  # 例如：oss-cn-beijing.aliyuncs.com
+    accessKeyId: your-access-key-id
+    accessKeySecret: dAakBv5huOCqj4cG6ZHuwfvMs6opBI
+    bucketName: your-bucket-name
+    baseDir: upload/
+    maxSize: 10485760  # 10MB
