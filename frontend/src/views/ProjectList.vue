@@ -22,7 +22,8 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div v-for="project in projects" 
                :key="project.id" 
-               class="project-item bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+               class="project-item bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
+               @click="router.push(`/project/${project.id}`)">
             <div class="flex h-16">
               <!-- 左侧：项目图片 -->
               <div class="w-16 h-16 relative shrink-0 p-2">
@@ -110,11 +111,18 @@ onMounted(() => {
   box-shadow: 0 2px 8px rgba(31, 38, 135, 0.1);
   transform: translateY(0);
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .project-item:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(31, 38, 135, 0.15);
+  background: rgba(255, 255, 255, 1);
+}
+
+.project-item:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(31, 38, 135, 0.1);
 }
 
 /* 增加文字清晰度 */
