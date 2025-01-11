@@ -29,11 +29,6 @@
       <!-- 文章信息 -->
       <div class="flex items-center text-[14px] text-[#8590a6] mb-[24px] font-ma-shan">
         <span>{{ formatDate(currentProject?.createdAt) }}</span>
-        <span class="mx-2">·</span>
-        <span class="text-blue-600">
-          <i class="fas fa-crown mr-1"></i>
-          需要 Lv.{{ requiredLevel }}
-        </span>
       </div>
 
       <!-- 文章正文 -->
@@ -52,25 +47,89 @@
       </div>
     </div>
   </div>
+
+  <!-- 联系方式弹窗 -->
+  <div v-if="showContactModal" 
+    class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl w-full max-w-md">
+      <div class="p-6 border-b">
+        <div class="flex justify-between items-center">
+          <h3 class="font-bold text-xl text-gray-800">寻访高人</h3>
+          <button @click="showContactModal = false" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <p class="mt-2 text-gray-600">速速添加高人微信，共商武学大计</p>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <!-- 微信号 -->
+        <div class="bg-gray-50 rounded-lg p-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z">
+                  </path>
+                </svg>
+              </div>
+              <div>
+                <span class="font-medium text-gray-800">微信号</span>
+                <p class="text-gray-600 text-sm mt-0.5">{{ adminInfo?.wechatId || '暂无微信' }}</p>
+              </div>
+            </div>
+            <button @click="copyText(adminInfo?.wechatId)" v-if="adminInfo?.wechatId"
+              class="px-3 py-1.5 bg-green-50 text-green-600 rounded text-sm font-medium hover:bg-green-100 transition-colors">
+              联系高人
+            </button>
+          </div>
+        </div>
+
+        <!-- 提交按钮 -->
+        <button @click="submitForReview"
+          class="w-full py-3 bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300">
+          提交拜师请求
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { storeToRefs } from 'pinia'
 import type { Project } from '@/types/project'
+import type { AiTips } from '@/types/tips'
+import type { ApiResponse } from '@/types/common'
+import type { Order } from '@/types/order'
 import { getProjectById } from '@/api/project'
-import { getAiTipsDetail } from '@/api/tips'
-import SharePoster from '@/components/SharePoster.vue'
+import { createOrder, type OrderCreateRequest } from '@/api/order'
 import { useUserStore } from '@/store/user'
+import SharePoster from '@/components/SharePoster.vue'
+import { getAiTipsDetail } from '@/api/tips'
+import { getAdminByTipId } from '@/api/admin'
 
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
-const { token, level } = storeToRefs(userStore)
 const currentProject = ref<Project | null>(null)
-const requiredLevel = ref<number>(1)
+const currentTip = ref<AiTips | null>(null)
+const showContactModal = ref(false)
+const loading = ref(false)
+const adminInfo = ref<any>(null)
+
+// 显示提示信息的函数
+const showToast = (options: { message: string; duration?: number }) => {
+  ElMessage({
+    message: options.message,
+    duration: options.duration || 2000,
+    type: 'info'
+  })
+}
 
 // 分享链接
 const shareUrl = computed(() => {
@@ -84,20 +143,122 @@ const formatDate = (date: string | undefined) => {
   return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
 }
 
-// 处理偷师学艺点击
-const handleLearn = () => {
-  // 检查用户等级是否满足要求
-  if (!token.value) {
-    ElMessage.warning('请先登录')
+// 获取锦囊详情和管理员信息
+const fetchTipDetailAndAdmin = async (tipId: number) => {
+  try {
+    const response = await getAiTipsDetail(tipId)
+    if (!response.data) {
+      showToast({
+        message: '锦囊已不知去向',
+        duration: 2000,
+      })
+      return
+    }
+    currentTip.value = response.data
+
+    // 获取管理员信息
+    const adminResponse = await getAdminByTipId(tipId)
+    if (adminResponse.data) {
+      adminInfo.value = adminResponse.data
+    }
+  } catch (error) {
+    console.error('获取信息失败:', error)
+    showToast({
+      message: '获取信息失败，请重试',
+      duration: 2000,
+    })
+  }
+}
+
+// 处理拜师学艺点击
+const handleLearn = async () => {
+  if (!userStore.isLoggedIn) {
+    showToast({
+      message: '请先登录',
+      duration: 2000,
+    })
     router.push('/login')
     return
   }
 
-  if (level.value < requiredLevel.value) {
-    ElMessage.warning(`需要达到 ${requiredLevel.value} 级才能学习此项目`)
+  if (!currentProject.value?.tipId) {
+    showToast({
+      message: '项目信息不完整',
+      duration: 2000,
+    })
     return
   }
- 
+
+  await fetchTipDetailAndAdmin(currentProject.value.tipId)
+  showContactModal.value = true
+}
+
+// 复制文本
+const copyText = async (text: string) => {
+  try {
+    await navigator.clipboard.writeText(text)
+    showToast({
+      message: '微信号已复制',
+      duration: 2000,
+    })
+  } catch (error) {
+    console.error('复制失败:', error)
+    showToast({
+      message: '复制失败，请重试',
+      duration: 2000,
+    })
+  }
+}
+
+// 提交审核
+const submitForReview = async () => {
+  try {
+    if (!currentProject.value?.tipId || !adminInfo.value?.id || !currentTip.value?.price) {
+      showToast({
+        message: '信息不完整，请重试',
+        duration: 2000,
+      })
+      return
+    }
+
+    const orderData: OrderCreateRequest = {
+      tipsId: currentProject.value.tipId,
+      userId: userStore.id,
+      title: currentTip.value.title,
+      price: currentTip.value.price,
+      userName: userStore.username || '',
+      gender: 1, // 默认值
+      age: 20, // 默认值
+      city: '',
+      userPhone: userStore.phone || '',
+      userWechat: '',
+      profession: '',
+      experience: 0,
+      reason: '',
+      introduction: ''
+    }
+
+    const response = await createOrder(orderData)
+
+    if (response) {
+      showToast({
+        message: '拜师请求已送达',
+        duration: 2000,
+      })
+      showContactModal.value = false
+    } else {
+      showToast({
+        message: '暂无教导者',
+        duration: 2000,
+      })
+    }
+  } catch (error) {
+    console.error('提交审核失败:', error)
+    showToast({
+      message: '提交失败，请重试',
+      duration: 2000,
+    })
+  }
 }
 
 // 加载项目数据
@@ -113,11 +274,6 @@ const loadProject = async () => {
     const response = await getProjectById(projectId)
     if (response.data) {
       currentProject.value = response.data
-      // 获取锦囊等级信息
-      const tipResponse = await getAiTipsDetail(response.data.tipId)
-      if (tipResponse.data) {
-        requiredLevel.value = tipResponse.data.requiredLevel
-      }
     } else {
       ElMessage.error('获取项目数据失败')
       router.back()
