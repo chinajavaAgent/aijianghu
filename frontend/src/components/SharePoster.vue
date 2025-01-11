@@ -250,6 +250,72 @@ const showPoster = async () => {
   }
 }
 
+// 处理富文本格式
+const processRichText = (html: string) => {
+  const tmp = document.createElement('div')
+  tmp.innerHTML = html
+  
+  let result = ''
+  const processNode = (node: Node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      result += node.textContent
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      const element = node as HTMLElement
+      
+      // 处理标题
+      if (element.tagName === 'H1' || element.tagName === 'H2' || element.tagName === 'H3') {
+        if (!result.endsWith('\n')) result += '\n'
+        result += '【' + (element.textContent || '').trim() + '】\n'
+        return
+      }
+      
+      // 处理段落
+      if (element.tagName === 'P') {
+        if (!result.endsWith('\n')) result += '\n'
+      }
+      
+      // 处理列表
+      if (element.tagName === 'UL' || element.tagName === 'OL') {
+        if (!result.endsWith('\n')) result += '\n'
+      }
+      
+      // 处理列表项
+      if (element.tagName === 'LI') {
+        result += '• '
+      }
+      
+      // 处理加粗
+      if (element.tagName === 'STRONG' || element.tagName === 'B') {
+        result += '「' + (element.textContent || '').trim() + '」'
+        return
+      }
+      
+      // 处理强调
+      if (element.tagName === 'EM' || element.tagName === 'I') {
+        result += '『' + (element.textContent || '').trim() + '』'
+        return
+      }
+      
+      // 处理换行
+      if (element.tagName === 'BR') {
+        result += '\n'
+        return
+      }
+      
+      // 递归处理子节点
+      element.childNodes.forEach(processNode)
+      
+      // 段落和列表结束后添加换行
+      if (element.tagName === 'P' || element.tagName === 'UL' || element.tagName === 'OL') {
+        if (!result.endsWith('\n')) result += '\n'
+      }
+    }
+  }
+  
+  tmp.childNodes.forEach(processNode)
+  return result.trim()
+}
+
 const generatePoster = async () => {
   if (!posterCanvas.value) return
 
@@ -330,9 +396,10 @@ const generatePoster = async () => {
   drawCornerDecoration(canvas.width - margin, canvas.height - margin, 'br')
 
   // 绘制标题
-  ctx.fillStyle = '#000000' // 黑色文字
-  ctx.font = 'bold 60px "Ma Shan Zheng"'
-  ctx.textAlign = 'center'
+  ctx.fillStyle = '#000000'
+  ctx.font = '60px "Ma Shan Zheng"'
+  ctx.textAlign = 'left'
+  ctx.textBaseline = 'middle'
   
   // 绘制标题装饰线
   const titleY = 160
@@ -356,57 +423,107 @@ const generatePoster = async () => {
 
   // 绘制标题文字
   const titleLines = wrapText(ctx, props.title || '', titleWidth, 60)
-  let currentY = titleY
+  let currentY = 200
   titleLines.forEach((line, index) => {
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.1)'
-    ctx.shadowBlur = 5
-    ctx.fillText(line, canvas.width / 2, currentY)
-    ctx.shadowBlur = 0
-    currentY += 80
+    ctx.fillText(line, 100, currentY)
+    currentY += 100
   })
 
-  drawDecorativeLine(currentY - 20)
+  drawDecorativeLine(currentY - 30)
 
   // 绘制简介
-  ctx.font = '36px "Ma Shan Zheng"'
-  ctx.fillStyle = '#333333' // 深灰色
-  const introLines = wrapText(ctx, props.introduction || '', canvas.width - 200, 36)
-  currentY += 60
+  currentY += 80
+  ctx.font = '40px "Ma Shan Zheng"'
+  ctx.fillStyle = '#333333'
+  const introLines = wrapText(ctx, props.introduction || '', canvas.width - 200, 40)
   introLines.forEach(line => {
-    ctx.fillText(line, canvas.width / 2, currentY)
-    currentY += 50
+    ctx.fillText(line, 100, currentY)
+    currentY += 60
   })
 
   // 绘制富文本内容
   if (props.detail) {
-    const detailText = stripHtmlTags(props.detail)
-    const detailLines = wrapText(ctx, detailText, canvas.width - 200, 32)
-    ctx.font = '32px "Ma Shan Zheng"'
-    ctx.fillStyle = '#333333' // 深灰色
     currentY += 60
-    detailLines.slice(0, 12).forEach(line => {
-      ctx.fillText(line, canvas.width / 2, currentY)
-      currentY += 46
-    })
-    if (detailLines.length > 12) {
-      ctx.fillText('...', canvas.width / 2, currentY)
+    const detailText = processRichText(props.detail)
+    
+    // 处理文本换行
+    const detailLines = detailText.split('\n').reduce((acc: string[], line) => {
+      const wrappedLines = wrapText(ctx, line, canvas.width - 200, 36)
+      if (line.startsWith('【') && line.endsWith('】')) {
+        ctx.font = 'bold 40px "Ma Shan Zheng"'
+      } else {
+        ctx.font = '36px "Ma Shan Zheng"'
+      }
+      return acc.concat(wrappedLines)
+    }, [])
+    
+    ctx.fillStyle = '#333333'
+    
+    // 限制最大显示行数为10行
+    const maxLines = 10
+    let lineCount = 0
+    let needEllipsis = false
+    
+    for (let i = 0; i < detailLines.length; i++) {
+      if (lineCount >= maxLines) {
+        needEllipsis = true
+        break
+      }
+
+      const line = detailLines[i]
+      
+      // 设置不同内容的样式
+      if (line.startsWith('【') && line.endsWith('】')) {
+        // 标题样式
+        ctx.font = 'bold 40px "Ma Shan Zheng"'
+        ctx.fillStyle = '#000000'
+      } else if (line.startsWith('• ')) {
+        // 列表项样式
+        ctx.font = '36px "Ma Shan Zheng"'
+        ctx.fillStyle = '#333333'
+        currentY += 10 // 列表项增加上边距
+      } else if (line.includes('「') || line.includes('『')) {
+        // 强调文本样式
+        ctx.font = 'bold 36px "Ma Shan Zheng"'
+        ctx.fillStyle = '#333333'
+      } else {
+        // 普通文本样式
+        ctx.font = '36px "Ma Shan Zheng"'
+        ctx.fillStyle = '#333333'
+      }
+      
+      // 绘制文本，列表项缩进20px
+      const x = line.startsWith('• ') ? 120 : 100
+      ctx.fillText(line, x, currentY)
+      
+      // 更新位置
+      currentY += line.startsWith('• ') ? 50 : 54
+      lineCount++
+    }
+    
+    // 如果需要显示省略号
+    if (needEllipsis) {
+      ctx.font = '36px "Ma Shan Zheng"'
+      ctx.fillStyle = '#333333'
+      currentY += 20
+      ctx.fillText('...', 100, currentY)
     }
   }
 
   // 绘制二维码背景装饰
-  const qrSize = 240
+  const qrSize = 180
   const qrX = (canvas.width - qrSize) / 2
-  const qrY = canvas.height - qrSize - 120
+  const qrY = canvas.height - qrSize - 100
   
   // 绘制二维码装饰框
   ctx.strokeStyle = '#000000'
   ctx.lineWidth = 2
   ctx.beginPath()
-  ctx.rect(qrX - 20, qrY - 20, qrSize + 40, qrSize + 40)
+  ctx.rect(qrX - 15, qrY - 15, qrSize + 30, qrSize + 30)
   ctx.stroke()
 
   // 添加二维码装饰角
-  const cornerSize = 20
+  const cornerSize = 15
   const drawCorner = (x: number, y: number, type: number) => {
     ctx.beginPath()
     if (type === 1) {
@@ -427,15 +544,15 @@ const generatePoster = async () => {
       ctx.lineTo(x + cornerSize, y)
     }
     ctx.strokeStyle = '#000000'
-    ctx.lineWidth = 3
+    ctx.lineWidth = 2
     ctx.stroke()
   }
 
   // 绘制四个角
-  drawCorner(qrX - 20, qrY - 20, 1)
-  drawCorner(qrX + qrSize + 20, qrY - 20, 2)
-  drawCorner(qrX + qrSize + 20, qrY + qrSize + 20, 3)
-  drawCorner(qrX - 20, qrY + qrSize + 20, 4)
+  drawCorner(qrX - 15, qrY - 15, 1)
+  drawCorner(qrX + qrSize + 15, qrY - 15, 2)
+  drawCorner(qrX + qrSize + 15, qrY + qrSize + 15, 3)
+  drawCorner(qrX - 15, qrY + qrSize + 15, 4)
 
   // 绘制二维码
   try {
@@ -443,7 +560,7 @@ const generatePoster = async () => {
       width: qrSize,
       margin: 1,
       color: {
-        dark: '#000000', // 黑色二维码
+        dark: '#000000',
         light: '#FFFFFF'
       }
     })
@@ -456,10 +573,11 @@ const generatePoster = async () => {
 
     // 绘制二维码提示文字
     ctx.fillStyle = '#000000'
-    ctx.font = '36px "Ma Shan Zheng"'
+    ctx.font = '32px "Ma Shan Zheng"'
+    ctx.textAlign = 'center'
     ctx.shadowColor = 'rgba(0, 0, 0, 0.1)'
     ctx.shadowBlur = 5
-    ctx.fillText('扫码入江湖', canvas.width / 2, canvas.height - 50)
+    ctx.fillText('扫码入江湖', canvas.width / 2, canvas.height - 40)
     ctx.shadowBlur = 0
   } catch (error) {
     console.error('Failed to generate QR code:', error)
@@ -470,29 +588,29 @@ const generatePoster = async () => {
 
 // 文本换行处理
 const wrapText = (ctx: CanvasRenderingContext2D, text: string, maxWidth: number, fontSize: number) => {
-  const words = text.split('')
+  const chars = text.split('')
   const lines = []
-  let currentLine = ''
+  let currentLine = chars[0] || ''
 
-  for (let i = 0; i < words.length; i++) {
-    const word = words[i]
-    const width = ctx.measureText(currentLine + word).width
-    if (width < maxWidth) {
-      currentLine += word
-    } else {
+  for (let i = 1; i < chars.length; i++) {
+    const char = chars[i]
+    const testLine = currentLine + char
+    const metrics = ctx.measureText(testLine)
+    const testWidth = metrics.width
+
+    if (testWidth > maxWidth && currentLine.length > 0) {
       lines.push(currentLine)
-      currentLine = word
+      currentLine = char
+    } else {
+      currentLine = testLine
     }
   }
-  lines.push(currentLine)
-  return lines
-}
+  
+  if (currentLine.length > 0) {
+    lines.push(currentLine)
+  }
 
-// 去除HTML标签
-const stripHtmlTags = (html: string) => {
-  const tmp = document.createElement('div')
-  tmp.innerHTML = html
-  return tmp.textContent || tmp.innerText || ''
+  return lines
 }
 
 const downloadPoster = () => {
