@@ -32,14 +32,14 @@
       </div>
 
       <!-- 文章正文 -->
-      <div class="prose max-w-none font-ma-shan">
+      <div class="prose max-w-none font-ma-shan pb-20">
         <div v-html="currentProject?.detail"></div>
       </div>
 
       <!-- 拜师学艺按钮 -->
-      <div class="flex justify-center mt-12 mb-8">
+      <div class="fixed bottom-20 left-0 right-0 flex justify-center py-6 bg-gradient-to-t from-white via-white to-transparent">
         <button 
-          class="learn-btn relative px-10 py-3 text-xl text-white font-ma-shan bg-[#1a1a1a] hover:bg-[#2c2c2c] rounded-md transition-all duration-300 border-2 border-yellow-500/50"
+          class="learn-btn relative px-6 py-2 text-2xl text-white font-ma-shan rounded-lg transition-all duration-300"
           @click="handleLearn"
         >
           拜师学艺
@@ -75,11 +75,7 @@ const formatDate = (date: string | undefined) => {
 
 // 处理偷师学艺点击
 const handleLearn = () => {
-  ElMessage.success({
-    message: '恭喜你学到了一门绝世武功！',
-    duration: 2000
-  })
-  // TODO: 这里可以添加实际的学习/购买逻辑
+ 
 }
 
 // 加载项目数据
@@ -120,19 +116,51 @@ onMounted(() => {
 
 /* 按钮特效 */
 .learn-btn {
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  letter-spacing: 0.1em;
+  background: linear-gradient(135deg, #ff4e50, #f9d423);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.2),
+    0 0 0 2px rgba(255, 255, 255, 0.1) inset,
+    0 10px 15px -3px rgba(254, 78, 80, 0.3);
+  letter-spacing: 0.2em;
+  position: relative;
+  overflow: hidden;
+}
+
+.learn-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: 0.5s;
+}
+
+.learn-btn:hover::before {
+  left: 100%;
 }
 
 .learn-btn:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.3),
+    0 0 0 2px rgba(255, 255, 255, 0.15) inset,
+    0 15px 20px -3px rgba(254, 78, 80, 0.4);
 }
 
 .learn-btn:active {
   transform: translateY(1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 
+    0 2px 10px rgba(0, 0, 0, 0.2),
+    0 0 0 2px rgba(255, 255, 255, 0.1) inset,
+    0 8px 12px -3px rgba(254, 78, 80, 0.3);
 }
 
 .prose {
