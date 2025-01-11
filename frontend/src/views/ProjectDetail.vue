@@ -35,6 +35,16 @@
       <div class="prose max-w-none font-ma-shan">
         <div v-html="currentProject?.detail"></div>
       </div>
+
+      <!-- 拜师学艺按钮 -->
+      <div class="flex justify-center mt-12 mb-8">
+        <button 
+          class="learn-btn relative px-10 py-3 text-xl text-white font-ma-shan bg-[#1a1a1a] hover:bg-[#2c2c2c] rounded-md transition-all duration-300 border-2 border-yellow-500/50"
+          @click="handleLearn"
+        >
+          拜师学艺
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -61,6 +71,15 @@ const formatDate = (date: string | undefined) => {
   if (!date) return ''
   const d = new Date(date)
   return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
+}
+
+// 处理偷师学艺点击
+const handleLearn = () => {
+  ElMessage.success({
+    message: '恭喜你学到了一门绝世武功！',
+    duration: 2000
+  })
+  // TODO: 这里可以添加实际的学习/购买逻辑
 }
 
 // 加载项目数据
@@ -99,79 +118,26 @@ onMounted(() => {
   font-family: 'Ma Shan Zheng', cursive;
 }
 
+/* 按钮特效 */
+.learn-btn {
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.1em;
+}
+
+.learn-btn:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+.learn-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .prose {
   color: #1a1a1a;
   font-size: 16px;
   line-height: 1.75;
-}
-
-.prose :deep(img) {
-  max-width: 100%;
-  height: auto;
-  margin: 16px 0;
-  border-radius: 4px;
-}
-
-.prose :deep(p) {
-  margin: 1em 0;
-  font-family: 'Ma Shan Zheng', cursive;
-}
-
-.prose :deep(h1),
-.prose :deep(h2),
-.prose :deep(h3),
-.prose :deep(h4),
-.prose :deep(h5),
-.prose :deep(h6) {
-  font-family: 'Ma Shan Zheng', cursive;
-  font-weight: 600;
-  line-height: 1.4;
-  margin: 1.2em 0 0.8em;
-}
-
-.prose :deep(blockquote) {
-  margin: 1em 0;
-  padding: 0.5em 1em;
-  border-left: 4px solid #e5e7eb;
-  background-color: #f9fafb;
-  color: #4b5563;
-  font-family: 'Ma Shan Zheng', cursive;
-}
-
-.prose :deep(ul),
-.prose :deep(ol) {
-  margin: 1em 0;
-  padding-left: 1.5em;
-  font-family: 'Ma Shan Zheng', cursive;
-}
-
-.prose :deep(li) {
-  margin: 0.5em 0;
-  font-family: 'Ma Shan Zheng', cursive;
-}
-
-.prose :deep(pre) {
-  margin: 1em 0;
-  padding: 1em;
-  background-color: #f9fafb;
-  border-radius: 4px;
-  overflow-x: auto;
-}
-
-.prose :deep(code) {
-  background-color: #f3f4f6;
-  padding: 0.2em 0.4em;
-  border-radius: 4px;
-  font-size: 0.9em;
-}
-
-.prose :deep(a) {
-  color: #1890ff;
-  text-decoration: none;
-  font-family: 'Ma Shan Zheng', cursive;
-}
-
-.prose :deep(a:hover) {
-  text-decoration: underline;
 }
 </style> 
