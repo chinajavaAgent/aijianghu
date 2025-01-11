@@ -68,6 +68,15 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/project-edit/:tipId/:tipTitle/:id?',
+    name: 'ProjectEdit',
+    component: () => import('@/views/ProjectEdit.vue'),
+    meta: {
+      requiresAuth: true,
+      title: '项目编辑'
+    }
+  },
+  {
     path: '/admin-manage',
     name: 'admin-manage',
     component: () => import('@/views/AdminManage.vue'),

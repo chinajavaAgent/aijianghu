@@ -15,7 +15,7 @@
       <div class="bg-white/80 backdrop-blur-sm rounded-xl shadow-md p-6">
         <div class="flex justify-between items-center mb-6">
           <h2 class="text-lg font-semibold">项目列表</h2>
-          <button @click="addProject" 
+          <button @click="router.push({ name: 'ProjectEdit', params: { tipId, tipTitle } })" 
             class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-sm">
             添加项目
           </button>
@@ -28,17 +28,58 @@
             <div class="flex justify-between items-start">
               <div class="flex-1">
                 <div class="flex items-center space-x-3 mb-3">
-                  <img v-if="project.icon" :src="project.icon" 
-                    class="w-10 h-10 object-cover rounded-lg" 
-                    alt="项目图标">
                   <h3 class="text-lg font-semibold text-gray-800">{{ project.name }}</h3>
+                  <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-500">
+                      <i class="fas fa-eye mr-1"></i>{{ project.views }}
+                    </span>
+                    <span class="text-sm text-gray-500">
+                      <i class="fas fa-heart mr-1"></i>{{ project.likes }}
+                    </span>
+                  </div>
                 </div>
                 <p class="text-gray-600 mb-4">{{ project.description }}</p>
-                <div class="prose prose-sm max-w-none" v-html="project.detail"></div>
+                
+                <!-- 项目内容区域 -->
+                <div class="space-y-4">
+                  <!-- 案例展示 -->
+                  <div v-if="project.cases && project.cases.length > 0">
+                    <h4 class="font-medium text-gray-700 mb-2">成功案例</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div v-for="case_ in project.cases" :key="case_.id" 
+                        class="bg-gray-50 rounded-lg p-3">
+                        <img v-if="case_.imageUrl" :src="case_.imageUrl" 
+                          class="w-full h-48 object-cover rounded-lg mb-2" 
+                          alt="案例图片">
+                        <p class="text-sm text-gray-600">{{ case_.description }}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 项目视频 -->
+                  <div v-if="project.videoUrl">
+                    <h4 class="font-medium text-gray-700 mb-2">项目视频</h4>
+                    <video :src="project.videoUrl" 
+                      class="w-full rounded-lg" 
+                      controls>
+                    </video>
+                  </div>
+
+                  <!-- 项目福利 -->
+                  <div v-if="project.benefits && project.benefits.length > 0">
+                    <h4 class="font-medium text-gray-700 mb-2">项目福利</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                      <li v-for="benefit in project.benefits" :key="benefit.id" 
+                        class="text-gray-600">
+                        {{ benefit.content }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
               
               <div class="flex flex-col space-y-2 ml-4">
-                <button @click="editProject(project)" 
+                <button @click="router.push({ name: 'ProjectEdit', params: { tipId, tipTitle, id: project.id } })" 
                   class="px-3 py-1 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
                   编辑
                 </button>
@@ -71,59 +112,110 @@
               placeholder="请输入项目名称">
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">项目描述</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">项目介绍</label>
             <textarea v-model="form.description"
               class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
               rows="3"
-              placeholder="请输入项目简短描述"></textarea>
+              placeholder="请输入项目详细介绍"></textarea>
           </div>
 
-          <!-- 项目图标 -->
+          <!-- 案例管理 -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">项目图标</label>
-            <div v-if="form.icon" class="relative w-20 h-20">
-              <img :src="form.icon" 
-                class="w-full h-full object-cover rounded-lg" 
-                alt="项目图标">
-              <button @click="form.icon = ''"
-                class="absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600">
+            <div class="flex justify-between items-center mb-2">
+              <label class="block text-sm font-medium text-gray-700">成功案例</label>
+              <button @click="addCase" 
+                class="text-sm text-blue-600 hover:text-blue-800">
+                添加案例
+              </button>
+            </div>
+            <div class="space-y-4">
+              <div v-for="(case_, index) in form.cases" :key="index"
+                class="bg-gray-50 p-4 rounded-lg">
+                <div class="flex justify-between items-start mb-2">
+                  <span class="text-sm font-medium text-gray-700">案例 {{ index + 1 }}</span>
+                  <button @click="removeCase(index)"
+                    class="text-sm text-red-600 hover:text-red-800">
+                    删除
+                  </button>
+                </div>
+                <textarea v-model="case_.description"
+                  class="w-full px-3 py-2 border rounded-lg mb-2"
+                  rows="2"
+                  placeholder="请输入案例描述"></textarea>
+                <div class="space-y-2">
+                  <div v-if="case_.imageUrl" class="relative">
+                    <img :src="case_.imageUrl" 
+                      class="w-full h-48 object-cover rounded-lg" 
+                      alt="案例图片">
+                    <button @click="case_.imageUrl = ''"
+                      class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                  <div v-else>
+                    <input type="file" 
+                      accept="image/*" 
+                      class="hidden" 
+                      :ref="(el: any) => { if (el) imageInputRefs[index] = el as HTMLInputElement }"
+                      @change="handleImageUpload($event, case_)">
+                    <button @click="triggerImageUpload(index)"
+                      class="w-full h-24 flex flex-col items-center justify-center text-gray-500 hover:text-gray-700 border-2 border-dashed border-gray-300 rounded-lg">
+                      <i class="fas fa-camera text-xl mb-1"></i>
+                      <span class="text-xs">点击上传案例图片</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 视频上传 -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">项目视频</label>
+            <div v-if="form.videoUrl" class="relative">
+              <video :src="form.videoUrl" 
+                class="w-full rounded-lg" 
+                controls>
+              </video>
+              <button @click="form.videoUrl = ''"
+                class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600">
                 <i class="fas fa-times"></i>
               </button>
             </div>
             <div v-else>
               <input type="file" 
-                accept="image/*" 
+                accept="video/*" 
                 class="hidden" 
-                ref="iconInput"
-                @change="handleIconUpload">
-              <button @click="triggerIconUpload"
-                class="w-20 h-20 flex flex-col items-center justify-center text-gray-500 hover:text-gray-700 border-2 border-dashed border-gray-300 rounded-lg">
-                <i class="fas fa-image text-xl mb-1"></i>
-                <span class="text-xs">上传图标</span>
+                ref="videoInput"
+                @change="handleVideoUpload">
+              <button @click="triggerVideoUpload"
+                class="w-full h-32 flex flex-col items-center justify-center text-gray-500 hover:text-gray-700 border-2 border-dashed border-gray-300 rounded-lg">
+                <i class="fas fa-video text-2xl mb-2"></i>
+                <span class="text-sm">点击上传项目视频</span>
               </button>
             </div>
           </div>
 
-          <!-- 项目详情 -->
+          <!-- 福利管理 -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">项目详情</label>
-            <div class="border rounded-lg">
-              <Editor
-                v-model="form.detail"
-                :init="{
-                  height: 300,
-                  menubar: false,
-                  plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table paste code help wordcount'
-                  ],
-                  toolbar:
-                    'undo redo | formatselect | bold italic backcolor | \
-                    alignleft aligncenter alignright alignjustify | \
-                    bullist numlist outdent indent | removeformat | help'
-                }"
-              />
+            <div class="flex justify-between items-center mb-2">
+              <label class="block text-sm font-medium text-gray-700">项目福利</label>
+              <button @click="addBenefit" 
+                class="text-sm text-blue-600 hover:text-blue-800">
+                添加福利
+              </button>
+            </div>
+            <div class="space-y-2">
+              <div v-for="(benefit, index) in form.benefits" :key="index"
+                class="flex items-center space-x-2">
+                <input v-model="benefit.content" type="text"
+                  class="flex-1 px-3 py-2 border rounded-lg"
+                  placeholder="请输入福利内容">
+                <button @click="removeBenefit(index)"
+                  class="text-sm text-red-600 hover:text-red-800">
+                  删除
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -136,15 +228,15 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { showConfirmDialog, showToast } from 'vant'
-import Editor from '@tinymce/tinymce-vue'
 import {
   getProjects,
   createProject,
   updateProject,
   deleteProject as deleteProjectApi,
-  uploadProjectIcon
+  uploadCaseImage,
+  uploadProjectVideo
 } from '@/api/project'
-import type { Project } from '@/types/project'
+import type { Project, ProjectCase, ProjectBenefit } from '@/types/project'
 import type { PageResponse } from '@/types/common'
 
 const route = useRoute()
@@ -162,8 +254,9 @@ const form = reactive({
   id: null as number | null,
   name: '',
   description: '',
-  icon: '',
-  detail: ''
+  videoUrl: '',
+  cases: [] as ProjectCase[],
+  benefits: [] as ProjectBenefit[]
 })
 
 // 显示添加对话框
@@ -174,8 +267,9 @@ const addProject = () => {
     id: null,
     name: '',
     description: '',
-    icon: '',
-    detail: ''
+    videoUrl: '',
+    cases: [],
+    benefits: []
   })
   showDialog.value = true
 }
@@ -188,8 +282,9 @@ const editProject = (project: Project) => {
     id: project.id,
     name: project.name,
     description: project.description,
-    icon: project.icon,
-    detail: project.detail
+    videoUrl: project.videoUrl,
+    cases: [...project.cases],
+    benefits: [...project.benefits]
   })
   showDialog.value = true
 }
@@ -228,8 +323,10 @@ const handleSubmit = async () => {
       tipId,
       name: form.name,
       description: form.description,
-      icon: form.icon || '',
-      detail: form.detail || ''
+      videoUrl: form.videoUrl || '',
+      status: 0,
+      cases: form.cases || [],
+      benefits: form.benefits || []
     }
 
     if (isEditing.value && form.id) {
@@ -261,8 +358,9 @@ const handleSubmit = async () => {
 const loadProjects = async () => {
   try {
     const response = await getProjects(1, 100, tipId)
-    if (response?.data?.data?.records) {
-      projects.value = response.data.data.records
+    // 添加多层空值检查
+    if (response?.data?.records) {
+      projects.value = response.data.records
     } else {
       console.warn('返回数据结构不符合预期:', response)
       projects.value = []
@@ -274,30 +372,82 @@ const loadProjects = async () => {
   }
 }
 
-// 图标上传相关
-const iconInput = ref<HTMLInputElement | null>(null)
+// 案例相关操作
+const addCase = () => {
+  form.cases.push({
+    description: '',
+    imageUrl: ''
+  })
+}
 
-const triggerIconUpload = () => {
-  if (iconInput.value) {
-    iconInput.value.click()
+const removeCase = (index: number) => {
+  form.cases.splice(index, 1)
+}
+
+// 福利相关操作
+const addBenefit = () => {
+  form.benefits.push({
+    content: ''
+  })
+}
+
+const removeBenefit = (index: number) => {
+  form.benefits.splice(index, 1)
+}
+
+// 图片上传相关
+const imageInputRefs = ref<{ [key: string]: HTMLInputElement | null }>({})
+
+const triggerImageUpload = (index: number) => {
+  const inputRef = imageInputRefs.value[index]
+  if (inputRef) {
+    inputRef.click()
   }
 }
 
-const handleIconUpload = async (event: Event) => {
+const handleImageUpload = async (event: Event, caseItem: ProjectCase) => {
   const input = event.target as HTMLInputElement
-  if (!input.files || !input.files[0]) return
+  if (!input.files || !input.files[0] || !form.id) return
 
   try {
     const file = input.files[0]
-    const response = await uploadProjectIcon(file)
+    const response = await uploadCaseImage(form.id, caseItem.id!, file)
     if (response?.data?.code === 200 && response.data.data) {
-      form.icon = response.data.data.toString()
+      caseItem.imageUrl = response.data.data.toString()
       showToast('上传成功')
     } else {
       showToast(response?.data?.message || '上传失败')
     }
   } catch (error) {
-    console.error('上传图标失败:', error)
+    console.error('上传图片失败:', error)
+    showToast('上传失败，请重试')
+  }
+}
+
+// 视频上传相关
+const videoInput = ref<HTMLInputElement | null>(null)
+
+const triggerVideoUpload = () => {
+  if (videoInput.value) {
+    videoInput.value.click()
+  }
+}
+
+const handleVideoUpload = async (event: Event) => {
+  const input = event.target as HTMLInputElement
+  if (!input.files || !input.files[0] || !form.id) return
+
+  try {
+    const file = input.files[0]
+    const response = await uploadProjectVideo(form.id, file)
+    if (response?.data?.code === 200 && response.data.data) {
+      form.videoUrl = response.data.data.toString()
+      showToast('上传成功')
+    } else {
+      showToast(response?.data?.message || '上传失败')
+    }
+  } catch (error) {
+    console.error('上传视频失败:', error)
     showToast('上传失败，请重试')
   }
 }
@@ -361,14 +511,6 @@ onMounted(() => {
       flex-shrink: 0;
       border-top: 1px solid #eee;
     }
-  }
-}
-
-:deep(.prose) {
-  max-width: none;
-  
-  img {
-    @apply rounded-lg;
   }
 }
 </style> 
