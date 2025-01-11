@@ -1,5 +1,6 @@
 package com.aigroup.world.controller;
 
+import com.aigroup.world.common.Result;
 import com.aigroup.world.service.OssService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,11 +23,11 @@ public class OssController {
 
     @ApiOperation("文件上传")
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(
+    public Result<String> uploadFile(
             @ApiParam(value = "文件", required = true) @RequestParam("file") MultipartFile file,
             @ApiParam(value = "目录", required = false, defaultValue = "default") @RequestParam(value = "directory", defaultValue = "default") String directory) {
         String url = ossService.uploadFile(file, directory);
-        return ResponseEntity.ok(url);
+        return Result.success(url);
     }
 
     @ApiOperation("文件删除")
