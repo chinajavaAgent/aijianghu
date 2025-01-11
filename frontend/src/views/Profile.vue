@@ -1,126 +1,130 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-cyan-50 via-fuchsia-50 to-yellow-50 pb-20">
-    <div class="container mx-auto px-4 py-6">
-      <!-- 用户信息卡片 -->
-      <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-              <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-              </svg>
-            </div>
-            <div class="ml-4">
-              <h2 class="text-xl font-bold text-gray-800">{{ nickname }}</h2>
-              <p class="text-gray-600 mt-1">手机号：{{ phone }}</p>
-              <div class="flex items-center mt-2">
-                <span :class="['font-semibold', levelColor]">{{ levelTitle }}</span>
-                <div class="ml-2 px-2 py-0.5 bg-gray-100 rounded text-sm text-gray-600">
-                  Level {{ userStore.level }}
+  <div class="min-h-screen bg-fixed bg-cover bg-center" 
+       style="background-image: url('https://wechat-group-all.oss-cn-hangzhou.aliyuncs.com/image/header_back.png');">
+    <!-- 整体背景遮罩 -->
+    <div class="min-h-screen bg-gradient-to-b from-black/30 via-white/80 to-white/90">
+      <div class="container mx-auto px-4 py-6">
+        <!-- 用户信息卡片 -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+              </div>
+              <div class="ml-4">
+                <h2 class="text-xl font-bold text-gray-800 font-ma-shan">{{ nickname }}</h2>
+                <p class="text-gray-600 mt-1 font-ma-shan">手机号：{{ phone }}</p>
+                <div class="flex items-center mt-2">
+                  <span :class="['font-semibold font-ma-shan', levelColor]">{{ levelTitle }}</span>
+                  <div class="ml-2 px-2 py-0.5 bg-gray-100 rounded text-sm text-gray-600 font-ma-shan">
+                    Level {{ userStore.level }}
+                  </div>
                 </div>
               </div>
             </div>
+            <button
+              @click="handleUpgrade"
+              class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg font-ma-shan"
+            >
+              <span class="block text-sm">去升级</span>
+            </button>
           </div>
-          <button
-            @click="handleUpgrade"
-            class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg"
-          >
-            <span class="block text-sm">去升级</span>
-          </button>
         </div>
-      </div>
 
-      <!-- 功能列表 -->
-      <div class="bg-white rounded-xl shadow-md overflow-hidden">
-        <div class="divide-y">
-          <!-- 我的订单 -->
-          <div class="flex items-center justify-between p-4 hover:bg-gray-50" @click="checkLogin(() => router.push('/orders'))">
-            <div class="flex items-center">
-              <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-                </svg>
+        <!-- 功能列表 -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+          <div class="divide-y">
+            <!-- 我的订单 -->
+            <div class="flex items-center justify-between p-4 hover:bg-gray-50" @click="checkLogin(() => router.push('/orders'))">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                  </svg>
+                </div>
+                <span class="ml-3 text-gray-700 font-ma-shan">我的升级</span>
               </div>
-              <span class="ml-3 text-gray-700">我的升级</span>
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
             </div>
-            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </div>
 
-          <!-- 联系客服 -->
-          <div class="flex items-center justify-between p-4 hover:bg-gray-50" @click="checkLogin(showCustomerService)">
-            <div class="flex items-center">
-              <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
-                </svg>
+            <!-- 联系客服 -->
+            <div class="flex items-center justify-between p-4 hover:bg-gray-50" @click="checkLogin(showCustomerService)">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                  </svg>
+                </div>
+                <span class="ml-3 text-gray-700 font-ma-shan">联系客服</span>
               </div>
-              <span class="ml-3 text-gray-700">联系客服</span>
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
             </div>
-            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </div>
 
-          <!-- AI机缘管理 -->
-          <div class="flex items-center justify-between p-4 hover:bg-gray-50" @click="checkLogin(() => router.push('/opportunity-manage'))">
-            <div class="flex items-center">
-              <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                </svg>
+            <!-- AI机缘管理 -->
+            <div class="flex items-center justify-between p-4 hover:bg-gray-50" @click="checkLogin(() => router.push('/opportunity-manage'))">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                  </svg>
+                </div>
+                <span class="ml-3 text-gray-700 font-ma-shan">AI机缘管理</span>
               </div>
-              <span class="ml-3 text-gray-700">AI机缘管理</span>
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
             </div>
-            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </div>
 
-          <!-- 运营物料 -->
-          <div class="flex items-center justify-between p-4 hover:bg-gray-50" @click="checkLogin(() => router.push('/operation-materials'))">
-            <div class="flex items-center">
-              <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                </svg>
+            <!-- 运营物料 -->
+            <div class="flex items-center justify-between p-4 hover:bg-gray-50" @click="checkLogin(() => router.push('/operation-materials'))">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                  </svg>
+                </div>
+                <span class="ml-3 text-gray-700 font-ma-shan">运营物料</span>
               </div>
-              <span class="ml-3 text-gray-700">运营物料</span>
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
             </div>
-            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </div>
 
-          <!-- 锦囊管理员维护 -->
-          <div class="flex items-center justify-between p-4 hover:bg-gray-50" @click="checkLogin(() => router.push('/admin-manage'))">
-            <div class="flex items-center">
-              <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                </svg>
+            <!-- 锦囊管理员维护 -->
+            <div class="flex items-center justify-between p-4 hover:bg-gray-50" @click="checkLogin(() => router.push('/admin-manage'))">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                  </svg>
+                </div>
+                <span class="ml-3 text-gray-700 font-ma-shan">机缘管理员维护</span>
               </div>
-              <span class="ml-3 text-gray-700">机缘管理员维护</span>
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
             </div>
-            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </div>
 
-          <!-- 退出登录 -->
-          <div class="flex items-center justify-between p-4 hover:bg-gray-50" @click="handleLogout">
-            <div class="flex items-center">
-              <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                </svg>
+            <!-- 退出登录 -->
+            <div class="flex items-center justify-between p-4 hover:bg-gray-50" @click="handleLogout">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                  </svg>
+                </div>
+                <span class="ml-3 text-gray-700 font-ma-shan">退出登录</span>
               </div>
-              <span class="ml-3 text-gray-700">退出登录</span>
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
             </div>
-            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
           </div>
         </div>
       </div>
@@ -141,12 +145,12 @@
             <path d="M8.2 9.6c-.4 0-.7.1-.9.3-.2.2-.3.5-.3.8 0 .4.1.7.3.9.2.2.5.3.9.3.3 0 .6-.1.8-.3.2-.2.3-.5.3-.9 0-.3-.1-.6-.3-.8-.2-.2-.5-.3-.8-.3zm7.6 0c-.4 0-.7.1-.9.3-.2.2-.3.5-.3.8 0 .4.1.7.3.9.2.2.5.3.9.3.3 0 .6-.1.8-.3.2-.2.3-.5.3-.9 0-.3-.1-.6-.3-.8-.2-.2-.5-.3-.8-.3zm-3.8 10.2c-4.8 0-8.7-3.9-8.7-8.7 0-4.8 3.9-8.7 8.7-8.7 4.8 0 8.7 3.9 8.7 8.7 0 4.8-3.9 8.7-8.7 8.7zm0-15.9c-4 0-7.2 3.2-7.2 7.2 0 4 3.2 7.2 7.2 7.2 4 0 7.2-3.2 7.2-7.2 0-4-3.2-7.2-7.2-7.2z"/>
           </svg>
         </div>
-        <p class="text-lg font-medium text-gray-900 mb-2">微信号：AI群江湖</p>
-        <p class="text-sm text-gray-500 mb-4">扫码或搜索添加客服微信</p>
+        <p class="text-lg font-medium text-gray-900 mb-2 font-ma-shan">微信号：AI群江湖</p>
+        <p class="text-sm text-gray-500 mb-4 font-ma-shan">扫码或搜索添加客服微信</p>
         <div class="flex justify-center">
           <img src="https://learn-app.oss-cn-hangzhou.aliyuncs.com/image/qrcode.jpg" alt="客服微信二维码" class="w-48 h-48 object-cover rounded-lg shadow-sm">
         </div>
-        <p class="text-xs text-gray-400 mt-4">工作时间：周一至周日 9:00-22:00</p>
+        <p class="text-xs text-gray-400 mt-4 font-ma-shan">工作时间：周一至周日 9:00-22:00</p>
       </div>
     </van-dialog>
   </div>
@@ -214,6 +218,8 @@ const handleUpgrade = () => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
+
 .container {
   max-width: 768px;
 }
@@ -226,5 +232,34 @@ const handleUpgrade = () => {
   padding: 1rem;
   font-weight: 600;
   font-size: 1.125rem;
+  font-family: 'Ma Shan Zheng', cursive;
+}
+
+/* 统一字体设置 */
+.font-ma-shan {
+  font-family: 'Ma Shan Zheng', cursive;
+}
+
+/* 优化字间距 */
+.tracking-wider {
+  letter-spacing: 0.05em;
+}
+
+/* 优化背景图片在不同设备上的显示 */
+.bg-cover {
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  .bg-cover {
+    background-position: center center;
+  }
+  
+  .from-black\/30 {
+    --tw-gradient-from: rgba(0, 0, 0, 0.4);
+  }
 }
 </style> 
