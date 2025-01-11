@@ -51,9 +51,21 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/opportunity-manage',
-    name: 'opportunity-manage',
+    name: 'OpportunityManage',
     component: () => import('@/views/OpportunityManage.vue'),
-    meta: { requiresAuth: true }
+    meta: {
+      requiresAuth: true,
+      title: 'AI机缘管理'
+    }
+  },
+  {
+    path: '/project-manage/:tipId/:tipTitle',
+    name: 'ProjectManage',
+    component: () => import('@/views/ProjectManage.vue'),
+    meta: {
+      requiresAuth: true,
+      title: '项目管理'
+    }
   },
   {
     path: '/admin-manage',

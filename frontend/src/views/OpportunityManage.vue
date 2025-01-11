@@ -291,6 +291,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { showConfirmDialog, showToast } from 'vant'
 import { createAiTips, updateAiTips, deleteAiTips, getAiTipsList } from '@/api/tips'
 import type { AiTips } from '@/types/tips'
@@ -309,6 +310,8 @@ import {
   deleteBenefit
 } from '@/api/project'
 import type { Project, ProjectCase, ProjectBenefit, ProjectUpdateDto } from '@/types/project'
+
+const router = useRouter()
 
 // 锦囊列表数据
 const tipsList = ref<AiTips[]>([])
@@ -365,26 +368,15 @@ const editTip = (tip: AiTips) => {
   showDialog.value = true
 }
 
-// 显示项目管理
-const openProjectDialog = async (tip: AiTips) => {
-  currentTip.value = tip
-  try {
-    // 加载项目列表，传入tipId参数
-    const response = await getProjects(1, 10, tip.id)
-    if (response.data && response.data.records) {
-      projectForm.projects = response.data.records.map((project: Project) => ({
-        ...project,
-        isExpanded: true,
-        currentStep: 0
-      }))
-    } else {
-      projectForm.projects = []
+// 跳转到项目管理页面
+const openProjectDialog = (tip: AiTips) => {
+  router.push({
+    name: 'ProjectManage',
+    params: {
+      tipId: tip.id,
+      tipTitle: tip.title
     }
-    projectDialogVisible.value = true
-  } catch (error) {
-    console.error('加载项目列表失败:', error)
-    showToast('加载失败，请重试')
-  }
+  })
 }
 
 // 添加项目

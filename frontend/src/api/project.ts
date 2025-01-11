@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 import type { Project, ProjectCase, ProjectBenefit } from '@/types/project'
-import type { ApiResponse } from '@/utils/request'
+import type { ApiResponse, PageResponse } from '@/types/common'
 
 // 获取项目列表
 export const getProjects = (page: number, size: number, tipId?: number) => {
-  return request.get<ApiResponse<Project[]>>('/projects', {
+  return request.get<ApiResponse<PageResponse<Project>>>('/projects', {
     params: {
       page,
       size,
