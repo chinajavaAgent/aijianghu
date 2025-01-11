@@ -354,8 +354,6 @@ const generatePoster = async () => {
     ctx.fill()
   }
 
-  drawDecorativeLine(titleY - 40)
-
   // 绘制标题文字
   const titleLines = wrapText(ctx, props.title || '', titleWidth, 60)
   let currentY = titleY
