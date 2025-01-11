@@ -264,31 +264,51 @@ const generatePoster = async () => {
   canvas.height = 1600
 
   // 加载字体
-  await document.fonts.load('16px "ZCOOL XiaoWei"')
-  await document.fonts.load('16px "ZCOOL QingKe HuangYou"')
+  await document.fonts.load('16px "Ma Shan Zheng"')
 
-  // 加载背景图
-  const bgImage = new Image()
-  await new Promise((resolve, reject) => {
-    bgImage.onload = resolve
-    bgImage.onerror = reject
-    bgImage.src = 'https://wechat-group-all.oss-cn-hangzhou.aliyuncs.com/image/header_back.png'
-  })
-
-  // 绘制背景图（使用平铺模式填充整个画布）
-  const pattern = ctx.createPattern(bgImage, 'repeat')
-  if (pattern) {
-    ctx.fillStyle = pattern
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-  }
-
-  // 添加渐变遮罩，增加文字可读性
-  const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
-  gradient.addColorStop(0, 'rgba(0, 0, 0, 0.7)')
-  gradient.addColorStop(0.5, 'rgba(0, 0, 0, 0.5)')
-  gradient.addColorStop(1, 'rgba(0, 0, 0, 0.7)')
-  ctx.fillStyle = gradient
+  // 创建古风渐变背景
+  const bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+  bgGradient.addColorStop(0, '#2c1810')    // 深褐色
+  bgGradient.addColorStop(0.3, '#4a2511')  // 红褐色
+  bgGradient.addColorStop(0.7, '#4a2511')  // 红褐色
+  bgGradient.addColorStop(1, '#2c1810')    // 深褐色
+  ctx.fillStyle = bgGradient
   ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+  // 添加水墨纹理效果
+  ctx.globalCompositeOperation = 'soft-light'
+  for (let i = 0; i < 5; i++) {
+    const x = Math.random() * canvas.width
+    const y = Math.random() * canvas.height
+    const radius = Math.random() * 300 + 200
+    
+    const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius)
+    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.1)')
+    gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.05)')
+    gradient.addColorStop(1, 'transparent')
+    
+    ctx.fillStyle = gradient
+    ctx.beginPath()
+    ctx.arc(x, y, radius, 0, Math.PI * 2)
+    ctx.fill()
+  }
+  ctx.globalCompositeOperation = 'source-over'
+
+  // 添加云纹装饰
+  ctx.strokeStyle = 'rgba(212, 175, 55, 0.1)'
+  ctx.lineWidth = 2
+  for (let i = 0; i < 8; i++) {
+    const y = i * 200
+    ctx.beginPath()
+    ctx.moveTo(0, y)
+    for (let x = 0; x < canvas.width; x += 50) {
+      ctx.quadraticCurveTo(
+        x + 25, y + (Math.sin(x / 50) * 20),
+        x + 50, y
+      )
+    }
+    ctx.stroke()
+  }
 
   // 绘制装饰边框
   const margin = 40
@@ -305,9 +325,48 @@ const generatePoster = async () => {
   ctx.rect(margin + 10, margin + 10, canvas.width - (margin + 10) * 2, canvas.height - (margin + 10) * 2)
   ctx.stroke()
 
+  // 添加四角装饰
+  const drawCornerDecoration = (x: number, y: number, type: 'tl' | 'tr' | 'bl' | 'br') => {
+    ctx.strokeStyle = '#D4AF37'
+    ctx.lineWidth = 2
+    ctx.beginPath()
+    
+    const size = 80
+    if (type === 'tl') {
+      ctx.moveTo(x + size, y)
+      ctx.lineTo(x, y)
+      ctx.lineTo(x, y + size)
+    } else if (type === 'tr') {
+      ctx.moveTo(x - size, y)
+      ctx.lineTo(x, y)
+      ctx.lineTo(x, y + size)
+    } else if (type === 'bl') {
+      ctx.moveTo(x + size, y)
+      ctx.lineTo(x, y)
+      ctx.lineTo(x, y - size)
+    } else {
+      ctx.moveTo(x - size, y)
+      ctx.lineTo(x, y)
+      ctx.lineTo(x, y - size)
+    }
+    ctx.stroke()
+
+    // 添加装饰点
+    ctx.fillStyle = '#D4AF37'
+    ctx.beginPath()
+    ctx.arc(x, y, 4, 0, Math.PI * 2)
+    ctx.fill()
+  }
+
+  // 绘制四角装饰
+  drawCornerDecoration(margin, margin, 'tl')
+  drawCornerDecoration(canvas.width - margin, margin, 'tr')
+  drawCornerDecoration(margin, canvas.height - margin, 'bl')
+  drawCornerDecoration(canvas.width - margin, canvas.height - margin, 'br')
+
   // 绘制标题（江湖风格）
   ctx.fillStyle = '#D4AF37' // 金色文字
-  ctx.font = 'bold 60px "ZCOOL XiaoWei"' // 使用江湖风格字体
+  ctx.font = 'bold 60px "Ma Shan Zheng"' // 使用马善政字体
   ctx.textAlign = 'center'
   
   // 添加标题装饰
@@ -338,8 +397,8 @@ const generatePoster = async () => {
   let currentY = titleY
   titleLines.forEach((line, index) => {
     // 添加文字阴影效果
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'
-    ctx.shadowBlur = 10
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.3)'
+    ctx.shadowBlur = 15
     ctx.fillText(line, canvas.width / 2, currentY)
     ctx.shadowBlur = 0
     currentY += 80
@@ -347,8 +406,8 @@ const generatePoster = async () => {
 
   drawDecorativeLine(currentY - 20)
 
-  // 绘制简介（使用毛笔字体）
-  ctx.font = '36px "ZCOOL QingKe HuangYou"'
+  // 绘制简介
+  ctx.font = '36px "Ma Shan Zheng"'
   ctx.fillStyle = '#E8D5A9' // 淡金色
   const introLines = wrapText(ctx, props.introduction || '', canvas.width - 200, 36)
   currentY += 60
@@ -361,7 +420,7 @@ const generatePoster = async () => {
   if (props.detail) {
     const detailText = stripHtmlTags(props.detail)
     const detailLines = wrapText(ctx, detailText, canvas.width - 200, 32)
-    ctx.font = '32px "ZCOOL QingKe HuangYou"'
+    ctx.font = '32px "Ma Shan Zheng"'
     ctx.fillStyle = '#E8D5A9' // 淡金色
     currentY += 60
     detailLines.slice(0, 12).forEach(line => {
@@ -436,9 +495,9 @@ const generatePoster = async () => {
 
     // 绘制二维码提示文字
     ctx.fillStyle = '#D4AF37'
-    ctx.font = '36px "ZCOOL XiaoWei"'
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'
-    ctx.shadowBlur = 10
+    ctx.font = '36px "Ma Shan Zheng"'
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.3)'
+    ctx.shadowBlur = 15
     ctx.fillText('扫码入江湖', canvas.width / 2, canvas.height - 50)
     ctx.shadowBlur = 0
   } catch (error) {
@@ -495,6 +554,8 @@ const downloadPoster = () => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
+
 .poster-container {
   position: relative;
   width: 100%;
