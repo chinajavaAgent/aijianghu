@@ -259,63 +259,171 @@ const generatePoster = async () => {
   const ctx = canvas.getContext('2d')
   if (!ctx) return
 
-  // 设置画布大小（增加宽度）
+  // 设置画布大小
   canvas.width = 900
   canvas.height = 1600
 
-  // 绘制背景
-  if (customBackground.type === 'gradient') {
-    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
-    gradient.addColorStop(0, customBackground.startColor)
-    gradient.addColorStop(1, customBackground.endColor)
-    ctx.fillStyle = gradient
-  } else {
-    ctx.fillStyle = customBackground.startColor
-  }
-  ctx.fillRect(0, 0, canvas.width, canvas.height)
+  // 加载字体
+  await document.fonts.load('16px "ZCOOL XiaoWei"')
+  await document.fonts.load('16px "ZCOOL QingKe HuangYou"')
 
-  // 绘制标题（处理换行）
-  ctx.fillStyle = '#FFFFFF'
-  ctx.font = 'bold 48px sans-serif'
-  ctx.textAlign = 'center'
-  const titleLines = wrapText(ctx, props.title || '', canvas.width - 160, 48)
-  let currentY = 120
-  titleLines.forEach((line, index) => {
-    ctx.fillText(line, canvas.width / 2, currentY)
-    currentY += 60 // 标题行间距加大
+  // 加载背景图
+  const bgImage = new Image()
+  await new Promise((resolve, reject) => {
+    bgImage.onload = resolve
+    bgImage.onerror = reject
+    bgImage.src = 'https://wechat-group-all.oss-cn-hangzhou.aliyuncs.com/image/header_back.png'
   })
 
-  // 绘制简介
-  ctx.font = '32px sans-serif'
-  const introLines = wrapText(ctx, props.introduction || '', canvas.width - 160, 32)
-  currentY += 40 // 标题和简介之间的间距
+  // 绘制背景图（使用平铺模式填充整个画布）
+  const pattern = ctx.createPattern(bgImage, 'repeat')
+  if (pattern) {
+    ctx.fillStyle = pattern
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+  }
+
+  // 添加渐变遮罩，增加文字可读性
+  const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+  gradient.addColorStop(0, 'rgba(0, 0, 0, 0.7)')
+  gradient.addColorStop(0.5, 'rgba(0, 0, 0, 0.5)')
+  gradient.addColorStop(1, 'rgba(0, 0, 0, 0.7)')
+  ctx.fillStyle = gradient
+  ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+  // 绘制装饰边框
+  const margin = 40
+  ctx.strokeStyle = '#D4AF37' // 金色边框
+  ctx.lineWidth = 3
+  ctx.beginPath()
+  ctx.rect(margin, margin, canvas.width - margin * 2, canvas.height - margin * 2)
+  ctx.stroke()
+
+  // 添加边框内层装饰
+  ctx.strokeStyle = 'rgba(212, 175, 55, 0.5)' // 半透明金色
+  ctx.lineWidth = 1
+  ctx.beginPath()
+  ctx.rect(margin + 10, margin + 10, canvas.width - (margin + 10) * 2, canvas.height - (margin + 10) * 2)
+  ctx.stroke()
+
+  // 绘制标题（江湖风格）
+  ctx.fillStyle = '#D4AF37' // 金色文字
+  ctx.font = 'bold 60px "ZCOOL XiaoWei"' // 使用江湖风格字体
+  ctx.textAlign = 'center'
+  
+  // 添加标题装饰
+  const titleY = 160
+  const titleWidth = canvas.width - 200
+  
+  // 绘制标题装饰线
+  const drawDecorativeLine = (y: number) => {
+    ctx.beginPath()
+    ctx.moveTo(100, y)
+    ctx.lineTo(canvas.width - 100, y)
+    ctx.strokeStyle = '#D4AF37'
+    ctx.lineWidth = 2
+    ctx.stroke()
+    
+    // 添加装饰点
+    ctx.beginPath()
+    ctx.arc(100, y, 4, 0, Math.PI * 2)
+    ctx.arc(canvas.width - 100, y, 4, 0, Math.PI * 2)
+    ctx.fillStyle = '#D4AF37'
+    ctx.fill()
+  }
+
+  drawDecorativeLine(titleY - 40)
+
+  // 绘制标题文字
+  const titleLines = wrapText(ctx, props.title || '', titleWidth, 60)
+  let currentY = titleY
+  titleLines.forEach((line, index) => {
+    // 添加文字阴影效果
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'
+    ctx.shadowBlur = 10
+    ctx.fillText(line, canvas.width / 2, currentY)
+    ctx.shadowBlur = 0
+    currentY += 80
+  })
+
+  drawDecorativeLine(currentY - 20)
+
+  // 绘制简介（使用毛笔字体）
+  ctx.font = '36px "ZCOOL QingKe HuangYou"'
+  ctx.fillStyle = '#E8D5A9' // 淡金色
+  const introLines = wrapText(ctx, props.introduction || '', canvas.width - 200, 36)
+  currentY += 60
   introLines.forEach(line => {
     ctx.fillText(line, canvas.width / 2, currentY)
-    currentY += 44
+    currentY += 50
   })
 
   // 绘制富文本内容
   if (props.detail) {
     const detailText = stripHtmlTags(props.detail)
-    const detailLines = wrapText(ctx, detailText, canvas.width - 160, 28)
-    ctx.font = '28px sans-serif'
-    currentY += 40 // 简介和详情之间的间距
-    detailLines.slice(0, 12).forEach(line => { // 增加显示行数到12行
+    const detailLines = wrapText(ctx, detailText, canvas.width - 200, 32)
+    ctx.font = '32px "ZCOOL QingKe HuangYou"'
+    ctx.fillStyle = '#E8D5A9' // 淡金色
+    currentY += 60
+    detailLines.slice(0, 12).forEach(line => {
       ctx.fillText(line, canvas.width / 2, currentY)
-      currentY += 40
+      currentY += 46
     })
     if (detailLines.length > 12) {
       ctx.fillText('...', canvas.width / 2, currentY)
     }
   }
 
+  // 绘制二维码背景装饰
+  const qrSize = 240
+  const qrX = (canvas.width - qrSize) / 2
+  const qrY = canvas.height - qrSize - 120
+  
+  // 绘制二维码装饰框
+  ctx.strokeStyle = '#D4AF37'
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  ctx.rect(qrX - 20, qrY - 20, qrSize + 40, qrSize + 40)
+  ctx.stroke()
+
+  // 添加二维码装饰角
+  const cornerSize = 20
+  const drawCorner = (x: number, y: number, type: number) => {
+    ctx.beginPath()
+    if (type === 1) {
+      ctx.moveTo(x, y + cornerSize)
+      ctx.lineTo(x, y)
+      ctx.lineTo(x + cornerSize, y)
+    } else if (type === 2) {
+      ctx.moveTo(x - cornerSize, y)
+      ctx.lineTo(x, y)
+      ctx.lineTo(x, y + cornerSize)
+    } else if (type === 3) {
+      ctx.moveTo(x - cornerSize, y)
+      ctx.lineTo(x, y)
+      ctx.lineTo(x, y - cornerSize)
+    } else {
+      ctx.moveTo(x, y - cornerSize)
+      ctx.lineTo(x, y)
+      ctx.lineTo(x + cornerSize, y)
+    }
+    ctx.strokeStyle = '#D4AF37'
+    ctx.lineWidth = 3
+    ctx.stroke()
+  }
+
+  // 绘制四个角
+  drawCorner(qrX - 20, qrY - 20, 1) // 左上
+  drawCorner(qrX + qrSize + 20, qrY - 20, 2) // 右上
+  drawCorner(qrX + qrSize + 20, qrY + qrSize + 20, 3) // 右下
+  drawCorner(qrX - 20, qrY + qrSize + 20, 4) // 左下
+
   // 绘制二维码
   try {
     const qrCodeUrl = await QRCode.toDataURL(props.shareUrl, {
-      width: 240, // 增加二维码尺寸
+      width: qrSize,
       margin: 1,
       color: {
-        dark: '#000000',
+        dark: '#D4AF37', // 金色二维码
         light: '#FFFFFF'
       }
     })
@@ -324,15 +432,15 @@ const generatePoster = async () => {
     await new Promise((resolve) => {
       qrImage.onload = resolve
     })
-    const qrSize = 240
-    const qrX = (canvas.width - qrSize) / 2
-    const qrY = canvas.height - qrSize - 120
     ctx.drawImage(qrImage, qrX, qrY, qrSize, qrSize)
 
     // 绘制二维码提示文字
-    ctx.fillStyle = '#FFFFFF'
-    ctx.font = '32px sans-serif' // 增加字体大小
-    ctx.fillText('扫码查看详情', canvas.width / 2, canvas.height - 60)
+    ctx.fillStyle = '#D4AF37'
+    ctx.font = '36px "ZCOOL XiaoWei"'
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'
+    ctx.shadowBlur = 10
+    ctx.fillText('扫码入江湖', canvas.width / 2, canvas.height - 50)
+    ctx.shadowBlur = 0
   } catch (error) {
     console.error('Failed to generate QR code:', error)
   }
