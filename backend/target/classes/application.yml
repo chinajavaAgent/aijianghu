@@ -99,4 +99,4 @@ aliyun:
     accessKeySecret: your-access-key-secret
     bucketName: your-bucket-name
     baseDir: upload/
-    maxSize: 10485760  # 10MB 
+    maxSize: 10485760  # 10MB
