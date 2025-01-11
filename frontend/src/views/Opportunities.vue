@@ -363,7 +363,14 @@ const handlePurchase = async (tip: AiTips) => {
     
     // 检查用户等级
     if (userStore.$state.level < tip.requiredLevel) {
-      showToast(`需要达到${getRealmName(tip.requiredLevel)}才能查看`)
+      const levelDiff = tip.requiredLevel - userStore.$state.level
+      if (levelDiff < 2) {
+        showToast('即将解锁，继续修炼')
+      } else {
+        const previousLevel = tip.requiredLevel - 1
+        const previousRealm = getRealmName(previousLevel)
+        showToast(`需要修炼至${previousRealm}才能查看`)
+      }
       return
     }
     
