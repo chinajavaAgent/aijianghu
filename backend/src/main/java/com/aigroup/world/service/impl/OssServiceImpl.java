@@ -5,9 +5,7 @@ import com.aigroup.world.service.OssService;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectRequest;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,11 +22,11 @@ import java.util.UUID;
 public class OssServiceImpl implements OssService {
 
     private final OSS ossClient;
-    @Value("${aliyun.oss.bucketName}")
-    private String bucketName;
+    private final OssProperties ossProperties;
 
-    public OssServiceImpl(OSS ossClient) {
+    public OssServiceImpl(OSS ossClient, OssProperties ossProperties) {
         this.ossClient = ossClient;
+        this.ossProperties = ossProperties;
     }
 
     @Override

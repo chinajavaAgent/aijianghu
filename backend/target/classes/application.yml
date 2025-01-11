@@ -97,4 +97,6 @@ aliyun:
     endpoint: your-endpoint  # 例如：oss-cn-beijing.aliyuncs.com
     accessKeyId: your-access-key-id
     accessKeySecret: your-access-key-secret
-    bucketName: your-bucket-name 
+    bucketName: your-bucket-name
+    baseDir: upload/
+    maxSize: 10485760  # 10MB 
