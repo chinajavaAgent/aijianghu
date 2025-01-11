@@ -7,6 +7,7 @@ import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,11 +21,15 @@ import java.util.UUID;
  */
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class OssServiceImpl implements OssService {
 
     private final OSS ossClient;
-    private final OssProperties ossProperties;
+    @Value("${aliyun.oss.bucketName}")
+    private String bucketName;
+
+    public OssServiceImpl(OSS ossClient) {
+        this.ossClient = ossClient;
+    }
 
     @Override
     public String uploadFile(MultipartFile file, String directory) {

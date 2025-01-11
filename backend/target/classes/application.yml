@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: ai-group-world
+    name: world
   datasource:
     dynamic:
       primary: primary
@@ -94,9 +94,7 @@ jwt:
 # 阿里云OSS配置
 aliyun:
   oss:
-    endpoint: oss-cn-hangzhou.aliyuncs.com  # 根据实际情况修改
-    access-key-id: your-access-key-id       # 需要替换为实际的AccessKeyId
-    access-key-secret: your-access-key-secret # 需要替换为实际的AccessKeySecret
-    bucket-name: your-bucket-name           # 需要替换为实际的Bucket名称
-    base-dir: upload/                       # 基础上传目录
-    max-size: 10485760                      # 最大文件大小（10MB） 
+    endpoint: your-endpoint  # 例如：oss-cn-beijing.aliyuncs.com
+    accessKeyId: your-access-key-id
+    accessKeySecret: your-access-key-secret
+    bucketName: your-bucket-name 
