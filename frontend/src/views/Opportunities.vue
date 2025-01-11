@@ -325,8 +325,15 @@ const getButtonText = (tip: AiTips) => {
   
   // 使用实时获取的用户等级
   if (userLevel.value < tip.requiredLevel) {
-    const nextRealm = getRealmName(tip.requiredLevel)
-    return `需修炼至${nextRealm}`
+    const levelDiff = tip.requiredLevel - userLevel.value
+    if (levelDiff < 2) {
+      return '马上解锁'
+    } else {
+      // 显示上一级的境界名称
+      const previousLevel = tip.requiredLevel - 1
+      const previousRealm = getRealmName(previousLevel)
+      return `需修炼至${previousRealm}`
+    }
   }
   
   // 用户等级已满足要求
