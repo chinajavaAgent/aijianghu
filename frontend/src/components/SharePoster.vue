@@ -2,7 +2,7 @@
   <div>
     <!-- 分享按钮 -->
     <button @click="showPoster" 
-      class="flex items-center space-x-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors">
+      class="flex items-center space-x-2 px-4 py-2 text-blue-600 rounded-lg hover:text-blue-800 transition-colors font-ma-shan">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
       </svg>
@@ -11,9 +11,9 @@
 
     <!-- 海报弹窗 -->
     <div v-if="visible" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[9999] p-4 overflow-hidden" style="min-height: 100vh;">
-      <div class="bg-white rounded-xl p-8 w-full max-w-2xl max-h-[80vh] overflow-y-auto relative transform transition-all my-auto" style="margin-bottom: 80px;">
+      <div class="bg-white rounded-xl p-8 w-full max-w-2xl max-h-[80vh] overflow-y-auto relative transform transition-all my-auto font-ma-shan" style="margin-bottom: 80px;">
         <div class="flex justify-between items-center mb-6">
-          <h3 class="text-2xl font-bold">分享项目海报</h3>
+          <h3 class="text-2xl font-bold font-ma-shan">分享项目海报</h3>
           <button @click="visible = false" 
             class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
             <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -24,7 +24,7 @@
 
         <!-- 背景颜色选择器 -->
         <div class="mb-4">
-          <h4 class="text-sm font-medium mb-2">选择背景样式</h4>
+          <h4 class="text-sm font-medium mb-2 font-ma-shan">选择背景样式</h4>
           <div class="flex flex-wrap gap-2">
             <!-- 预设颜色方案 -->
             <div v-for="(scheme, index) in colorSchemes" 
@@ -44,7 +44,7 @@
                   backgroundColor: scheme.startColor
                 }">
               </div>
-              <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-20 text-white text-[8px] text-center py-0.5">
+              <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-20 text-white text-[8px] text-center py-0.5 font-ma-shan">
                 {{ scheme.name }}
               </div>
             </div>
@@ -52,7 +52,7 @@
             <!-- 自定义颜色选择器 -->
             <div class="flex items-center gap-2">
               <select v-model="customBackground.type" 
-                class="border rounded px-1 py-0.5 text-sm">
+                class="border rounded px-1 py-0.5 text-sm font-ma-shan">
                 <option value="gradient">渐变</option>
                 <option value="solid">纯色</option>
               </select>
@@ -80,7 +80,7 @@
             class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 backdrop-blur-sm">
             <div class="flex flex-col items-center">
               <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mb-4"></div>
-              <span class="text-gray-600">正在生成海报...</span>
+              <span class="text-gray-600 font-ma-shan">正在生成海报...</span>
             </div>
           </div>
         </div>
@@ -88,11 +88,11 @@
         <!-- 操作按钮 -->
         <div class="flex justify-end space-x-4">
           <button @click="visible = false" 
-            class="px-6 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+            class="px-6 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors font-ma-shan">
             取消
           </button>
           <button @click="downloadPoster" 
-            class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+            class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center font-ma-shan">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
             </svg>
@@ -640,6 +640,10 @@ const downloadPoster = () => {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
+
+.font-ma-shan {
+  font-family: 'Ma Shan Zheng', cursive;
+}
 
 .poster-container {
   position: relative;

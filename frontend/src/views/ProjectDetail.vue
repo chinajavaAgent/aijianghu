@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-white">
+  <div class="min-h-screen bg-white font-ma-shan">
     <!-- 顶部导航栏 -->
     <div class="sticky top-0 z-10 bg-white border-b border-gray-100">
       <div class="max-w-[960px] mx-auto px-4 flex items-center justify-between h-[44px]">
@@ -22,17 +22,17 @@
     <!-- 文章内容区域 -->
     <div class="max-w-[960px] mx-auto px-[16px] py-[20px]">
       <!-- 文章标题 -->
-      <h1 class="text-[22px] font-bold text-[#1a1a1a] leading-[1.4] mb-[14px]">
+      <h1 class="text-[22px] font-bold text-[#1a1a1a] leading-[1.4] mb-[14px] font-ma-shan">
         {{ currentProject?.name }}
       </h1>
 
       <!-- 文章信息 -->
-      <div class="flex items-center text-[14px] text-[#8590a6] mb-[24px]">
+      <div class="flex items-center text-[14px] text-[#8590a6] mb-[24px] font-ma-shan">
         <span>{{ formatDate(currentProject?.createdAt) }}</span>
       </div>
 
       <!-- 文章正文 -->
-      <div class="prose max-w-none">
+      <div class="prose max-w-none font-ma-shan">
         <div v-html="currentProject?.detail"></div>
       </div>
     </div>
@@ -95,11 +95,14 @@ onMounted(() => {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
 
+.font-ma-shan {
+  font-family: 'Ma Shan Zheng', cursive;
+}
+
 .prose {
   color: #1a1a1a;
   font-size: 16px;
   line-height: 1.75;
-  font-family: 'Ma Shan Zheng', cursive;
 }
 
 .prose :deep(img) {
@@ -170,15 +173,5 @@ onMounted(() => {
 
 .prose :deep(a:hover) {
   text-decoration: underline;
-}
-
-/* 统一字体设置 */
-h1, h2, p, button, div {
-  font-family: 'Ma Shan Zheng', cursive;
-}
-
-/* 优化字间距 */
-.tracking-wider {
-  letter-spacing: 0.05em;
 }
 </style> 
