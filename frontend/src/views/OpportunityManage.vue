@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <div class="bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-10">
       <div class="container mx-auto px-4">
-        <h1 class="text-xl font-bold text-gray-800 py-4">AI锦囊管理</h1>
+        <h1 class="text-xl font-bold text-gray-800 py-4">AI机缘管理</h1>
       </div>
     </div>
 
@@ -11,10 +11,10 @@
       <!-- 锦囊列表 -->
       <div class="bg-white/80 backdrop-blur-sm rounded-xl shadow-md p-6">
         <div class="flex justify-between items-center mb-6">
-          <h2 class="text-lg font-semibold">锦囊列表</h2>
+          <h2 class="text-lg font-semibold">机缘列表</h2>
           <button @click="showDialog = true" 
             class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-sm">
-            添加锦囊
+            添加机缘
           </button>
         </div>
 
