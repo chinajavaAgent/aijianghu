@@ -394,7 +394,29 @@ const handleReject = (orderId: number) => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
+
 .max-w-screen-md {
   max-width: 640px;
+}
+
+/* 统一字体设置 */
+.font-ma-shan {
+  font-family: 'Ma Shan Zheng', cursive;
+}
+
+/* 所有文字都使用毛笔字体 */
+h1, h2, h3, p, button, div, span {
+  font-family: 'Ma Shan Zheng', cursive;
+}
+
+/* 优化字间距 */
+.tracking-wider {
+  letter-spacing: 0.05em;
+}
+
+/* 数字使用正常字体权重 */
+.text-lg.font-bold {
+  font-weight: normal;
 }
 </style> 
