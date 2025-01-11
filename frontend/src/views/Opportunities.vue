@@ -5,6 +5,56 @@
     <!-- 添加一个浅色遮罩层 -->
     <div class="absolute inset-0 bg-white/90 backdrop-blur-[1px]"></div>
 
+    <!-- 添加项目列表对话框 -->
+    <van-dialog v-model:show="showProjectDialog" 
+                title="项目列表" 
+                class="project-dialog"
+                :show-confirm-button="false">
+      <div class="project-list p-4">
+        <div v-for="project in selectedTipProjects" 
+             :key="project.id" 
+             class="project-item mb-6 bg-white rounded-lg overflow-hidden shadow-md">
+          <!-- 项目标题 -->
+          <div class="p-4 bg-[#7A9D96] text-white">
+            <h3 class="text-lg font-medium">{{ project.name }}</h3>
+          </div>
+          
+          <!-- 项目内容 -->
+          <div class="p-4">
+            <!-- 项目描述 -->
+            <p class="text-gray-600 mb-4">{{ project.description }}</p>
+            
+            <!-- 项目案例 -->
+            <div v-if="project.cases && project.cases.length > 0" class="mb-4">
+              <h4 class="text-[#2A3F54] font-medium mb-2">项目案例</h4>
+              <div class="grid grid-cols-2 gap-4">
+                <div v-for="(case_item, index) in project.cases" 
+                     :key="index" 
+                     class="case-item">
+                  <img :src="case_item.imageUrl" 
+                       :alt="case_item.description"
+                       class="w-full h-32 object-cover rounded-lg mb-2">
+                  <p class="text-sm text-gray-500">{{ case_item.description }}</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 项目福利 -->
+            <div v-if="project.benefits && project.benefits.length > 0">
+              <h4 class="text-[#2A3F54] font-medium mb-2">项目福利</h4>
+              <ul class="list-disc list-inside text-gray-600">
+                <li v-for="(benefit, index) in project.benefits" 
+                    :key="index" 
+                    class="mb-1">
+                  {{ benefit.content }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </van-dialog>
+
     <!-- 页面内容 -->
     <div class="container mx-auto px-4 py-8 sm:py-12 relative z-10">
       <!-- 页面标题区域 -->
@@ -125,7 +175,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { getAiTipsList, getAiTipsDetail } from '@/api/tips'
+import { getAiTipsList } from '@/api/tips'
 import { getUserOrders } from '@/api/order'
 import { getUserInfo } from '@/api/user'
 import type { AiTips } from '@/types/tips'
@@ -133,11 +183,12 @@ import type { Order } from '@/types/order'
 import { showToast } from 'vant'
 import { useUserStore } from '@/store/user'
 import type { User } from '@/types/user'
+import type { Project } from '@/types/project'
 
 const router = useRouter()
 const tipsList = ref<AiTips[]>([])
 const showProjectDialog = ref(false)
-const selectedTipProjects = ref<any[]>([])
+const selectedTipProjects = ref<Project[]>([])
 const userStore = useUserStore()
 const pendingOrders = ref<Order[]>([])
 const approvedOrders = ref<Order[]>([])
@@ -272,12 +323,6 @@ const getButtonText = (tip: AiTips) => {
     return '掌门正在审核'
   }
   
-  // 检查是否已通过
-  const hasApprovedOrder = approvedOrders.value.some(order => order.tipsId === tip.id)
-  if (hasApprovedOrder) {
-    return '已获得传承'
-  }
-  
   // 使用实时获取的用户等级
   if (userLevel.value < tip.requiredLevel) {
     const nextRealm = getRealmName(tip.requiredLevel)
@@ -285,7 +330,7 @@ const getButtonText = (tip: AiTips) => {
   }
   
   // 用户等级已满足要求
-  return '可以学习'
+  return '查看详情'
 }
 
 // 添加购买处理函数
@@ -302,14 +347,6 @@ const handlePurchase = async (tip: AiTips) => {
       return
     }
     
-    // 检查是否已通过
-    const hasApprovedOrder = approvedOrders.value.some(order => order.tipsId === tip.id)
-    if (hasApprovedOrder) {
-      // 已通过的订单直接查看详情
-      router.push(`/tips/${tip.id}`)
-      return
-    }
-    
     // 检查是否有待审核订单
     const hasPendingOrder = pendingOrders.value.some(order => order.tipsId === tip.id)
     if (hasPendingOrder) {
@@ -319,16 +356,15 @@ const handlePurchase = async (tip: AiTips) => {
     
     // 检查用户等级
     if (userStore.$state.level < tip.requiredLevel) {
-      // 跳转到锦囊详情页面
-      router.push(`/tips/${tip.id}`)
+      showToast(`需要达到${getRealmName(tip.requiredLevel)}才能查看`)
       return
     }
     
-    // 跳转到锦囊详情页面
-    router.push(`/tips/${tip.id}`)
+    // 跳转到项目列表页面
+    router.push(`/projects/${tip.id}`)
   } catch (error) {
-    console.error('获取项目信息失败:', error)
-    showToast('获取项目信息失败，请重试')
+    console.error('处理失败:', error)
+    showToast('操作失败，请重试')
   }
 }
 
@@ -370,12 +406,6 @@ const isLocked = (tip: AiTips) => {
     return true
   }
   
-  // 如果已经通过，则解锁
-  const hasApprovedOrder = approvedOrders.value.some(order => order.tipsId === tip.id)
-  if (hasApprovedOrder) {
-    return false
-  }
-  
   // 如果用户等级不足，则锁定
   return userLevel.value < tip.requiredLevel
 }
@@ -396,7 +426,7 @@ onMounted(async () => {
     // 先获取用户信息，确保等级是最新的
     await fetchUserInfo()
     // 加载订单数据
-    await Promise.all([loadPendingOrders(), loadApprovedOrders()])
+    await loadPendingOrders()
   }
   await loadTipsList()
 })
@@ -555,5 +585,42 @@ h1, h2, h3, p, span, div {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* 项目列表对话框样式 */
+.project-dialog {
+  :deep(.van-dialog) {
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+  }
+  
+  :deep(.van-dialog__header) {
+    padding: 20px;
+    font-size: 1.25rem;
+    color: #2A3F54;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+}
+
+.project-item {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.case-item img {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
 }
 </style> 
