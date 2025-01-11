@@ -57,22 +57,20 @@
           <!-- 项目详情 -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">项目详情</label>
-            <div class="border rounded-lg">
+            <div class="border rounded-lg overflow-hidden">
+              <Toolbar
+                class="border-b"
+                :editor="editorRef"
+                :defaultConfig="toolbarConfig"
+                :mode="mode"
+              />
               <Editor
+                class="h-[500px]"
                 v-model="form.detail"
-                :init="{
-                  height: 500,
-                  menubar: false,
-                  plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table paste code help wordcount'
-                  ],
-                  toolbar:
-                    'undo redo | formatselect | bold italic backcolor | \
-                    alignleft aligncenter alignright alignjustify | \
-                    bullist numlist outdent indent | removeformat | help'
-                }"
+                :defaultConfig="editorConfig"
+                :mode="mode"
+                @onCreated="handleCreated"
+                @onChange="handleChange"
               />
             </div>
           </div>
@@ -95,10 +93,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, shallowRef, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { showToast } from 'vant'
-import Editor from '@tinymce/tinymce-vue'
+import '@wangeditor/editor/dist/css/style.css'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import {
   getProjectById,
   createProject,
@@ -106,6 +105,7 @@ import {
   uploadProjectIcon
 } from '@/api/project'
 import type { Project } from '@/types/project'
+import type { IDomEditor, IEditorConfig, IToolbarConfig } from '@wangeditor/editor'
 
 const route = useRoute()
 const router = useRouter()
@@ -213,6 +213,59 @@ const handleIconUpload = async (event: Event) => {
     console.error('上传图标失败:', error)
     showToast('上传失败，请重试')
   }
+}
+
+// 编辑器实例，必须用 shallowRef
+const editorRef = shallowRef<IDomEditor>()
+
+// 编辑器配置
+const toolbarConfig: Partial<IToolbarConfig> = {
+  excludeKeys: [
+    'group-video',
+    'insertTable',
+    'group-indent',
+    'headerSelect',
+    'fullScreen'
+  ]
+}
+
+const editorConfig: Partial<IEditorConfig> = {
+  placeholder: '请输入项目详情...',
+  MENU_CONF: {
+    uploadImage: {
+      server: '/api/upload/image',
+      fieldName: 'file',
+      maxFileSize: 5 * 1024 * 1024, // 5M
+      maxNumberOfFiles: 10,
+      allowedFileTypes: ['image/*'],
+      metaWithUrl: true,
+      customInsert(res: any, insertFn: Function) {
+        // res 即服务端的返回结果
+        if (res.code === 200 && res.data) {
+          insertFn(res.data)
+        } else {
+          showToast('上传失败')
+        }
+      },
+    }
+  }
+}
+
+// 组件销毁时，也及时销毁编辑器
+onBeforeUnmount(() => {
+  const editor = editorRef.value
+  if (editor == null) return
+  editor.destroy()
+})
+
+const mode = 'default'
+
+const handleCreated = (editor: IDomEditor) => {
+  editorRef.value = editor
+}
+
+const handleChange = (editor: IDomEditor) => {
+  form.detail = editor.getHtml()
 }
 
 // 页面加载时获取数据

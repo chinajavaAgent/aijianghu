@@ -15,7 +15,7 @@ export const getProjects = (page: number, size: number, tipId?: number) => {
 
 // 获取项目详情
 export const getProjectById = (id: number) => {
-  return request.get<ApiResponse<{ projects: Project[], tipId: number }>>(`/projects/${id}`)
+  return request.get<ApiResponse<Project>>(`/projects/${id}`)
 }
 
 // 创建项目
