@@ -2,12 +2,17 @@
   <div class="min-h-screen bg-white">
     <!-- 顶部导航栏 -->
     <div class="sticky top-0 z-10 bg-white border-b border-gray-100">
-      <div class="max-w-[960px] mx-auto px-4 flex items-center h-[44px]">
+      <div class="max-w-[960px] mx-auto px-4 flex items-center justify-between h-[44px]">
         <button @click="router.back()" class="flex items-center text-gray-600">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
           </svg>
         </button>
+        <SharePoster 
+          :projectId="Number(route.params.id)"
+          :share-url="shareUrl"
+          class="flex-shrink-0"
+        />
       </div>
     </div>
 
@@ -37,10 +42,16 @@ import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import type { Project } from '@/types/project'
 import { getProjectById } from '@/api/project'
+import SharePoster from '@/components/SharePoster.vue'
 
 const router = useRouter()
 const route = useRoute()
 const currentProject = ref<Project | null>(null)
+
+// 分享链接
+const shareUrl = computed(() => {
+  return `${window.location.origin}/project/${route.params.id}`
+})
 
 // 格式化日期
 const formatDate = (date: string | undefined) => {

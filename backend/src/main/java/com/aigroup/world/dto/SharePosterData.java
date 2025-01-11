@@ -16,7 +16,7 @@ public class SharePosterData {
     /**
      * 锦囊下的项目列表
      */
-    private List<ProjectInfo> projects;
+    private List<Project> projects;
 
     /**
      * 品牌名称
@@ -32,7 +32,7 @@ public class SharePosterData {
      * 项目信息
      */
     @Data
-    public static class ProjectInfo {
+    public static class Project {
         /**
          * 项目名称
          */

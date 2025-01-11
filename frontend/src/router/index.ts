@@ -146,6 +146,12 @@ const routes: Array<RouteRecordRaw> = [
       title: 'AI锦囊详情',
       requiresAuth: true
     }
+  },
+  {
+    path: '/share/project/:id',
+    name: 'project-share',
+    component: () => import('@/views/ProjectShare.vue'),
+    meta: { title: '项目分享' }
   }
 ]
 

@@ -10,6 +10,11 @@ export interface Project {
     description: string;
 
     /**
+     * 项目详细信息
+     */
+    detail?: string;
+
+    /**
      * 项目视频链接
      */
     videoUrl?: string;

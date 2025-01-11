@@ -1,6 +1,7 @@
 import request from '@/utils/request'
 import type { Project, ProjectCase, ProjectBenefit } from '@/types/project'
 import type { ApiResponse, PageResponse } from '@/types/common'
+import type { SharePosterData } from '@/types/poster'
 
 // 获取项目列表
 export const getProjects = (page: number, size: number, tipId?: number) => {
@@ -106,4 +107,11 @@ export const uploadEditorImage = (file: File) => {
       'Content-Type': 'multipart/form-data'
     }
   })
+}
+
+/**
+ * 获取项目分享海报数据
+ */
+export function getProjectPoster(id: number) {
+    return request.get<SharePosterData>(`/projects/${id}/poster`)
 } 

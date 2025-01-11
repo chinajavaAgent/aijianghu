@@ -1,6 +1,7 @@
 package com.aigroup.world.controller;
 
 import com.aigroup.world.common.Result;
+import com.aigroup.world.dto.SharePosterData;
 import com.aigroup.world.entity.Project;
 import com.aigroup.world.entity.ProjectCase;
 import com.aigroup.world.entity.ProjectBenefit;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/aiGroup/projects")
@@ -146,5 +148,30 @@ public class ProjectController {
     @DeleteMapping("/{projectId}/benefits/{benefitId}")
     public Result<Boolean> deleteBenefit(@PathVariable Long projectId, @PathVariable Long benefitId) {
         return Result.success(projectService.deleteBenefit(projectId, benefitId));
+    }
+
+    /**
+     * 获取项目分享海报数据
+     */
+    @GetMapping("/{id}/poster")
+    public Result<SharePosterData> getSharePoster(@PathVariable Long id) {
+        Project project = projectService.getProjectById(id);
+        if (project == null) {
+            return Result.error("项目不存在");
+        }
+
+        SharePosterData posterData = new SharePosterData();
+        posterData.setTitle(project.getName());
+        posterData.setBrandName("AI群江湖");
+        posterData.setQrCodeTip("扫码查看详情");
+
+        List<SharePosterData.Project> projectInfos = new ArrayList<>();
+        SharePosterData.Project projectInfo = new SharePosterData.Project();
+        projectInfo.setTitle(project.getName());
+        projectInfo.setDescription(project.getDescription());
+        projectInfos.add(projectInfo);
+
+        posterData.setProjects(projectInfos);
+        return Result.success(posterData);
     }
 } 

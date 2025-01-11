@@ -55,7 +55,6 @@
                 class="border rounded px-1 py-0.5 text-sm">
                 <option value="gradient">渐变</option>
                 <option value="solid">纯色</option>
-                <option value="paper">纸张</option>
               </select>
               
               <div class="flex items-center gap-1">
@@ -109,7 +108,7 @@
 import { ref, nextTick, reactive, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import QRCode from 'qrcode'
-import { getSharePoster } from '@/api/tips'
+import { getProjectPoster } from '@/api/project'
 import { encryptUserId } from '@/api/share'
 
 const props = withDefaults(defineProps<{
@@ -136,25 +135,12 @@ const props = withDefaults(defineProps<{
 interface ColorScheme {
   startColor: string
   endColor?: string
-  type: 'gradient' | 'solid' | 'paper'
+  type: 'gradient' | 'solid'
   name: string
-  texture?: string
 }
 
 // 预设颜色方案
 const colorSchemes: ColorScheme[] = [
-  {
-    startColor: '#F5F5F5',
-    type: 'paper',
-    name: '米色纸张',
-    texture: '/textures/paper-1.png'
-  },
-  {
-    startColor: '#E8E8E8',
-    type: 'paper',
-    name: '灰色纸张',
-    texture: '/textures/paper-2.png'
-  },
   {
     startColor: '#40E0D0',
     endColor: '#4169E1',
@@ -194,22 +180,25 @@ const colorSchemes: ColorScheme[] = [
     startColor: '#3B4371',
     type: 'solid',
     name: '深邃蓝'
+  },
+  {
+    startColor: '#F5F5F5',
+    type: 'solid',
+    name: '简约白'
   }
 ]
 
 interface Background {
   startColor: string
   endColor: string
-  type: 'gradient' | 'solid' | 'paper'
-  texture?: string
+  type: 'gradient' | 'solid'
 }
 
 // 当前选中的背景方案
 const customBackground = reactive<Background>({
-  startColor: '#F5F5F5',
+  startColor: '#40E0D0',
   endColor: '#4169E1',
-  type: 'paper',
-  texture: '/textures/paper-1.png'
+  type: 'gradient'
 })
 
 const visible = ref(false)
@@ -234,18 +223,11 @@ const selectColorScheme = (scheme: ColorScheme) => {
   if (scheme.type === 'gradient' && scheme.endColor) {
     customBackground.endColor = scheme.endColor
   }
-  if (scheme.type === 'paper' && scheme.texture) {
-    customBackground.texture = scheme.texture
-  }
   generatePoster()
 }
 
 // 检查是否是当前选中的方案
 const isCurrentScheme = (scheme: ColorScheme) => {
-  if (scheme.type === 'paper') {
-    return customBackground.type === 'paper' && 
-           customBackground.texture === scheme.texture
-  }
   if (scheme.type === 'solid') {
     return customBackground.type === 'solid' && 
            customBackground.startColor === scheme.startColor
@@ -253,17 +235,6 @@ const isCurrentScheme = (scheme: ColorScheme) => {
   return customBackground.type === 'gradient' && 
          customBackground.startColor === scheme.startColor && 
          customBackground.endColor === scheme.endColor
-}
-
-// 加载纹理图片
-const loadTexture = async (url: string): Promise<HTMLImageElement> => {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.crossOrigin = 'anonymous'
-    img.onload = () => resolve(img)
-    img.onerror = reject
-    img.src = url
-  })
 }
 
 const showPoster = async () => {
@@ -294,7 +265,7 @@ const generatePoster = async () => {
 
   try {
     // 获取海报数据
-    const response = await getSharePoster(props.tipId)
+    const response = await getProjectPoster(props.projectId)
     if (!response.data) {
       throw new Error('获取海报数据失败')
     }
@@ -303,33 +274,12 @@ const generatePoster = async () => {
     
     // 设置画布大小
     canvas.width = 800
-    canvas.height = 800
+    canvas.height = 1200
     
     // 1. 绘制背景
     const bg = customBackground
     
-    if (bg.type === 'paper' && bg.texture) {
-      try {
-        // 加载纹理图片
-        const textureImg = await loadTexture(bg.texture)
-        
-        // 创建纹理图案
-        const pattern = ctx.createPattern(textureImg, 'repeat')
-        if (pattern) {
-          ctx.fillStyle = pattern
-          ctx.fillRect(0, 0, canvas.width, canvas.height)
-        }
-        
-        // 添加一层浅色遮罩使纹理更柔和
-        ctx.fillStyle = `${bg.startColor}99`  // 添加60%透明度
-        ctx.fillRect(0, 0, canvas.width, canvas.height)
-      } catch (error) {
-        console.error('Failed to load texture:', error)
-        // 如果纹理加载失败，使用纯色背景
-        ctx.fillStyle = bg.startColor
-        ctx.fillRect(0, 0, canvas.width, canvas.height)
-      }
-    } else if (bg.type === 'solid') {
+    if (bg.type === 'solid') {
       ctx.fillStyle = bg.startColor
       ctx.fillRect(0, 0, canvas.width, canvas.height)
     } else {
@@ -340,124 +290,224 @@ const generatePoster = async () => {
       ctx.fillRect(0, 0, canvas.width, canvas.height)
     }
 
-    // 2. 绘制卡片内容
-    const cardMargin = 40
-    const cardWidth = canvas.width - (cardMargin * 2)
-    const cardHeight = canvas.height - (cardMargin * 2)
+    // 2. 绘制内容区域
+    const margin = 40
+    const contentWidth = canvas.width - (margin * 2)
+    const contentHeight = canvas.height - (margin * 2)
 
-    // 如果不是纸张风格，需要绘制白色背景
-    if (bg.type !== 'paper') {
-      ctx.fillStyle = '#FFFFFF'
-      ctx.beginPath()
-      ctx.roundRect(cardMargin, cardMargin, cardWidth, cardHeight, 20)
-      ctx.fill()
+    // 绘制白色背景
+    ctx.fillStyle = '#FFFFFF'
+    ctx.beginPath()
+    ctx.roundRect(margin, margin, contentWidth, contentHeight, 20)
+    ctx.fill()
+
+    let currentY = margin + 60
+
+    // 3. 绘制项目标题
+    ctx.fillStyle = '#1a1a1a'
+    ctx.font = 'bold 36px sans-serif'
+    ctx.textAlign = 'left'
+    ctx.fillText(posterData.title, margin + 40, currentY)
+    currentY += 60
+
+    // 4. 绘制项目描述
+    if (posterData.projects[0]?.description) {
+      ctx.font = '28px sans-serif'
+      ctx.fillStyle = '#666666'
+      const maxWidth = contentWidth - 80
+      const lineHeight = 40
+      
+      const words = posterData.projects[0].description.split('')
+      let line = ''
+      let lines = []
+      
+      for (let word of words) {
+        const testLine = line + word
+        const metrics = ctx.measureText(testLine)
+        if (metrics.width > maxWidth) {
+          lines.push(line)
+          line = word
+        } else {
+          line = testLine
+        }
+      }
+      if (line) {
+        lines.push(line)
+      }
+
+      // 绘制每一行文字
+      lines.forEach((line, index) => {
+        ctx.fillText(line, margin + 40, currentY + index * lineHeight)
+      })
+
+      currentY += lines.length * lineHeight + 60
     }
 
-    let currentY = cardMargin + 60
-
-    // 3. 绘制固定标题
-    ctx.fillStyle = '#333333'
-    ctx.font = 'bold 48px sans-serif'
-    ctx.textAlign = 'left'
-    ctx.fillText('AI江湖，你的赚钱江湖首选', cardMargin + 40, currentY)
-
-    currentY += 80
-
-    // 4. 遍历绘制项目信息
-    for (let i = 0; i < Math.min(posterData.projects.length, 3); i++) { // 最多显示3个项目
-      const project = posterData.projects[i]
-      
-      // 绘制项目标题
-      ctx.fillStyle = '#333333'
+    // 4.5 绘制项目详细信息
+    if (posterData.projects[0]?.detail) {
+      ctx.fillStyle = '#1a1a1a'
       ctx.font = 'bold 32px sans-serif'
-      ctx.fillText(`项目 ${i + 1}：${project.title}`, cardMargin + 40, currentY)
+      ctx.fillText('项目详情', margin + 40, currentY)
       currentY += 50
 
-      // 绘制项目介绍
-      if (project.description) {
-        ctx.font = '28px sans-serif'
-        ctx.fillStyle = '#666666'
-        const maxWidth = cardWidth - 80
-        const lineHeight = 40
-        
-        // 将项目介绍文字按行分割
-        const words = project.description.split('')
-        let line = ''
-        let lines = []
-        
-        for (let word of words) {
-          const testLine = line + word
-          const metrics = ctx.measureText(testLine)
-          if (metrics.width > maxWidth) {
-            lines.push(line)
-            line = word
-          } else {
-            line = testLine
+      // 创建临时容器处理HTML内容
+      const tempDiv = document.createElement('div')
+      tempDiv.innerHTML = posterData.projects[0].detail
+
+      // 移除所有图片
+      tempDiv.querySelectorAll('img').forEach(img => img.remove())
+
+      // 处理富文本内容
+      const processNode = (node: Node, level: number = 0) => {
+        let lines: string[] = []
+        const indent = level * 20 // 每级缩进20像素
+
+        if (node.nodeType === Node.TEXT_NODE) {
+          const text = node.textContent?.trim()
+          if (text) {
+            lines.push(text)
+          }
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          const element = node as Element
+          
+          // 处理标题
+          if (element.tagName.match(/^H[1-6]$/)) {
+            ctx.font = 'bold 30px sans-serif'
+            ctx.fillStyle = '#1a1a1a'
+          } 
+          // 处理列表项
+          else if (element.tagName === 'LI') {
+            lines.push('• ')
+            ctx.font = '26px sans-serif'
+            ctx.fillStyle = '#666666'
+          }
+          // 处理段落
+          else if (element.tagName === 'P') {
+            ctx.font = '26px sans-serif'
+            ctx.fillStyle = '#666666'
+          }
+
+          // 递归处理子节点
+          Array.from(node.childNodes).forEach(child => {
+            lines = lines.concat(processNode(child, element.tagName === 'LI' ? level + 1 : level))
+          })
+
+          // 段落和列表项后添加额外的空行
+          if (element.tagName === 'P' || element.tagName === 'LI') {
+            lines.push('')
           }
         }
-        if (line) {
-          lines.push(line)
+
+        return lines
+      }
+
+      // 获取处理后的文本行
+      const textLines = processNode(tempDiv)
+
+      // 绘制文本
+      ctx.font = '26px sans-serif'
+      ctx.fillStyle = '#666666'
+      const maxWidth = contentWidth - 80
+      const lineHeight = 40
+
+      let currentLine = ''
+      let renderedLines: string[] = []
+
+      textLines.forEach(text => {
+        if (!text) {
+          if (currentLine) {
+            renderedLines.push(currentLine)
+            currentLine = ''
+          }
+          renderedLines.push('')
+          return
         }
 
-        // 限制最多显示2行，超出部分用省略号表示
-        if (lines.length > 2) {
-          lines = lines.slice(0, 1)
-          lines.push(lines[1] + '...')
+        const words = text.split('')
+        for (let word of words) {
+          const testLine = currentLine + word
+          const metrics = ctx.measureText(testLine)
+          if (metrics.width > maxWidth) {
+            renderedLines.push(currentLine)
+            currentLine = word
+          } else {
+            currentLine = testLine
+          }
         }
-
-        // 绘制每一行文字
-        lines.forEach((line, index) => {
-          ctx.fillText(line, cardMargin + 40, currentY + index * lineHeight)
-        })
-
-        currentY += lines.length * lineHeight + 30
+      })
+      if (currentLine) {
+        renderedLines.push(currentLine)
       }
 
-      // 绘制所有项目案例
-      if (project.cases?.length) {
-        ctx.fillStyle = '#333333'
-        ctx.font = 'bold 28px sans-serif'
-        ctx.fillText('项目案例：', cardMargin + 40, currentY)
-        currentY += 40
-
-        ctx.font = '26px sans-serif'
-        ctx.fillStyle = '#666666'
-        project.cases.forEach((case_: string, index: number) => {
-          ctx.fillText(`${index + 1}. ${case_}`, cardMargin + 40, currentY)
-          currentY += 35
-        })
-        currentY += 20
+      // 限制最多显示15行，超出部分用省略号表示
+      if (renderedLines.length > 15) {
+        renderedLines = renderedLines.slice(0, 14)
+        renderedLines.push('...')
       }
 
-      // 绘制所有项目福利
-      if (project.benefits?.length) {
-        ctx.fillStyle = '#333333'
-        ctx.font = 'bold 28px sans-serif'
-        ctx.fillText('项目福利：', cardMargin + 40, currentY)
-        currentY += 40
+      // 绘制每一行文字
+      renderedLines.forEach((line, index) => {
+        ctx.fillText(line, margin + 40, currentY + index * lineHeight)
+      })
 
-        ctx.font = '26px sans-serif'
-        ctx.fillStyle = '#666666'
-        project.benefits.forEach((benefit: string, index: number) => {
-          ctx.fillText(`${index + 1}. ${benefit}`, cardMargin + 40, currentY)
-          currentY += 35
-        })
-        currentY += 20
-      }
-
-      currentY += 30 // 项目之间的间距
+      currentY += renderedLines.length * lineHeight + 60
     }
 
-    // 5. 绘制底部信息
-    const bottomY = canvas.height - cardMargin - 60
+    // 5. 绘制项目案例
+    if (posterData.projects[0]?.cases?.length) {
+      ctx.fillStyle = '#1a1a1a'
+      ctx.font = 'bold 32px sans-serif'
+      ctx.fillText('成功案例', margin + 40, currentY)
+      currentY += 50
+
+      ctx.font = '26px sans-serif'
+      ctx.fillStyle = '#666666'
+      posterData.projects[0].cases.forEach((case_: string, index: number) => {
+        ctx.fillText(`${index + 1}. ${case_}`, margin + 40, currentY)
+        currentY += 40
+      })
+      currentY += 40
+    }
+
+    // 6. 绘制项目福利
+    if (posterData.projects[0]?.benefits?.length) {
+      ctx.fillStyle = '#1a1a1a'
+      ctx.font = 'bold 32px sans-serif'
+      ctx.fillText('项目福利', margin + 40, currentY)
+      currentY += 50
+
+      ctx.font = '26px sans-serif'
+      ctx.fillStyle = '#666666'
+      posterData.projects[0].benefits.forEach((benefit: string, index: number) => {
+        // 绘制勾选图标
+        ctx.fillStyle = '#10B981'
+        ctx.beginPath()
+        ctx.arc(margin + 55, currentY - 8, 12, 0, Math.PI * 2)
+        ctx.fill()
+        
+        ctx.strokeStyle = '#FFFFFF'
+        ctx.lineWidth = 2
+        ctx.beginPath()
+        ctx.moveTo(margin + 48, currentY - 8)
+        ctx.lineTo(margin + 53, currentY - 3)
+        ctx.lineTo(margin + 62, currentY - 13)
+        ctx.stroke()
+
+        // 绘制福利文本
+        ctx.fillStyle = '#666666'
+        ctx.fillText(benefit, margin + 80, currentY)
+        currentY += 40
+      })
+      currentY += 40
+    }
+
+    // 7. 绘制底部信息
+    const bottomY = canvas.height - margin - 60
     
     // 右侧二维码
     try {
-      const qrSize = 100
-      // 构建带有加密后userId参数的URL
-      console.log('shareUrl:' + props.shareUrl)
+      const qrSize = 120
       const qrUrl = new URL(props.shareUrl)
-      // 只有当userId存在且不为0时才添加到URL中
       if (props.userId && props.userId !== 0) {
         try {
           const { data } = await encryptUserId(props.userId)
@@ -466,7 +516,6 @@ const generatePoster = async () => {
           }
         } catch (error) {
           console.error('Failed to encrypt userId:', error)
-          // 如果加密失败，使用原始userId作为备选方案
           qrUrl.searchParams.append('userId', props.userId.toString())
         }
       }
@@ -476,7 +525,7 @@ const generatePoster = async () => {
         margin: 0,
         color: {
           dark: '#000000',
-          light: bg.type === 'paper' ? '#FFFFFF99' : '#FFFFFF'
+          light: '#FFFFFF'
         }
       })
 
@@ -487,7 +536,7 @@ const generatePoster = async () => {
         qrImage.src = qrCodeUrl
       })
 
-      const qrX = canvas.width - cardMargin - qrSize - 40
+      const qrX = canvas.width - margin - qrSize - 40
       const qrY = bottomY - qrSize - 40
       
       // 绘制二维码背景
@@ -503,7 +552,7 @@ const generatePoster = async () => {
       ctx.fillStyle = '#666666'
       ctx.font = '24px sans-serif'
       ctx.textAlign = 'center'
-      ctx.fillText(posterData.qrCodeTip, qrX + qrSize/2, bottomY + 5)
+      ctx.fillText(posterData.qrCodeTip || '扫码查看详情', qrX + qrSize/2, bottomY + 5)
 
     } catch (error) {
       console.error('Failed to generate QR code:', error)

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 /**
@@ -106,42 +107,31 @@ public class AiTipsController {
         posterData.setBrandName("AI群江湖");
         posterData.setQrCodeTip("扫码查看详情");
 
-        // 获取锦囊下的所有项目信息
-        List<SharePosterData.ProjectInfo> projectInfos = aiTips.getProjects().stream()
-            .map(project -> {
-                SharePosterData.ProjectInfo info = new SharePosterData.ProjectInfo();
-                info.setTitle(project.getName());
-                info.setDescription(project.getDescription());
-                info.setVideoUrl(project.getVideoUrl());
-                
-                // 获取所有项目案例
-                if (project.getCases() != null && !project.getCases().isEmpty()) {
-                    List<String> cases = project.getCases().stream()
-                        .map(projectCase -> {
-                            StringBuilder caseInfo = new StringBuilder();
-                            // 添加案例描述
-                            caseInfo.append(projectCase.getDescription());
-                            // 如果有图片，添加图片URL
-                            if (projectCase.getImageUrl() != null && !projectCase.getImageUrl().isEmpty()) {
-                                caseInfo.append(" [图片: ").append(projectCase.getImageUrl()).append("]");
-                            }
-                            return caseInfo.toString();
-                        })
-                        .collect(Collectors.toList());
-                    info.setCases(cases);
-                }
-                
-                // 获取所有项目福利
-                if (project.getBenefits() != null && !project.getBenefits().isEmpty()) {
-                    List<String> benefits = project.getBenefits().stream()
-                        .map(ProjectBenefit::getContent)
-                        .collect(Collectors.toList());
-                    info.setBenefits(benefits);
-                }
-                
-                return info;
-            })
-            .collect(Collectors.toList());
+        List<SharePosterData.Project> projectInfos = new ArrayList<>();
+        
+        for (Project project : aiTips.getProjects()) {
+            SharePosterData.Project projectInfo = new SharePosterData.Project();
+            projectInfo.setTitle(project.getName());
+            projectInfo.setDescription(project.getDescription());
+            
+            // 设置案例列表
+            if (project.getCases() != null && !project.getCases().isEmpty()) {
+                List<String> cases = project.getCases().stream()
+                    .map(ProjectCase::getDescription)
+                    .collect(Collectors.toList());
+                projectInfo.setCases(cases);
+            }
+            
+            // 设置福利列表
+            if (project.getBenefits() != null && !project.getBenefits().isEmpty()) {
+                List<String> benefits = project.getBenefits().stream()
+                    .map(ProjectBenefit::getContent)
+                    .collect(Collectors.toList());
+                projectInfo.setBenefits(benefits);
+            }
+            
+            projectInfos.add(projectInfo);
+        }
 
         posterData.setProjects(projectInfos);
         return Result.success(posterData);

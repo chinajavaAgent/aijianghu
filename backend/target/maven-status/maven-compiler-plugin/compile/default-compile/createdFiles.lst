@@ -13,6 +13,7 @@ com/aigroup/world/controller/ShareController.class
 com/aigroup/world/service/OrderService.class
 com/aigroup/world/entity/User.class
 com/aigroup/world/dto/RegisterRequest.class
+com/aigroup/world/dto/SharePosterData$Project.class
 com/aigroup/world/service/ProjectService.class
 com/aigroup/world/dto/ExternalUserImportDTO.class
 com/aigroup/world/service/impl/UserServiceImpl.class
@@ -54,7 +55,6 @@ com/aigroup/world/mapper/AdminMapper.class
 com/aigroup/world/config/WebConfig.class
 com/aigroup/world/entity/Project.class
 com/aigroup/world/controller/OrderController$CreateOrderRequest.class
-com/aigroup/world/dto/SharePosterData$ProjectInfo.class
 com/aigroup/world/security/CustomUserDetailsService.class
 com/aigroup/world/config/PasswordEncoderConfig.class
 com/aigroup/world/service/impl/AiTipsServiceImpl.class
