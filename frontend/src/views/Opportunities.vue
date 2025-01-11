@@ -66,7 +66,7 @@
           神秘强者留下十七份机缘，待有缘人
         </p>
         <!-- 修炼步骤说明 -->
-        <div class="inline-flex flex-col gap-3 bg-white/50 backdrop-blur-sm rounded-2xl p-6 shadow-sm">
+        <div class="inline-flex flex-col gap-3 bg-white/50 backdrop-blur-sm rounded-2xl p-2 shadow-sm">
           <div class="flex items-center gap-4 text-[#2A3F54]">
             <div class="flex items-center gap-2 justify-end font-medium text-[#2A3F54]">
               <span class="w-2 h-2 rounded-full bg-[#7A9D96]"></span>
