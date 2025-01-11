@@ -194,9 +194,9 @@ interface Background {
 
 // 当前选中的背景方案
 const customBackground = reactive<Background>({
-  startColor: '#40E0D0',
-  endColor: '#4169E1',
-  type: 'gradient'
+  startColor: '#F5F5F5',
+  endColor: '#F5F5F5',
+  type: 'solid'
 })
 
 const visible = ref(false)
