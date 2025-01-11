@@ -89,7 +89,7 @@ export const deleteBenefit = (projectId: number, benefitId: number) => {
 export const uploadProjectIcon = (file: File) => {
   const formData = new FormData()
   formData.append('file', file)
-  return request.post<ApiResponse<string>>('/projects/icon', formData, {
+  return request.post<ApiResponse<string>>('/oss/upload', formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
