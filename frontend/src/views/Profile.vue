@@ -19,7 +19,7 @@
                 <div class="flex items-center mt-2">
                   <span :class="['font-semibold font-ma-shan', levelColor]">{{ levelTitle }}</span>
                   <div class="ml-2 px-2 py-0.5 bg-gray-100 rounded text-sm text-gray-600 font-ma-shan">
-                    Level {{ userStore.level }}
+                    第{{ userStore.level }}重境界
                   </div>
                 </div>
               </div>
