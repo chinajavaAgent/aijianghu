@@ -125,12 +125,7 @@
                     >
                       准许入门
                     </button>
-                    <button 
-                      @click.stop="handleReject(order.id)"
-                      class="flex-1 py-2 bg-red-50 text-red-600 rounded text-sm font-medium active:bg-red-100"
-                    >
-                      婉拒
-                    </button>
+                  
                   </div>
                 </div>
               </div>

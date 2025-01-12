@@ -118,6 +118,30 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             .eq(status != null, Order::getStatus, status)
             .orderByDesc(Order::getCreatedAt);
         
-        return this.page(pageParam, queryWrapper);
+        // 获取订单列表
+        IPage<Order> orderPage = this.page(pageParam, queryWrapper);
+        
+        // 填充用户信息
+        for (Order order : orderPage.getRecords()) {
+            User user = userMapper.selectById(order.getUserId());
+            if (user != null) {
+                order.setUserName(user.getRealName());
+                order.setUserPhone(user.getPhone());
+                order.setUserWechat(user.getWechat());
+                order.setGender(user.getGender());
+                // 计算年龄
+                if (user.getBirthDate() != null) {
+                    int age = LocalDateTime.now().getYear() - user.getBirthDate().getYear();
+                    order.setAge(age);
+                }
+                order.setCity(user.getCity());
+                order.setProfession(user.getProfession());
+                order.setExperience(user.getExperience());
+                order.setIntroduction(user.getIntroduction());
+                order.setReason(user.getReason());
+            }
+        }
+        
+        return orderPage;
     }
 } 
