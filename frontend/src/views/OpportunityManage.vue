@@ -70,16 +70,16 @@
     >
       <div class="p-4 space-y-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">锦囊名称</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">机缘名称</label>
           <input v-model="form.title" type="text" 
             class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="请输入锦囊名称">
+            placeholder="请输入机缘名称">
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">锦囊描述</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">机缘描述</label>
           <textarea v-model="form.description" 
             class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            rows="3" placeholder="请输入锦囊描述"></textarea>
+            rows="3" placeholder="请输入机缘描述"></textarea>
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div>
@@ -718,8 +718,25 @@ const handleVideoUpload = async (event: Event, project: Project) => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
+
 .container {
   max-width: 1200px;
+}
+
+/* 统一字体设置 */
+.font-ma-shan {
+  font-family: 'Ma Shan Zheng', cursive;
+}
+
+/* 所有文字都使用毛笔字体 */
+h1, h2, p, button, div {
+  font-family: 'Ma Shan Zheng', cursive;
+}
+
+/* 优化字间距 */
+.tracking-wider {
+  letter-spacing: 0.05em;
 }
 
 .project-dialog {
