@@ -15,15 +15,27 @@
         <!-- 搜索框 -->
         <div class="bg-white rounded-lg shadow-sm mb-4 p-4">
           <div class="flex items-center gap-2">
-            <input 
-              v-model="searchPhone" 
-              type="text" 
-              placeholder="请输入手机号查询" 
-              class="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
-            />
+            <div class="relative flex-1">
+              <input 
+                v-model="searchPhone" 
+                type="text" 
+                placeholder="请输入手机号查询（支持模糊搜索）" 
+                class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                @input="handleSearchInput"
+              />
+              <button 
+                v-if="searchPhone" 
+                @click="clearSearch" 
+                class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
             <button 
               @click="handleSearch" 
-              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 active:bg-blue-700"
+              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 active:bg-blue-700 min-w-[80px]"
             >
               查询
             </button>
@@ -408,16 +420,35 @@ const handleReject = (orderId: number) => {
 
 // 搜索相关
 const searchPhone = ref('')
+const searchTimeout = ref<number | null>(null)
+
+// 清除搜索
+const clearSearch = () => {
+  searchPhone.value = ''
+  loadOrders() // 清空搜索后，重新加载当前用户的订单
+}
+
+// 处理搜索输入（带防抖）
+const handleSearchInput = () => {
+  if (searchTimeout.value) {
+    clearTimeout(searchTimeout.value)
+  }
+  
+  searchTimeout.value = window.setTimeout(() => {
+    if (searchPhone.value) {
+      handleSearch()
+    } else {
+      loadOrders() // 如果搜索框为空，加载当前用户的订单
+    }
+  }, 500) // 500ms 防抖
+}
+
+// 处理搜索
 const handleSearch = async () => {
   if (!checkLogin()) return
   
-  if (!searchPhone.value) {
-    showToast('请输入手机号')
-    return
-  }
-  
   try {
-    const response = await getOrdersByPhone(searchPhone.value, {
+    const response = await getOrdersByPhone(searchPhone.value || userStore.phone!, {
       page: 1,
       size: 100,
       status: activeTab.value === 'pending' ? 0 : 1

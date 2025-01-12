@@ -114,7 +114,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     public IPage<Order> getOrdersByPhone(String phone, Integer page, Integer size, Integer status) {
         Page<Order> pageParam = new Page<>(page, size);
         LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<Order>()
-            .eq(Order::getCheckPhone, phone)
+            .like(Order::getCheckPhone, phone)
             .eq(status != null, Order::getStatus, status)
             .orderByDesc(Order::getCreatedAt);
         
