@@ -3,6 +3,7 @@ package com.aigroup.world.service.impl;
 import com.aigroup.world.entity.Admin;
 import com.aigroup.world.entity.AdminTips;
 import com.aigroup.world.entity.AiTips;
+import com.aigroup.world.enums.UserLevel;
 import com.aigroup.world.exception.BusinessException;
 import com.aigroup.world.mapper.AdminMapper;
 import com.aigroup.world.mapper.AdminTipsMapper;
@@ -17,6 +18,7 @@ import com.aigroup.world.service.FileService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,6 +34,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements AdminService {
     private final FileService fileService;
     private final AdminTipsMapper adminTipsMapper;
@@ -185,6 +188,42 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         adminTipsMapper.delete(wrapper);
     }
 
+    /**
+     * 根据手机，去寻找加ai群符合要求的师傅（往上找两级）
+     * @param currentUserPhone
+     * @param level
+     * @return
+     */
+    public User findReferrerUser(String currentUserPhone, int level) {
+        // 在第二数据源中查询推荐人ID
+        TUser tUser = tUserMapper.selectOne(new LambdaQueryWrapper<TUser>()
+                .eq(TUser::getPhoneNumber, currentUserPhone));
+        if (tUser == null) {
+            return null;
+        }
+        if(null == tUser.getRecommendId()){
+            return null;
+        }
+        // 通过推荐人ID查询推荐人的手机号
+        TUser recommender = tUserMapper.selectById(tUser.getRecommendId());
+        if (recommender == null) {
+            return null;
+        }
+        Long recommendId = recommender.getRecommendId();
+        if (recommendId == null) {
+            return null;
+        }
+        TUser parentRecommender = tUserMapper.selectById(tUser.getRecommendId());
+        if (parentRecommender == null) {
+            return null;
+        }
+        log.info("推荐人手机号：{}", parentRecommender.getPhoneNumber());
+        // 在第一数据源中查询推荐人用户信息
+        return userMapper.selectOne(new LambdaQueryWrapper<User>()
+                .ge(User::getLevel, level+1)
+                .eq(User::getPhone, parentRecommender.getPhoneNumber()));
+    }
+
     @Override
     public Admin getAdminByTipId(Long tipId) {
         AiTips aiTips = aiTipsMapper.selectById(tipId);
@@ -197,7 +236,8 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
             Integer level = user.getLevel();
             Integer requiredLevel = aiTips.getRequiredLevel();
             if(requiredLevel> level+1){
-                throw new BusinessException("少侠，练功需循序渐进，请先提升至"+(requiredLevel-1)+"重天再进行查看");
+                String titleByLevel = UserLevel.getTitleByLevel(requiredLevel-1);
+                throw new BusinessException("少侠，练功需循序渐进，请先提升至"+titleByLevel+"境，才能查看此锦囊");
             }
             AdminTips adminTips = adminTipsMapper.selectOne(new LambdaQueryWrapper<AdminTips>().eq(AdminTips::getTipsId, tipId));
             if(null == adminTips){
@@ -205,37 +245,11 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
             }
             Long adminId = adminTips.getAdminId();
             admin = adminMapper.selectById(adminId);
-            // 在第二数据源中查询推荐人ID
-            TUser tUser = tUserMapper.selectOne(new LambdaQueryWrapper<TUser>()
-                    .eq(TUser::getPhoneNumber, currentUserPhone));
-            
-            if (tUser != null && tUser.getRecommendId() != null) {
-                // 通过推荐人ID查询推荐人的手机号
-                TUser recommender = tUserMapper.selectById(tUser.getRecommendId());
-                
-                if (recommender != null) {
-                    // 在第一数据源中查询推荐人用户信息
-                    User recommenderUser = userMapper.selectOne(new LambdaQueryWrapper<User>()
-                            .ge(User::getLevel, user.getLevel()+1)
-                            .eq(User::getPhone, recommender.getPhoneNumber()));
-                    
-                    if (recommenderUser != null) {
-                        // 设置上级用户信息到admin对象中
-                        admin.setReferrerUser(recommenderUser);
-                    }
-                }
+            User referrerUser = findReferrerUser(currentUserPhone, requiredLevel);
+            if(null!=referrerUser) {
+                log.info("referrerUser：{}", referrerUser.getPhone());
             }
-
-            // 查询本系统的推荐人
-            Long referrerId = user.getReferrerId();
-            if(null!=referrerId) {
-                User referrerUser = userMapper.selectById(referrerId);
-                if (referrerUser != null && referrerUser.getLevel() > user.getLevel()) {
-                    // 设置上级用户信息到admin对象中
-                    admin.setReferrerUser(referrerUser);
-                }
-            }
-
+            admin.setReferrerUser(referrerUser);
         }
 
         return admin;

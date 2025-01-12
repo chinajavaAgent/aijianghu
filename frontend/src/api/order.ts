@@ -6,6 +6,12 @@ export interface OrderResponse {
   total: number
   size: number
   current: number
+  data?: {
+    records: Order[]
+    total: number
+    size: number
+    current: number
+  }
 }
 
 export interface UserResponse {
@@ -49,7 +55,7 @@ export const createOrder = async (data: OrderCreateRequest & { adminId: number }
 }
 
 // 获取用户订单列表
-export const getUserOrders = async (userId: number, params: { page: number; size: number; status: number }) => {
+export const getUserOrders = async (userId: number, params: { page: number; size: number; status?: number; isBig?: boolean }) => {
   try {
     const response = await request.get<OrderResponse>(`/orders/user/${userId}`, { params })
     return response.data || { records: [], total: 0, size: params.size, current: params.page }
@@ -95,5 +101,22 @@ export const getOrdersByTipId = async (tipId: number, params?: { page?: number; 
   } catch (error) {
     console.error('获取锦囊订单失败:', error)
     return { records: [], total: 0, size: params?.size || 100, current: params?.page || 1 }
+  }
+}
+
+// 根据手机号查询订单列表
+export const getOrdersByPhone = async (phone: string, params?: { page?: number; size?: number; status?: number }) => {
+  try {
+    const response = await request.get<OrderResponse>(`/orders/phone/${phone}`, {
+      params: {
+        page: params?.page || 1,
+        size: params?.size || 10,
+        status: params?.status
+      }
+    })
+    return response.data
+  } catch (error) {
+    console.error('根据手机号查询订单失败:', error)
+    return { records: [], total: 0, size: params?.size || 10, current: params?.page || 1 }
   }
 } 

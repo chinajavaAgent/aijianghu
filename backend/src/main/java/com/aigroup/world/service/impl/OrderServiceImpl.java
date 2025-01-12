@@ -42,7 +42,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setTitle(title);
         order.setPrice(new BigDecimal(price));
         order.setStatus(0); // 待审核状态
-        
+        User user = userMapper.selectById(userId);
+        String phone = user.getPhone();
         // 生成订单编号：ORD + 年月日时分秒 + 4位随机数
         String orderNo = "ORD" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
                 + String.format("%04d", (int)(Math.random() * 10000));
@@ -53,7 +54,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setApplyTime(now);
         order.setCreatedAt(now);
         order.setUpdatedAt(now);
-        
+        order.setCheckPhone(phone);
         // 保存订单
         save(order);
         
@@ -103,6 +104,17 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         Page<Order> pageParam = new Page<>(page, size);
         LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<Order>()
             .eq(Order::getTipsId, tipId)
+            .eq(status != null, Order::getStatus, status)
+            .orderByDesc(Order::getCreatedAt);
+        
+        return this.page(pageParam, queryWrapper);
+    }
+
+    @Override
+    public IPage<Order> getOrdersByPhone(String phone, Integer page, Integer size, Integer status) {
+        Page<Order> pageParam = new Page<>(page, size);
+        LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<Order>()
+            .eq(Order::getCheckPhone, phone)
             .eq(status != null, Order::getStatus, status)
             .orderByDesc(Order::getCreatedAt);
         

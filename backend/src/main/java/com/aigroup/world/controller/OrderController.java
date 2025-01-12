@@ -79,4 +79,18 @@ public class OrderController {
         IPage<Order> orders = orderService.getOrdersByTipId(tipId, page, size, status);
         return Result.success(orders);
     }
+
+    /**
+     * 根据手机号查询订单列表
+     */
+    @GetMapping("/phone/{phone}")
+    public Result<IPage<Order>> getOrdersByPhone(
+            @PathVariable String phone,
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(required = false) Integer status
+    ) {
+        IPage<Order> orders = orderService.getOrdersByPhone(phone, page, size, status);
+        return Result.success(orders);
+    }
 } 

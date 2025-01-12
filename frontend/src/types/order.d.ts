@@ -11,14 +11,21 @@ export interface Order {
   approveTime?: string
   createdAt: string
   updatedAt: string
+  checkPhone?: string
   // 关联字段
+  userName?: string
+  gender?: number
+  age?: number
+  city?: string
+  userPhone?: string
+  userWechat?: string
+  profession?: string
+  experience?: number
+  reason?: string
+  introduction?: string
   reviewer?: string
   reviewerPhone?: string
   reviewerWechat?: string
-  phone?: string
-  wechat?: string
-  credit?: number
-  introduction?: string
 }
 
 // API响应类型

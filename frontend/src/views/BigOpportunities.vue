@@ -12,6 +12,24 @@
       </div>
 
       <div class="max-w-screen-md mx-auto px-4 py-4">
+        <!-- 搜索框 -->
+        <div class="bg-white rounded-lg shadow-sm mb-4 p-4">
+          <div class="flex items-center gap-2">
+            <input 
+              v-model="searchPhone" 
+              type="text" 
+              placeholder="请输入手机号查询" 
+              class="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+            />
+            <button 
+              @click="handleSearch" 
+              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 active:bg-blue-700"
+            >
+              查询
+            </button>
+          </div>
+        </div>
+
         <!-- 标签页导航 -->
         <div class="bg-white rounded-lg shadow-sm mb-4 overflow-hidden">
           <div class="flex border-b">
@@ -217,7 +235,8 @@ import { ref, onMounted, watch } from 'vue'
 import { showToast, showDialog } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/store/user'
-import { getUserOrders, approveOrder } from '@/api/order'
+import { getUserOrders, approveOrder, getOrdersByPhone } from '@/api/order'
+import type { Order } from '@/types/order'
 
 // 标签页配置
 const tabs = [
@@ -247,20 +266,20 @@ const checkLogin = () => {
 // 获取订单列表
 const loadOrders = async () => {
   try {
-    if (!userStore.id) return
+    if (!userStore.id || !userStore.phone) return
 
-    const response = await getUserOrders(userStore.id, {
+    // 使用当前用户手机号查询订单
+    const response = await getOrdersByPhone(userStore.phone, {
       page: 1,
       size: 100,
-      status: activeTab.value === 'pending' ? 0 : 1,
-      isBig: true // 只获取大机缘类型的订单
+      status: activeTab.value === 'pending' ? 0 : 1
     })
 
-    if (response.data) {
+    if (response) {
       if (activeTab.value === 'pending') {
-        pendingOrders.value = response.data.records
+        pendingOrders.value = response.records
       } else {
-        approvedOrders.value = response.data.records
+        approvedOrders.value = response.records
       }
     }
   } catch (error) {
@@ -281,25 +300,7 @@ onMounted(async () => {
 })
 
 // 订单数据
-interface OrderItem {
-  id: number
-  tipsId: number
-  title: string
-  userName: string
-  gender: number // 1: 男, 2: 女
-  age: number
-  city: string
-  userPhone: string
-  userWechat: string
-  profession: string
-  experience: number
-  reason: string
-  introduction: string
-  price: number
-  applyTime: string
-  approveTime?: string
-  status: number
-}
+type OrderItem = Order
 
 const pendingOrders = ref<OrderItem[]>([])
 const approvedOrders = ref<OrderItem[]>([])
@@ -351,7 +352,14 @@ const handleApprove = (orderId: number) => {
   }).then(async (action) => {
     if (action === 'confirm') {
       try {
-        await approveOrder(orderId, 1)
+        await approveOrder({
+          orderId,
+          reviewerId: userStore.id!,
+          reviewerName: userStore.realName!,
+          reviewerPhone: userStore.phone!,
+          reviewerWechat: userStore.phone!, // 使用手机号作为微信号
+          credit: 0
+        })
         showToast({
           type: 'success',
           message: '已准许入门'
@@ -380,7 +388,14 @@ const handleReject = (orderId: number) => {
   }).then(async (action) => {
     if (action === 'confirm') {
       try {
-        await approveOrder(orderId, 2)
+        await approveOrder({
+          orderId,
+          reviewerId: userStore.id!,
+          reviewerName: userStore.realName!,
+          reviewerPhone: userStore.phone!,
+          reviewerWechat: userStore.phone!, // 使用手机号作为微信号
+          credit: 0
+        })
         showToast({
           type: 'success',
           message: '已婉拒'
@@ -394,6 +409,36 @@ const handleReject = (orderId: number) => {
       }
     }
   })
+}
+
+// 搜索相关
+const searchPhone = ref('')
+const handleSearch = async () => {
+  if (!checkLogin()) return
+  
+  if (!searchPhone.value) {
+    showToast('请输入手机号')
+    return
+  }
+  
+  try {
+    const response = await getOrdersByPhone(searchPhone.value, {
+      page: 1,
+      size: 100,
+      status: activeTab.value === 'pending' ? 0 : 1
+    })
+
+    if (response) {
+      if (activeTab.value === 'pending') {
+        pendingOrders.value = response.records
+      } else {
+        approvedOrders.value = response.records
+      }
+    }
+  } catch (error) {
+    console.error('查询订单失败:', error)
+    showToast('查询订单失败')
+  }
 }
 </script>
 

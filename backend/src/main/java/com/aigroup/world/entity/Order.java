@@ -28,7 +28,8 @@ public class Order {
     private BigDecimal price;
     
     private Integer status;
-    
+    private String checkPhone;
+
     private LocalDateTime applyTime;
     
     private LocalDateTime approveTime;

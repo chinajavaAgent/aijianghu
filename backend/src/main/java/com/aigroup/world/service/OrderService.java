@@ -25,4 +25,14 @@ public interface OrderService extends IService<Order> {
      * 根据锦囊ID获取订单列表
      */
     IPage<Order> getOrdersByTipId(Long tipId, Integer page, Integer size, Integer status);
+
+    /**
+     * 根据手机号查询订单列表
+     * @param phone 手机号
+     * @param page 页码
+     * @param size 每页大小
+     * @param status 订单状态
+     * @return 订单列表
+     */
+    IPage<Order> getOrdersByPhone(String phone, Integer page, Integer size, Integer status);
 } 
