@@ -57,13 +57,23 @@ public class OrderController {
     /**
      * 审核订单
      */
-    @PutMapping("/{orderId}/approve")
+    @PostMapping("/{orderId}/approve")
     public Result<Boolean> approveOrder(
             @PathVariable Long orderId,
-            @RequestParam Integer status
+            @RequestBody ApproveOrderRequest request
     ) {
-        boolean success = orderService.approveOrder(orderId, status);
+        boolean success = orderService.approveOrder(orderId, request.getStatus());
         return Result.success(success);
+    }
+
+    @Data
+    public static class ApproveOrderRequest {
+        private Integer status;
+        private Long reviewerId;
+        private String reviewerName;
+        private String reviewerPhone;
+        private String reviewerWechat;
+        private Integer credit;
     }
 
     /**

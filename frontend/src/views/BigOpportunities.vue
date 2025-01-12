@@ -361,6 +361,7 @@ const handleApprove = (orderId: number) => {
       try {
         await approveOrder({
           orderId,
+          status: 1, // 1表示通过
           reviewerId: userStore.id!,
           reviewerName: userStore.realName!,
           reviewerPhone: userStore.phone!,
@@ -397,6 +398,7 @@ const handleReject = (orderId: number) => {
       try {
         await approveOrder({
           orderId,
+          status: 2, // 2表示拒绝
           reviewerId: userStore.id!,
           reviewerName: userStore.realName!,
           reviewerPhone: userStore.phone!,

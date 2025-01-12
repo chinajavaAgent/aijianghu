@@ -74,6 +74,7 @@ export const getUserLevel = async (userId: number) => {
 
 export interface ApproveOrderRequest {
   orderId: number
+  status: number
   reviewerId: number
   reviewerName: string
   reviewerPhone: string
@@ -83,7 +84,14 @@ export interface ApproveOrderRequest {
 
 // 审核订单
 export const approveOrder = async (data: ApproveOrderRequest) => {
-  const response = await request.post<Order>(`/orders/${data.orderId}/approve`, data)
+  const response = await request.post<Order>(`/orders/${data.orderId}/approve`, {
+    status: data.orderId === 0 ? 2 : 1, // 如果orderId为0则拒绝，否则通过
+    reviewerId: data.reviewerId,
+    reviewerName: data.reviewerName,
+    reviewerPhone: data.reviewerPhone,
+    reviewerWechat: data.reviewerWechat,
+    credit: data.credit
+  })
   return response.data
 }
 
